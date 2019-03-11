@@ -15,6 +15,7 @@
       v-show="editMeta.editId"
       @emitUpdateArticle="doUpdateArticle"
     ></articles>
+    <articleFixed></articleFixed>
   </div>
 </template>
 <script>
@@ -25,13 +26,15 @@
   import TreeItem from '../../components/tree/index.vue'
   import ArticleBrief from './ArticleBrief.vue'
   import articles from './article.vue'
+  import articleFixed from './articleFixed.vue'
   import constKey from '../../util/const'
 
   export default {
     components: {
       TreeItem,
       ArticleBrief,
-      articles
+      articles,
+      articleFixed
     },
     data: function () {
       return {
