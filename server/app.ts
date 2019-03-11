@@ -21,6 +21,6 @@ if(!process.env.JUSTNODE) {
 middleware(app)
 // mon()
 
-app.listen(3000, () => {
-  console.log('Example app listening on port 3000!\n')
+app.listen(3001, () => {
+  console.log('Example app listening on port 3001!\n')
 })
