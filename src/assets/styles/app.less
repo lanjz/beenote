@@ -1,0 +1,454 @@
+
+*{
+  box-sizing: border-box;
+  font-family: "微软雅黑";
+}
+body{
+  padding: 0;
+  margin: 0;
+  min-height: 500px;
+}
+.app{
+  border: 1px solid #d7dde4;
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  color: @primary-color;
+}
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+.flex{
+  display: flex;
+}
+.flex-1{
+  flex: 1;
+}
+.flex.direction-column{
+  flex-direction: column;
+}
+.flex.direction-row{
+  flex-direction: row;
+}
+.flex.wrap{
+  flex-wrap: wrap;
+}
+.flex.justify-content-end{
+  justify-content: flex-end
+}
+.flex.justify-content-start{
+  justify-content: flex-start;
+}
+.flex.justify-content-center{
+  justify-content: center;
+}
+.flex.align-items-center{
+  align-items: center;
+}
+.flex.justify-content-space-between{
+  justify-content: space-between;
+}
+.absolute-full{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.relative{
+  position: relative;
+}
+
+
+
+.line-ellipsis{
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+
+/*我的表单*/
+.form-layout{  position: relative;  }
+.form-group:not(:first-child){
+  margin-top: 18px;
+}
+.form-label-layout{
+  text-align: right;
+  width: 100px;
+  padding: 8px 10px;
+}
+.from-select, .form-input{
+  width: 350px;
+  height: 40px;
+  border-radius: 4px;
+  border: solid 1px @form-color;
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+}
+.form-input{
+  padding: 0 7px;
+}
+textarea.form-input{
+  min-height: 100px;
+}
+.radio-style{
+  position: relative;
+  padding-left: 25px;
+  .form-radio{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    z-index: 1;
+  }
+}
+.radio-style:not(:last-child){
+  margin-right: 20px;
+}
+.radio-style:after{
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  background: @font-primary-color;
+  top: 50%;
+  border: solid 4px @font-primary-color;
+  transform: translateY(-50%);
+  left: 0;
+}
+.radio-style.act:after{
+
+  background: #fff;
+}
+.select-style{
+  position: relative;
+  line-height: 20px;
+  display: block;
+  .select-iconfont{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    background: @bg-second-color;
+    color: @tree-color;
+    text-align: center;
+    margin-right: 7px;
+  }
+  .iconfont{
+    font-size: 12px;
+    transform: scale(0.8);
+    display: none;
+    transform-origin: 50% 50%;
+    text-align: center;
+
+  }
+}
+.form-radio{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  z-index: 1;
+}
+.select-style.act{
+  .iconfont{
+    display: block;
+  }
+}
+.select-style:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.switch-layout{
+  height: 20px;
+  width: 40px;
+  position: relative;
+  background: @warn-color;
+  border-radius: 20px;
+  transition: .2s;
+}
+.switch-layout:after{
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  left: 2px;
+  top: 50%;
+  transition: .2s;
+  transform: translateY(-50%);
+}
+.switch-layout.act{
+  background: @highlight-color;
+}
+.switch-layout.act:after{
+  left: 50%;
+}
+.theme-1 {
+  textarea, input {
+    width: 100%;
+  }
+}
+
+.btn{
+  min-width: 100px;
+  padding: 5px 10px;
+  background: @bg-color;
+  color: #fff;
+  display: inline-block;
+  border-radius: 2px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: .3s
+}
+.btn.warn{
+  background: @warn-color;
+}
+
+.btn.second-btn{
+  border: solid 1px @border-color;
+  background: #fff;
+  color: @bg-color;
+}
+
+.btn.second-btn.act{
+  border: solid 1px @primary-color;
+  background: @primary-color;
+  color: #fff;
+}
+
+.btn.disable-btn{
+  background: #7e8896;
+}
+
+/*.router-link-active{
+  text-decoration: underline !important;
+}*/
+
+.panel-bg{
+  background: #fff;
+  padding: 7px;
+}
+// 表格
+.table-layout {
+  width: 100%;
+  background: #fff;
+  border-collapse:collapse;  /*重叠的border合度为一条线*/
+  /*控制cellpadding-单元格间距-单元边沿与单元内容之间的空间*/
+  margin: 0;
+  padding: 0 ;
+  .option-label{
+    display: inline-block;
+    color: #fff;
+    border-radius: 2px;
+    padding: 2px 5px;
+    background: @bg-second-color;
+    font-size: 13px;
+  }
+  .option-label:not(:last-child) {
+    margin-right: 5px;
+  }
+}
+.table-layout td, .table-layout th {
+  text-align: left;
+  padding:0; /*控制cellpadding-单元格间距*/
+}
+.table-layout th {
+  background: @bg-second-color;
+  font-weight: normal;
+}
+.table-layout th .th-p{
+  color: #fff;
+  word-break: keep-all;   /*th里的内容强制不换行，即最小宽度为字段宽度*/
+}
+.table-layout th:last-child,
+.table-layout td:last-child{
+  text-align: right;
+}
+
+.table-layout td {
+  white-space: normal;
+  word-break: break-all;
+  font-size: 14px;
+  /*background-clip: padding-box;*/
+}
+.table-layout .td-p,
+.table-layout .th-p{
+  padding: 10px;
+  margin: 0;
+}
+.table-layout tr:nth-child(even){  background: #fafafa;  }
+.table-layout .tableCheckBox{position: relative;top: 1px}
+/*保持单行，超出显示省略号*/
+.tableEllipsis{table-layout: fixed}
+
+.tableEllipsis .td-p,
+.tableEllipsis .th-p{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.table-layout{
+  .table-btn{
+    display: inline-block;
+    border-radius: 2px;
+    font-size: 13px;
+    color: #fff;
+    padding: 7px 12px;
+    background: @bg-second-color;
+    vertical-align: top;
+    line-height: 10px;
+    cursor: pointer;
+  }
+  .table-btn:not(:last-child){
+    margin-right: 15px;
+  }
+  .table-btn.warn{
+    background: @warn-color;
+  }
+}
+
+.bg-fff{
+  background: #fff;
+}
+.full-input{
+  position: absolute;
+  height: 100%;
+  border: none;
+  width: 100%;
+}
+
+.delete-icon{
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: @warn-color;
+  cursor: pointer;
+}
+.delete-icon:after{
+  content: '';
+  position: absolute;
+  height: 3px;
+  width: 70%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%);
+  background: #fff;
+}
+
+
+/*modal*/
+
+.modal-mark-bg{
+  background: rgba(0,0,0,0.2);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+.modal-layout{
+  width: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  .from-select, .form-input{
+    width: 250px;
+  }
+  .form-layout{
+    padding: 10px 0;
+  }
+}
+
+.modal-title{
+  background: @bg-color;
+  padding: @padding-size 20px;
+  color: #fff;
+  font-size: 16px;
+  position: relative;
+}
+.modal-title-close{
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  right: 5px;
+  top: 50%;
+  transform-origin: 50% 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  cursor: pointer;
+}
+.modal-title-close:after{
+  content: '';
+  width: 100%;
+  height: 2px;
+  position: absolute;
+  background: #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.modal-title-close:before{
+  content: '';
+  height: 100%;
+  width: 2px;
+  position: absolute;
+  background: #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.modal-operate{
+  border-top: solid 1px @border-color;
+  text-align: right;
+  padding: @padding-size 20px;
+}
+
+.box-shadow-inset{
+  box-shadow: 0 0 4px 1px #000 inset;
+}
+
+.box-shadow{
+  box-shadow: 0 0 4px 1px #000;
+}
+
+.scroll-box{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+
+
+.cursor{
+  cursor: pointer;
+}
+.no-data-cue-bg{
+  background: @bg-panel-color;
+}
+.no-data-cue{
+  font-size: 18px;
+  color: @tree-light-bg-color;
+}
