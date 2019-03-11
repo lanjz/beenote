@@ -1,6 +1,12 @@
 import * as mongoose from 'mongoose'
 
-const DBURL = 'mongodb://127.0.0.1:27017/test'
+const dbName = {
+  dev: 'beenotetest',
+  pro: 'beenote'
+}
+const getDBName = process.env.DEV ? dbName.dev : dbName.pro
+
+const DBURL = `mongodb://127.0.0.1:27017/${getDBName}`
 
 mongoose.connect(DBURL, { useNewUrlParser: true })
 mongoose.set('useFindAndModify', false)
