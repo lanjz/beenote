@@ -5,6 +5,7 @@ import { STATIC_PATH } from './utils/CONST'
 
 const app = new Koa()
 app.use(favicon(STATIC_PATH + '/favicon.ico'))
+/*
 if(!process.env.JUSTNODE) {
   const webpack = require('webpack')
   const devMiddleware = require('./middleware/webpackConfig');
@@ -16,6 +17,7 @@ if(!process.env.JUSTNODE) {
     }))
   app.use(hotMiddleware(compiler))
 }
+*/
 
 
 middleware(app)
