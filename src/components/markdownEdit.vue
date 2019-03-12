@@ -23,7 +23,8 @@
 </template>
 
 <script>
-  import MarkdownItVue from 'markdown-it-vue'
+  const MarkdownItVue = () => import('./test.vue')
+  // import MarkdownItVue from 'markdown-it-vue'
 
   export default {
     model: {

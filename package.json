@@ -15,7 +15,8 @@
     "startTs:end": "tsc && cross-env DEV=1 JUSTNODE=1  node --inspect dist/app.js",
     "startTs": "tsc && cross-env DEV=1 node --inspect dist/app.js",
     "inspect": "ts-node --inspect ./server/app.ts",
-    "server": "cross-env ts-node ./server/app.ts"
+    "server": "cross-env ts-node ./server/app.ts",
+    "analyz": "npm_config_report=true npm run build"
   },
   "dependencies": {
     "@babel/core": "^7.1.6",
@@ -55,6 +56,7 @@
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
     "webpack": "^4.26.0",
+    "webpack-bundle-analyzer": "^3.1.0",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.6.1",
     "webpack-hot-middleware": "^2.24.3",
