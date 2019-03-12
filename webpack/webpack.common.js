@@ -6,6 +6,20 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 console.log('path.resolve(__dirname, \'../\')', path.resolve(__dirname, '../'))
 console.log('process.env.MOCK', process.env.MOCK)
+const setBundleAnalyzerPlugin =  new BundleAnalyzerPlugin(
+  {
+    analyzerMode: 'server',
+    analyzerHost: '127.0.0.1',
+    analyzerPort: 8889,
+    reportFilename: 'report.html',
+    defaultSizes: 'parsed',
+    openAnalyzer: true,
+    generateStatsFile: false,
+    statsFilename: 'stats.json',
+    statsOptions: null,
+    logLevel: 'info'
+  }
+)
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: './src/main.js',
@@ -28,20 +42,7 @@ module.exports = {
       'process.env.NODE_ENV': process.env.DEV ? JSON.stringify('development') : JSON.stringify('production'),
       'process.env.MOCK': process.env.MOCK,
     }),
-    new BundleAnalyzerPlugin(
-      {
-        analyzerMode: 'server',
-        analyzerHost: '127.0.0.1',
-        analyzerPort: 8889,
-        reportFilename: 'report.html',
-        defaultSizes: 'parsed',
-        openAnalyzer: true,
-        generateStatsFile: false,
-        statsFilename: 'stats.json',
-        statsOptions: null,
-        logLevel: 'info'
-      }
-    )
+    // setBundleAnalyzerPlugin
   ],
   optimization: { // 指定公共 bundle 的名称。
     runtimeChunk: {
