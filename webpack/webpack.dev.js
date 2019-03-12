@@ -10,7 +10,8 @@ module.exports = merge(webpackCommon, {
   devServer: {
     contentBase: path.resolve(cwd, 'dist'),
     // host: "10.5.23.",
-    hot: true
+    hot: true,
+    post: 3002
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin() // 启动热更新
