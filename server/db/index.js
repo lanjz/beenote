@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose'
+const mongoose = require('mongoose')
 
 const dbName = {
   dev: 'beenotetest',
@@ -19,4 +19,4 @@ function dbModel(tar, schema) {
 
 }
 
-export default dbModel
+module.exports = dbModel

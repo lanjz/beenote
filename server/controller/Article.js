@@ -1,16 +1,17 @@
-import BaseCtl from './BaseCtl'
-import contentModel from '../model/Article'
-import bookCtl from './Book'
-import catalogCtl from './Catalog'
-import schematasCtl from './SchematasCtl'
-import validator from '../utils/validator'
-import hello from '../utils/hello'
+const BaseCtl  = require('./BaseCtl')
+const contentModel  = require('../model/Article')
+const bookCtl  = require('./Book')
+const catalogCtl  = require('./Catalog')
+const schematasCtl  = require('./SchematasCtl')
+const validator  = require('../utils/validator')
+const hello  = require('../utils/hello')
+
 
 class ArticleCtl extends BaseCtl {
   constructor() {
     super()
     this.stringConValid = this.stringConValid.bind(this)
-    this.dateConValid = this.dateConValid.bind(this)
+    this.dateConValid = this.dateConValid.bind(this)``
     this.radioConValid = this.radioConValid.bind(this)
     this.selectConValid = this.selectConValid.bind(this)
     this.addContent = this.addContent.bind(this)
@@ -548,4 +549,4 @@ class ArticleCtl extends BaseCtl {
 }
 
 const articleCtl = new ArticleCtl()
-export default articleCtl
+module.exports = articleCtl

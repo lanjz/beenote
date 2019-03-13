@@ -1,9 +1,9 @@
-import * as util from 'util'
-import * as Busboy from 'busboy'
-import * as fs from 'fs'
-import * as path from 'path'
-import hello from '../utils/hello'
-import { STATIC_IMG_PATH } from '../utils/CONST'
+const util  = require('util')
+const Busboy  = require('busboy')
+const fs  = require('fs')
+const path  = require('path')
+const hello  = require('../utils/hello')
+const { STATIC_IMG_PATH }  = require('../utils/CONST')
 
 class BaseCtl {
   constructor() {
@@ -227,4 +227,4 @@ class BaseCtl {
   }
 }
 
-export default BaseCtl
+module.exports = BaseCtl

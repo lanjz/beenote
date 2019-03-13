@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose'
+const mongoose = require('mongoose')
 
 const DBURL = 'mongodb://127.0.0.1:27017/test'
 const VALIDA_ERR_MSG = '{PATH} = {VALUE} : Format error'
@@ -48,6 +48,6 @@ function mon() {
   })
 }
 
-export default function () {
+module.exports = function () {
   mon()
 }

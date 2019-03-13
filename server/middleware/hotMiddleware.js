@@ -17,4 +17,4 @@ const hotMiddleware = (compiler, opts) => {
 };
 
 
-module.exports = hotMiddleware
+module.exportss = hotMiddleware

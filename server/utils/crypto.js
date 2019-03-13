@@ -1,4 +1,4 @@
-import * as crypto from 'crypto'
+const crypto = require('crypto')
 
 const SALT = 'haha'
 function createHash(test) {
@@ -12,6 +12,6 @@ function createHash(test) {
   return result
 }
 
-export default {
+module.exports = {
   createHash
 }

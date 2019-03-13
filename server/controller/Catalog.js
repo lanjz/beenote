@@ -1,7 +1,7 @@
-import BaseCtl from './BaseCtl'
-import Catalog from '../model/Catalog'
-import hello from '../utils/hello'
-import bookCtl from './Book'
+const BaseCtl  = require('./BaseCtl')
+const Catalog  = require('../model/Catalog')
+const hello  = require('../utils/hello')
+const bookCtl  = require('./Book')
 
 class CatalogCtl extends BaseCtl {
   constructor() {
@@ -182,4 +182,4 @@ class CatalogCtl extends BaseCtl {
 }
 
 const catalogCtl = new CatalogCtl()
-export default catalogCtl
+module.exports = catalogCtl

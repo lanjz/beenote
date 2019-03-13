@@ -1,10 +1,10 @@
-import * as Router from 'koa-router'
-import userCtl from './controller/User.js'
-import catalogCtl from './controller/Catalog.js'
-import bookCtl from './controller/Book.js'
-import schematasCtl from './controller/SchematasCtl.js'
-import articleCtl from './controller/Article.js'
-import BaseCtl from './controller/BaseCtl.js'
+const Router = require('koa-router')
+const userCtl = require('./controller/User.js')
+const catalogCtl = require('./controller/Catalog.js')
+const bookCtl = require('./controller/Book.js')
+const schematasCtl = require('./controller/SchematasCtl.js')
+const articleCtl = require('./controller/Article.js')
+const BaseCtl = require('./controller/BaseCtl.js')
 const baseCtl = new BaseCtl()
 // userCtl.find()
 const router = new Router({ prefix: '/api' })
@@ -77,4 +77,4 @@ router.post('/qa', async (ctx, next) => {
   ctx.body = 'Hello World2222!'
 })
 
-export default router
+module.exports =  router

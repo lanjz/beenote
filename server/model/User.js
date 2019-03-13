@@ -1,5 +1,9 @@
-import baseModel, { definedValidate } from './BaseModel'
-import validator from './validator'
+const baseModel = require('./BaseModel')
+const definedValidate  = require('./DefinedValidate')
+console.log('baseModel', baseModel)
+console.log('definedValidate', definedValidate)
+
+const validator = require('./validator')
 
 
 class UserModel extends baseModel{
@@ -52,5 +56,5 @@ class UserModel extends baseModel{
     return this.Model.findOne({ email }).select(this.assectPath).exec()
   }
 }
-export default UserModel
+module.exports = UserModel
 

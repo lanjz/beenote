@@ -1,7 +1,7 @@
-import hello from '../utils/hello'
-import BaseCtl from './BaseCtl'
-import schematasModel from '../model/Schematas'
-import validator from '../utils/validator'
+const hello  = require('../utils/hello')
+const BaseCtl  = require('./BaseCtl')
+const schematasModel  = require('../model/Schematas')
+const validator  = require('../utils/validator')
 
 class SchematasCtl extends BaseCtl {
   constructor() {
@@ -480,4 +480,4 @@ class SchematasCtl extends BaseCtl {
 }
 const schemaCtl = new SchematasCtl()
 
-export default schemaCtl
+module.exports = schemaCtl

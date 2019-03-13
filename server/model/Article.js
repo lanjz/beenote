@@ -1,4 +1,4 @@
-import baseModel from './BaseModel'
+const baseModel = require('./BaseModel')
 
 class ArticleModel extends baseModel {
   constructor() {
@@ -46,6 +46,6 @@ class ArticleModel extends baseModel {
   }
 }
 
-export default new ArticleModel()
+module.exports = new ArticleModel()
 
 

@@ -1,6 +1,6 @@
-import * as mongoose from 'mongoose';
-import dbModel from '../db/index'
-import { VALIDA_ERR_MSG } from '../utils/CONST'
+const mongoose = require('mongoose')
+const dbModel = require('../db/index')
+const { VALIDA_ERR_MSG } = require('../utils/CONST')
 
 class baseModel {
   constructor() {
@@ -129,22 +129,6 @@ class baseModel {
   }
 }
 
-/**
- * @param {Function} f 校验函数
- * @return <Object> mongoose.Schema.validate
- * */
-export function definedValidate(f) {
-  return {
-    validator(v) {
-      return f(v)
-    },
-    message(props) {
-      if(props.reason && props.reason.message){
-        return props.reason.message
-      }
-      return `${props.path} = ${props.value} : Format error`
-    }
-  }
-}
 
-export default baseModel
+
+module.exports = baseModel

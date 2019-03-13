@@ -1,8 +1,8 @@
-import * as jwt from 'jwt-simple'
-import * as mongoose from 'mongoose'
-import * as path from 'path';
-import * as fs from 'fs';
-import userCtrl from '../controller/User'
+const jwt = require('jwt-simple')
+const mongoose = require('mongoose')
+const path = require('path')
+const fs = require('fs')
+const userCtrl = require('../controller/User')
 
 /**
  * @param { Error } e
@@ -95,9 +95,7 @@ function errorHandle(ctx, next){
 const SECRET = 'hello~'
 
 function encodeLoginTypeJwt(data) {
-  const payload = {
-    ...data
-  }
+  const payload = { ...data }
   const token = jwt.encode(payload, SECRET)
   return token
 }
@@ -107,6 +105,9 @@ function decodeLoginTypeJwt(token) {
 }
 
 function passValidAuth(ctx = {}) {
+  if(ctx.url.indexOf('/api') < 0) {
+    return true
+  }
   const passPath = {
     get: [''],
     post: ['/api/login', '/api/user']
@@ -170,7 +171,7 @@ function promiseToAwait(fn) {
 }
 
 
-export default {
+module.exports = {
   dealError,
   filterParams,
   errorHandle,

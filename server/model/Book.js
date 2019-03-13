@@ -1,5 +1,6 @@
-import baseModel, { definedValidate } from './BaseModel'
-import validator from './validator'
+const baseModel = require('./BaseModel')
+const definedValidate  = require('./DefinedValidate')
+const validator = require('./validator')
 
 
 class BookModel extends baseModel{
@@ -34,5 +35,5 @@ class BookModel extends baseModel{
   }
 }
 
-export default new BookModel()
+module.exports = new BookModel()
 

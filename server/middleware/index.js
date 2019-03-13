@@ -1,9 +1,9 @@
-import * as bodyParser from 'koa-bodyparser'
-import router from '../router'
-import sent from '../utils/ret'
-import hello from '../utils/hello.js'
+const bodyParser = require('koa-bodyparser')
+const router  = require( '../router')
+const sent  = require( '../utils/ret')
+const hello  = require( '../utils/hello.js')
 
-export default function (app) {
+module.exports = function (app) {
   app.use(bodyParser())
   app.use(sent())
   app.use(hello.errorHandle)

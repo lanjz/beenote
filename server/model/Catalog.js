@@ -1,4 +1,4 @@
-import baseModel from './BaseModel'
+const baseModel = require('./BaseModel')
 
 class catalogModel extends baseModel{
   constructor() {
@@ -34,4 +34,4 @@ class catalogModel extends baseModel{
   }
 }
 
-export default catalogModel
+module.exports = catalogModel

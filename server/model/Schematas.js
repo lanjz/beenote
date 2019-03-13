@@ -1,5 +1,5 @@
-import * as mongoose from 'mongoose';
-import baseModel  from './BaseModel'
+const mongoose = require('mongoose')
+const baseModel  = require('./BaseModel')
 
 
 class BookModel extends baseModel{
@@ -48,5 +48,5 @@ class BookModel extends baseModel{
 
 }
 
-export default new BookModel()
+module.exports = new BookModel()
 

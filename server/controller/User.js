@@ -1,6 +1,6 @@
-import hello from '../utils/hello'
-import BaseCtl from './BaseCtl'
-import UserModel from '../model/User'
+const hello  = require('../utils/hello')
+const BaseCtl  = require('./BaseCtl')
+const UserModel  = require('../model/User')
 
 
 class UserCtl extends BaseCtl {
@@ -64,4 +64,4 @@ class UserCtl extends BaseCtl {
 
 const userCtl = new UserCtl()
 
-export default userCtl
+module.exports = userCtl
