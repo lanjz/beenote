@@ -1,10 +1,6 @@
 const baseModel = require('./BaseModel')
 const definedValidate  = require('./DefinedValidate')
-console.log('baseModel', baseModel)
-console.log('definedValidate', definedValidate)
-
 const validator = require('./validator')
-
 
 class UserModel extends baseModel{
   constructor() {

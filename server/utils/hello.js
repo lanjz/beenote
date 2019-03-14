@@ -4,6 +4,7 @@ const path = require('path')
 const fs = require('fs')
 const userCtrl = require('../controller/User')
 
+console.log('userCtrl', userCtrl)
 /**
  * @param { Error } e
  * @param { String } tart 出错的目标名称
@@ -132,7 +133,8 @@ async function checkAuth(ctx, next) {
         ctx.send(4, '', 'token无效请重新登录')
         return
       }
-      const result = await userCtrl.userAuth(clientUser)
+      // const result = await userCtrl.userAuth(clientUser)
+      const result = {}
       if(!result) {
         ctx.send(4, result, `请重新登录`)
         return

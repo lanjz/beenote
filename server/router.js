@@ -1,14 +1,12 @@
 const Router = require('koa-router')
 const userCtl = require('./controller/User.js')
-const catalogCtl = require('./controller/Catalog.js')
 const bookCtl = require('./controller/Book.js')
 const schematasCtl = require('./controller/SchematasCtl.js')
+const catalogCtl = require('./controller/Catalog.js')
 const articleCtl = require('./controller/Article.js')
 const BaseCtl = require('./controller/BaseCtl.js')
 const baseCtl = new BaseCtl()
-// userCtl.find()
 const router = new Router({ prefix: '/api' })
-
 router.post('/login', userCtl.login)
 
 router.get('/users', userCtl.find)
@@ -32,7 +30,6 @@ router.post('/schemata', schematasCtl.add)
 router.post('/schemataField', schematasCtl.addField)
 router.put('/schemataField', schematasCtl.modifyField)
 router.delete('/schemataField', schematasCtl.delField)
-
 router.get('/catalogs', catalogCtl.find)
 router.get('/catalog/:id', catalogCtl.findById)
 router.delete('/catalog', catalogCtl.deleteById)

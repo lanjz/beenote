@@ -1,7 +1,6 @@
 const hello  = require('../utils/hello')
-const BaseCtl  = require('./BaseCtl')
+const BaseCtl  = require('./BaseCtl.js')
 const UserModel  = require('../model/User')
-
 
 class UserCtl extends BaseCtl {
   constructor(){
