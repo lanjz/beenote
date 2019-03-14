@@ -27,7 +27,7 @@ const mutations = {
 }
 
 const actions = {
-  async [ACTIONS.BOOK_LIST_GET]({ state, commit }, { bookId, catalogId, force }){
+  async [ACTIONS.ARTICLE_LIST_GET]({ state, commit }, { bookId, catalogId, force }){
     const key = `${bookId}_${catalogId}`
     if(!force && state.catalogMapArticles[key]) {
       return { err: null, data: { list: Object.values(state.list)} }

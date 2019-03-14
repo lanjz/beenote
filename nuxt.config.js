@@ -43,6 +43,7 @@ module.exports = {
   plugins: [
     '~/plugins/loading',
     '~/plugins/messageBox',
+    '~/plugins/toast',
     '~/plugins/filters',
     '~/plugins/directive'
   ],
