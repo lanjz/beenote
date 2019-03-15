@@ -23,8 +23,15 @@
 </template>
 
 <script>
-  const MarkdownItVue = () => import('./test.vue')
+/*
+  // let MarkdownItVue = () => import('./test.vue')
+  let MarkdownItVue = require('./test.vue')
   // import MarkdownItVue from 'markdown-it-vue'
+  if (process.browser) {
+    // MarkdownItVue = () => import('markdown-it-vue')
+    MarkdownItVue = require('markdown-it-vue')
+  }
+*/
 
   export default {
     model: {
@@ -43,9 +50,9 @@
         isPreview: true
       }
     },
-    components: {
+/*    components: {
       MarkdownItVue
-    },
+    },*/
     watch: {
       markDownValue: function (val) {
         this.$emit('update', val)

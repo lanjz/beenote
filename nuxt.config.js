@@ -49,7 +49,8 @@ module.exports = {
     '~/plugins/messageBox',
     '~/plugins/toast',
     '~/plugins/filters',
-    '~/plugins/directive'
+    '~/plugins/directive',
+    {src: '~/plugins/markdownIt' , ssr: false}
   ],
 
   /*
@@ -70,6 +71,7 @@ module.exports = {
     },
     extend(config, ctx) {
     },
+    
   },
   env: {
     MOCK: process.env.MOCK

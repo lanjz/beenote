@@ -23,6 +23,7 @@
     "koa-router": "^7.4.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
+    "markdown-it-vue": "^1.0.6",
     "mongoose": "^5.4.19",
     "nuxt": "^2.4.0",
     "sass-resources-loader": "^2.0.0"
