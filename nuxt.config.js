@@ -18,7 +18,8 @@ module.exports = {
       { hid: 'description', name: 'description', content: pkg.description }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', href: '//at.alicdn.com/t/font_992689_gyvzflq1sbv.css' },
     ],
     script: [
       {

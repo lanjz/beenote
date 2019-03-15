@@ -21,7 +21,6 @@
   }
 </script>
 <style lang="less">
-  @import '//at.alicdn.com/t/font_992689_gyvzflq1sbv.css';
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;
