@@ -1,5 +1,5 @@
 import axios from 'axios'
-import helloAlert from '../../components/messageBox/index'
+import helloAlert from '../../components/messageBox/messageBox'
 import { HOST_CONFIG as hostConfig } from './fetchConifg'
 import LoadingLine from './loadingLine'
 const loadingLine = new LoadingLine()
@@ -67,7 +67,7 @@ const doFetchData = function (options) {
           res.err = result.err
           if(!result.notAlert) {
             helloAlert({
-              content: res.err.message,
+              title: res.err.message,
               showCancel: false
             })
           }
