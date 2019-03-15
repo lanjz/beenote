@@ -11,6 +11,9 @@ function dealRetCode(response = {}) {
   if(response.retCode === 4){
     res.notAlert = true
     res.err = new Error('未登录')
+    if(process.client) {
+      window.location.href = '/login'
+    }
     return res
   }
   if(response.retCode !== 1) {
