@@ -19,4 +19,8 @@ $ yarn start
 $ yarn run generate
 ```
 
+服务器启动项目
+
+先 `yarn build` 后` pm2 start npm -- run start`
+
 For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
