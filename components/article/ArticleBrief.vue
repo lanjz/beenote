@@ -109,7 +109,7 @@
 <style lang="less" scoped="">
   .article-item {
     padding: 10px 20px;
-    width: 200px;
+    width: 100%;
     cursor: pointer;
 
     position: relative;

@@ -24,7 +24,7 @@
 
 <script>
   const MarkdownItVue = () => import('./test.vue')
-  // import MarkdownItVue from 'markdown-it-vue'
+  import { markdown } from 'markdown';
 
   export default {
     model: {
@@ -48,6 +48,7 @@
     },
     watch: {
       markDownValue: function (val) {
+        console.log('markdown', markdown.toHTML(val))
         this.$emit('update', val)
       }
     },

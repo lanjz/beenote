@@ -42,7 +42,7 @@ module.exports = {
       'process.env.NODE_ENV': process.env.DEV ? JSON.stringify('development') : JSON.stringify('production'),
       'process.env.MOCK': process.env.MOCK,
     }),
-    // setBundleAnalyzerPlugin
+    setBundleAnalyzerPlugin
   ],
   optimization: { // 指定公共 bundle 的名称。
     runtimeChunk: {

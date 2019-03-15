@@ -16,7 +16,7 @@
         <textarea class="markdown-edit-box box-shadow-inset" v-model="markDownValue"></textarea>
       </div>
       <div class="flex-1 md-body-layout edit-layout relative" v-if="isPreview">
-        <markdown-it-vue class="md-body" :content="markDownValue"/>
+        <div v-html="markdownHTML"></div>
       </div>
     </div>
   </div>
@@ -32,7 +32,7 @@
     MarkdownItVue = require('markdown-it-vue')
   }
 */
-
+import { markdown } from 'markdown';
   export default {
     model: {
       prop: 'data',
@@ -47,14 +47,17 @@
         markDownValue: '',
         editMode: 1, // 编辑模式
         isEdit: true,
-        isPreview: true
+        isPreview: true,
+        markdownHTML: ''
       }
     },
 /*    components: {
       MarkdownItVue
     },*/
+
     watch: {
       markDownValue: function (val) {
+        this.markdownHTML = markdown.toHTML(val)
         this.$emit('update', val)
       }
     },

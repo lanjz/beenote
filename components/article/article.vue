@@ -2,7 +2,7 @@
   <div class="article-layout flex direction-column flex-1"  :class="editMeta._id">
     <div class="article-title flex ">
       <div class="flex-1 schema-title-layout relative">
-        <input class="full-input" v-model.trim="articleName" @blur="todoEdit" />
+        <input class="full-input" v-model.trim="articleName" @blur="todoEdit(false)" />
       </div>
       <div class="schema-operate">
         <span class="schema-operate-btn"
@@ -23,8 +23,10 @@
         v-show="(showList&&showEditContent)||!showList"
         @click="isEditContents = true"
         v-click-outside="toDoSaveArticleContent"
-        class="article-content relative flex-1 flex">
-        <div class="noSave" v-show="dataHasChange"></div>
+        class="article-content relative flex-1 flex"
+        :class="{'noSave': dataHasChange}"
+      >
+        <!--<div class="noSave" v-show="dataHasChange"></div>-->
         <div class="flex-1 relative">
           <div class="scroll-box" >
             <div class="form-layout theme-1" v-if="fields&&fields.length">
@@ -469,15 +471,8 @@
       height: 100%;
     }
   }
-  .noSave{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    z-index: 1;
-    box-shadow: 0 0 4px 1px  @warn-color inset;
-
+  .article-content.noSave{
+    border: solid 1px @warn-color
   }
   .schema-operate-btn{
     height: 30px;

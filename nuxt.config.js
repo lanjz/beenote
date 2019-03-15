@@ -50,7 +50,6 @@ module.exports = {
     '~/plugins/toast',
     '~/plugins/filters',
     '~/plugins/directive',
-    {src: '~/plugins/markdownIt' , ssr: false}
   ],
 
   /*
