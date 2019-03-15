@@ -162,7 +162,7 @@
         })
         this.$hideLoading()
         if(!result.err){
-          this.$router.push('/article')
+          this.$router.push('/')
         }
       },
       doReset() {

@@ -1,15 +1,14 @@
 import axios from 'axios'
-// import Vue from '../../main'
 import helloAlert from '../../components/messageBox/index'
 import { HOST_CONFIG as hostConfig } from './fetchConifg'
 import LoadingLine from './loadingLine'
 const loadingLine = new LoadingLine()
 
+
 const { MOCK } = process.env
 function dealRetCode(response = {}) {
   const res = { err: null, data: response.data }
   if(response.retCode === 4){
-    // Vue.$router.push('/login')
     res.notAlert = true
     res.err = new Error('未登录')
     return res

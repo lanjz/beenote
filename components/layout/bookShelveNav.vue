@@ -63,7 +63,7 @@
         MUTATIONS.BOOK_CUR_UPDATE
       ]),
       goArticle() {
-        this.$router.push('/article')
+        this.$router.push('/')
       },
       goBook() {
         this.$router.push('/BookList')

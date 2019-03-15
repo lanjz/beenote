@@ -46,7 +46,7 @@ class UserCtl extends BaseCtl {
         ctx.send(3, '', '登录失败：账号或密码错误')
       } else {
         this.setUserCookie(ctx, result)
-        ctx.send(1, '', '登录成功')
+        ctx.send(1, result, '登录成功')
       }
     } catch (e) {
       ctx.send(2, '', hello.dealError(e))
