@@ -65,11 +65,15 @@ typings/
 # next.js build output
 .next
 
-# nuxt.js build output
-.nuxt
+# nuxt.js build output  直接打包后上传，所以这个先翻番掉
+# .nuxt
 
 # Nuxt generate
-dist
+# dist
+# /dist这个文件夹是执行nuxt generate后生成的，用来做静态应用部署的，
+# 这部分就跟通常情况下的.nuxt一样是不应该加入到版本控制里的，但由于nuxt build之后，
+# 在.nuxt里也会生成一个dist文件夹，我们希望gitignore的只有/dist而不是/.nuxt/dist，因此猜需要做出这里的修改
+/dist
 
 # vuepress build output
 .vuepress/dist
