@@ -59,7 +59,7 @@
       ])
     },
     methods: {
-      ...mapMutations([
+      ...mapMutations('books',[
         MUTATIONS.BOOK_CUR_UPDATE
       ]),
       goArticle() {

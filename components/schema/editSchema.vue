@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="flex">
     <div class="flex flex-1 direction-column">
       <div class="flex-1 form-bg bg-fff">
@@ -258,11 +258,11 @@
         this.$toast({
           title: toastMsg
         })
-        this.field = { ...initSchema }
         this.todoCloseEdit(true)
       },
       todoCloseEdit(force = false) {
         this.$emit('emitCloseEdit', force)
+        this.options = []
       },
       todoOptionRename(e, index){
         this.field.options[index].name = e.target.innerText
@@ -272,6 +272,11 @@
       if(this.curField._id) {
         this.field = { ...this.field, ...this.curField }
         this.originData = JSON.stringify(this.field)
+      } else {
+        this.field = { ...initSchema }
+        this.field.options =  []
+        this.field.arrDefault =  []
+        console.log( this.field)
       }
     }
 

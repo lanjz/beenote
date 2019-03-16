@@ -41,7 +41,7 @@
                   <input class="form-input" v-model="contents[field._id]" :placeholder="'填写'+field.name"/>
                 </div>
                 <div class="flex flex-1 align-items-center form-content-layout" v-if="field.type==='textarea'">
-                  <textarea type="text" class="form-input"/>
+                  <textarea type="text" v-model="contents[field._id]" class="form-input"/>
                 </div>
                 <div class="flex flex-1 align-items-center form-content-layout" v-if="field.type==='radio'">
                   <div
