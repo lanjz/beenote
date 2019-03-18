@@ -169,11 +169,11 @@
         }
         const { MOCK } = process.env
         const getSchema = (editId !== 'new' && MOCK) ? Object.values(this.schemaList)[0] : this.schemaList[schemaId]
-        if(!getSchema) {
+/*        if(!getSchema) {
           this.$alert({
             title: `schemaId:${schemaId}缺少fields`
           })
-        }
+        }*/
         console.info('setEditMeta', schemaId)
         const { fields } = getSchema
         const { tempObj, editTitle, list } = await this.initContent(editId, fields, contentId)

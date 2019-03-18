@@ -482,5 +482,6 @@
     display: inline-block;
     border-radius: 2px;
     font-size: 14px;
+    cursor: pointer;
   }
 </style>
