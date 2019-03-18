@@ -83,16 +83,14 @@
           </div>
         </div>
       </div>
-      <div class="flex-1 relative" v-if="showList">
-        <div class="scroll-box">
-          <article-content-list
-            :fields=fields
-            :contentList=contentList
-            @focusContent=todoEditContent
-            @emitDeleteItem="doDeleteContent"
-            :curContentId="contents._id"
-          ></article-content-list>
-        </div>
+      <div class="flex flex-1 relative" v-if="showList">
+        <article-content-list
+          :fields=fields
+          :contentList=contentList
+          @focusContent=todoEditContent
+          @emitDeleteItem="doDeleteContent"
+          :curContentId="contents._id"
+        ></article-content-list>
       </div>
     </div>
 
@@ -171,7 +169,7 @@
         this.editId = editId
         this.schemaId = _id
         this.catalogId = catalogId
-        this.fields = []
+        // this.fields = []
         setTimeout(() =>{
           this.getContentList()
           this.cacheName = this.articleName = editId === 'new' ? '未命名' : title

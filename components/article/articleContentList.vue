@@ -1,58 +1,63 @@
 <template>
- <div class="content-list absolute-full">
-   <div class="content-list-item"
-        v-for="(contents, index) in contentList" v-if="contentList && contentList.length"
-        :key="index"
-        @click="focusContent(contents)"
-        :class="{'act': curContentId === contents._id}"
-   >
-     <div class="operate-icon" @click.stop="todoDelete(contents)">
-       <i class="iconfont icon-shanchu1"></i>
-     </div>
-     <div class="form-layout theme-1" v-if="fields&&fields.length">
-       <div class="form-group flex" v-for="(field, index) in fields" :index="index" :class="'content-list-'+index">
-         <div class="form-label-layout">
-           {{field.name}}：
-         </div>
-         <div class="flex flex-1 align-items-center form-content-layout markdown-layout" v-if="field.type==='markdown'">
-           {{contents[field._id]|| '无'}}
-         </div>
-         <div class="flex flex-1 align-items-center form-content-layout" v-if="field.type==='input'">
-           {{contents[field._id]|| '无'}}
-         </div>
-         <div class="flex flex-1 align-items-center form-content-layout" v-if="field.type==='textarea'">
-           {{contents[field._id]|| '无'}}
-         </div>
-         <div class="flex flex-1 align-items-center form-content-layout" v-if="field.type==='radio'">
-           <div
-             class="add-options-item"
-             :class="{'act':optionsItem.id === contents[field._id]}"
-             v-if="optionsItem.id === contents[field._id]"
-             v-for="(optionsItem, optionsIndex) in field.options"
-           >
-             {{optionsItem.name}}
-           </div>
-           <div v-if="!contents[field._id]">无</div>
-         </div>
-         <div class=" form-content-layout flex flex-1 align-items-center " v-if="field.type==='select'">
-           <div
-             v-for="(optionsItem, optionsIndex) in field.options"
-             :class="{
+ <div class="content-list  flex flex-1 direction-column">
+  <div class="flex-1 relative">
+    <div class="absolute-full scroll-auto">
+      <div class="content-list-item"
+           v-for="(contents, index) in contentList" v-if="contentList && contentList.length"
+           :key="index"
+           @click="focusContent(contents)"
+           :class="{'act': curContentId === contents._id}"
+      >
+        <div class="operate-icon" @click.stop="todoDelete(contents)">
+          <i class="iconfont icon-shanchu1"></i>
+        </div>
+        <div class="form-layout theme-1" v-if="fields&&fields.length">
+          <div class="form-group flex" v-for="(field, index) in fields" :index="index" :class="'content-list-'+index">
+            <div class="form-label-layout">
+              {{field.name}}：
+            </div>
+            <div class="flex flex-1 align-items-center form-content-layout markdown-layout" v-if="field.type==='markdown'">
+              {{contents[field._id]|| '无'}}
+            </div>
+            <div class="flex flex-1 align-items-center form-content-layout" v-if="field.type==='input'">
+              {{contents[field._id]|| '无'}}
+            </div>
+            <div class="flex flex-1 align-items-center form-content-layout" v-if="field.type==='textarea'"
+                 v-html="textareaFormat(contents[field._id])"
+            >
+            </div>
+            <div class="flex flex-1 align-items-center form-content-layout" v-if="field.type==='radio'">
+              <div
+                class="add-options-item"
+                :class="{'act':optionsItem.id === contents[field._id]}"
+                v-if="optionsItem.id === contents[field._id]"
+                v-for="(optionsItem, optionsIndex) in field.options"
+              >
+                {{optionsItem.name}}
+              </div>
+              <div v-if="!contents[field._id]">无</div>
+            </div>
+            <div class=" form-content-layout flex flex-1 align-items-center " v-if="field.type==='select'">
+              <div
+                v-for="(optionsItem, optionsIndex) in field.options"
+                :class="{
                 'act':Object.prototype.toString.call(contents[field._id]) === '[object Array]'&&
                 contents[field._id].indexOf(optionsItem.id) > -1
               }"
-             v-if="Object.prototype.toString.call(contents[field._id]) === '[object Array]'&&
+                v-if="Object.prototype.toString.call(contents[field._id]) === '[object Array]'&&
                 contents[field._id].indexOf(optionsItem.id) > -1"
-           >
-             <div class=" flex align-items-center">
-               <div>{{optionsItem.name}}</div>
-             </div>
-           </div>
-           <div v-if="!contents[field._id] || !contents[field._id].length">无</div>
-         </div>
-       </div>
-     </div>
-   </div>
+              >
+                <div class=" flex align-items-center">
+                  <div>{{optionsItem.name}}</div>
+                </div>
+              </div>
+              <div v-if="!contents[field._id] || !contents[field._id].length">无</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
    <div class="add-content-box"
         :class="{'act': curContentId === 'new'}"
         @click="todoAddContent">添加内容</div>
@@ -63,7 +68,14 @@
 <script>
   export default {
     props: ['fields', 'contentList', 'curContentId'],
+    filters: {
+
+    },
     methods: {
+      textareaFormat(val) {
+        if(!val) return ''
+        return val.replace(/\n|\r\n/g,"<br>")
+      },
       todoAddContent() {
         this.$emit('focusContent', )
       },
@@ -115,8 +127,9 @@
     .content-list-item.act:after{
       background: @highlight-color;
     }
-    padding-bottom: 60px;
-    overflow: auto;
+    .scroll-auto{
+      overflow: auto;
+    }
   }
   .add-content-box{
     height: 60px;
