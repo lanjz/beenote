@@ -64,12 +64,22 @@
         ACTIONS.ARTICLE_LIST_GET,
         ACTIONS.ARTICLE_DES_GET,
       ]),
+      ...mapActions('catalogs', [
+        ACTIONS.CATALOGS_GET,
+      ]),
       /**
        * 初始化的时候，获取book列表 字段 最近文章
        * 最近文章加载完后，显示预览列表和显示第一篇文章
        * */
       async getBookData() {
-        Promise.all([this[ACTIONS.BOOK_LIST_GET](), this[ACTIONS.SCHEMA_LIST_GET]()])
+        Promise.all([
+          this[ACTIONS.BOOK_LIST_GET](),
+          this[ACTIONS.SCHEMA_LIST_GET](),
+          this[ACTIONS.CATALOGS_GET]({
+            parentId: 'root',
+            bookId: this.curBook
+          })
+        ])
           .then(() => {
             this[ACTIONS.ARTICLE_RECENTLY_LIST_GET]()
               .then(() => {
