@@ -16,7 +16,7 @@
         <textarea class="markdown-edit-box box-shadow-inset" v-model="markDownValue"></textarea>
       </div>
       <div class="flex-1 md-body-layout edit-layout relative" v-if="isPreview">
-        <div v-html="markdownHTML"></div>
+        <div class="markdown-style" v-html="markdownHTML"></div>
       </div>
     </div>
   </div>
@@ -32,7 +32,22 @@
     MarkdownItVue = require('markdown-it-vue')
   }
 */
-import { markdown } from 'markdown';
+import marked from 'marked'
+import hljs from 'highlight.js'
+
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  sanitize: false,
+  smartLists: true,
+  smartypants: false,
+  highlight: function (code) {
+    return hljs.highlightAuto(code).value;
+  }
+});
   export default {
     model: {
       prop: 'data',
@@ -57,7 +72,7 @@ import { markdown } from 'markdown';
 
     watch: {
       markDownValue: function (val) {
-        this.markdownHTML = markdown.toHTML(val)
+        this.markdownHTML = marked(val)
         this.$emit('update', val)
       }
     },
@@ -152,7 +167,7 @@ import { markdown } from 'markdown';
     .md-body-layout{
       overflow: auto;
       padding: 20px;
-      background: #e7eaef;
+      background: #fff;
       box-shadow: 0 0 4px 1px #e7eaef inset;
     }
     .markdown-operate-layout{

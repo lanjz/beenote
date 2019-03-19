@@ -3,6 +3,8 @@ import NuxtLoading from './components/nuxt-loading.vue'
 
 import '..\\assets\\styles\\app.less'
 
+import '..\\utils\\hightlight\\hightlight.css'
+
 import _2d21d098 from '..\\layouts\\blog.vue'
 import _6f6c098b from '..\\layouts\\default.vue'
 
