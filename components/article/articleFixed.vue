@@ -2,11 +2,11 @@
   <div class="controller-layout-fixed">
     <div
       class="controller-layout-item"
-      @click.stop="doSetConfig('showDir')"
+      @click.stop="doSetConfig('showDir', !showDir)"
       :class="{'act' : showDir}"><i class="iconfont icon-neirong"></i></div>
     <div
       class="controller-layout-item"
-      @click.stop="doSetConfig('showBrief')"
+      @click.stop="doSetConfig('showBrief', !showBrief)"
       :class="{'act' : showBrief}"><i class="iconfont icon-shujia1"></i></div>
   </div>
 </template>
@@ -30,7 +30,17 @@
           tar,
           val: !this[tar]
         })
+      },
+    },
+    mounted() {
+      let getShowDir = true
+      let getShowBrief = true
+      if(process.client){
+        getShowDir = window.localStorage.getItem('showDir') * 1 === 0 ? false : true
+        getShowBrief = window.localStorage.getItem('showBrief') * 1 === 0 ? false : true
       }
+      this.doSetConfig('showDir', getShowDir)
+      this.doSetConfig('showBrief', getShowBrief)
     }
   }
 </script>

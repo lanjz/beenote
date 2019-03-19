@@ -135,7 +135,7 @@
       border-radius: 50%;
       font-size: 28px;
     }
-    .router-link-active .iconfont{
+    .nuxt-link-active .iconfont{
       color: @highlight-color;
     }
     .book-list-layout{

@@ -68,7 +68,6 @@
         return bookList[id] ? bookList[id].name : ''
       },
       getCatalogsName: function(id, schemaList) {
-        console.log('this', schemaList)
         return schemaList[id] ? schemaList[id].name : ''
       }
     },

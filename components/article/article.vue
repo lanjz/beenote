@@ -169,15 +169,30 @@
         this.editId = editId
         this.schemaId = _id
         this.catalogId = catalogId
-        // this.fields = []
+        if(this.articleName = editId === 'new') {
+          this.fields = []
+        }
         setTimeout(() =>{
           this.getContentList()
           this.cacheName = this.articleName = editId === 'new' ? '未命名' : title
           this.showList = list || false
           this.fields = [ ...fields ]
-          this.contents = content
+          this.contents = this.initContent(this.fields, content)
           this.cacheContents = JSON.parse(JSON.stringify(this.contents))
         })
+      },
+      /**
+       * 如果content字段无内容则尝试给默认值
+       * */
+      initContent(fields, tempObj) {
+        if(fields && fields.length) {
+          fields.forEach((item) => {
+            if(!tempObj[item._id]) {
+              tempObj[item._id] = item.default ? item.default : ''
+            }
+          })
+        }
+        return tempObj
       },
       todoEditContent(contentItem) {
         this.showEditContent = true
@@ -416,10 +431,9 @@
   }
   .article-title {
     border-bottom: solid 1px @border-color;
-    font-size: 18px;
     background: #fff;
-    height: 65px;
-    line-height: 65px;
+    height: 45px;
+    line-height: 45px;
     padding: 0 15px;
     .operate-list-operate{
       .iconfont{
@@ -447,7 +461,7 @@
   }
 
   .full-input {
-    font-size: 20px;
+    font-size: 17px;
     outline: none;
     color: @tree-light-bg-color;
   }
