@@ -49,6 +49,21 @@
               </div>
             </div>
           </div>
+          <div class="form-group flex" v-if="field.type === 'isDone'">
+            <div class="form-label-layout">
+              选项：
+            </div>
+            <div class="flex flex-1 form-content wrap direction-column">
+              <div class="flex align-items-center wrap">
+                <div class="add-options-item"
+                     v-for="(item, index) in field.options"
+                     @blur="e => todoOptionRename(e, index)"
+                     contenteditable="true">
+                  {{item.name}}
+                </div>
+              </div>
+            </div>
+          </div>
           <!--单选默认值-->
           <div class="form-group flex" v-if="field.type === 'input'">
             <div class="form-label-layout">
@@ -106,6 +121,21 @@
               </div>
             </div>
           </div>
+          <!--radios默认值-->
+          <div class="form-group flex" v-if="field.type === 'isDone'">
+            <div class="form-label-layout">
+              默认值：
+            </div>
+            <div class="flex flex-1 align-items-center">
+              <div
+                class="radio-style"
+                v-for="(item, index) in field.options"
+                :class="{'act':item.id === field.default}"
+              >
+                <input type="radio" class="form-radio" :value="item.id" :key="item.id" v-model="field.default">{{item.name}}
+              </div>
+            </div>
+          </div>
           <div class="form-group submit-layout">
             <div class="btn" :class="{'disable-btn': disableBtn}"  @click="todoSaveSchema">提交</div>
             <div class="btn second-btn" @click="todoCloseEdit(false)">返回</div>
@@ -150,6 +180,7 @@
           {alias: '多行文本', name: 'textarea', type: 'String'},
           {alias: 'markdown', name: 'markdown', type: 'markdown'},
           {alias: '单选', name: 'radio', type: 'String'},
+          {alias: '结果', name: 'isDone', type: 'String'},
           {alias: '多选', name: 'select', type: 'Array'},
           {alias: '日期', name: 'time', type: 'String'},
           {alias: '标签', name: 'label', type: 'Array'},
@@ -171,9 +202,24 @@
         ACTIONS.SCHEMA_FIELD_POST,
         ACTIONS.SCHEMA_FIELD_PUT
       ]),
-      doClearSchemaDefault() {
+      doClearSchemaDefault(e) {
         this.field.default = ''
         this.field.arrDefault = []
+        if(this.field.type === 'isDone') {
+          this.field.options = [
+            {
+              name: '未完成',
+              id: 'n'
+            },
+            {
+              name: '完成',
+              id: 'y'
+            }
+
+          ]
+          this.field.default = 'n'
+        }
+
       },
       doAddSchemaOption() {
         if(!this.newOptionValue) return
