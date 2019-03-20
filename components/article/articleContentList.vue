@@ -115,6 +115,7 @@
     background: #fff;
     /*box-shadow: 1px 0 1px 1px #adabab inset;*/
     font-size: 13px;
+    padding-bottom: 60px;
     position: relative;
     .content-list-item{
       padding: 10px;
