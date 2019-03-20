@@ -114,8 +114,6 @@ const actions = {
       }
     })
     if(!result.err) {
-      const { bookId, catalogId } = state.list[id]
-      dispatch(ACTIONS.ARTICLE_LIST_GET, { bookId, catalogId, force: true })
       dispatch(ACTIONS.ARTICLE_RECENTLY_LIST_GET)
     }
     return result

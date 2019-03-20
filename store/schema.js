@@ -23,7 +23,6 @@ const mutations = {
 
 const actions = {
   async [ACTIONS.SCHEMA_LIST_GET]({ state, commit }, arg = {}) {
-    console.log(11111111111)
     const { limit = 0, start = 0, force = false } = arg
     if(!force && Object.keys(state.list).length){
       return { err: null, data: {list: Object.values(state.list)}}
@@ -35,7 +34,6 @@ const actions = {
         start
       }
     })
-    console.log('result', result)
     const { err, data } = result
     if(!err) {
       commit(MUTATIONS.SCHEMA_LIST_SAVE, data.list, start)

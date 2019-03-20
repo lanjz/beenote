@@ -167,7 +167,6 @@
             title: `schemaId:${schemaId}缺少fields`
           })
         }
-        console.info('setEditMeta', schemaId)
         const { fields } = getSchema
         const { tempObj, editTitle, list } = await this.initContent(editId, fields, contentId)
         const temEditMeta = {

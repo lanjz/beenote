@@ -260,7 +260,6 @@
       async getArticleByCatalogId(catalogId) {
         if(catalogId === constKey.recentlyArticlesKey){
           this.setArticleBrief()
-          console.log('11')
           return
         }
         if(!this.curBook){

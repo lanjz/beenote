@@ -310,7 +310,6 @@
         this.field = { ...initSchema }
         this.field.options =  []
         this.field.arrDefault =  []
-        console.log( this.field)
       }
     }
 

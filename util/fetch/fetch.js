@@ -41,7 +41,6 @@ function fetchData(options) {
   options.method = options.method || 'get'
   options.onUploadProgress = onUploadProgress
   options.onDownloadProgress = onUploadProgress
-  console.log('options', options)
   if (options.method.toLowerCase() === 'get') {
     options.params = options.data
   }

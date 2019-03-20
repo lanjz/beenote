@@ -174,7 +174,6 @@
             title: `schemaId:${schemaId}缺少fields`
           })
         }*/
-        console.info('setEditMeta', schemaId)
         const { fields } = getSchema
         const { tempObj, editTitle, list } = await this.initContent(editId, fields, contentId)
         const temEditMeta = {
@@ -281,7 +280,6 @@
       async getArticleByCatalogId(catalogId) {
         if(catalogId === constKey.recentlyArticlesKey){
           this.setArticleBrief()
-          console.log('11')
           return
         }
         if(!this.curBook){
@@ -320,7 +318,6 @@
           this.editMeta.editId = ''
           return
         }
-        console.log('getList', getList)
         this.curArticleList = [ ...getList ]
       },
       async init() {
