@@ -53,6 +53,14 @@
               </div>
               <div v-if="!contents[field._id] || !contents[field._id].length">无</div>
             </div>
+            <div
+              v-if="findDone && findDone._id === field._id"
+              class="is-done-layout"
+              :class="{'is-done-y': findDone.isDone === contents[field._id]}"
+            >
+              <div v-if="findDone.isDone === contents[field._id]">Y</div>
+              <div v-else>N</div>
+            </div>
           </div>
         </div>
       </div>
@@ -70,6 +78,12 @@
     props: ['fields', 'contentList', 'curContentId'],
     filters: {
 
+    },
+    computed: {
+      findDone: function () {
+        const result = this.fields.find(item => item.isDone)
+        return result
+      }
     },
     methods: {
       textareaFormat(val) {
@@ -189,5 +203,26 @@
   }
   .content-list-0{
     font-size: 16px;
+  }
+  .is-done-layout{
+    position: absolute;
+    border-top: solid 20px transparent;
+    border-left: solid 20px transparent;
+    border-right: solid 20px red;
+    border-bottom: solid 20px red;
+    bottom: 0;
+    right: 0;
+    width: 0px;
+    height: 0px;
+    color: #fff;
+    font-size: 15px;
+
+  }
+  .is-done-y{
+    border-right: solid 20px @highlight-color;
+    border-bottom: solid 20px @highlight-color;
+  }
+  .form-group{
+    overflow: hidden;
   }
 </style>

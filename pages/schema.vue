@@ -50,6 +50,7 @@
               <th><div class="th-p">类型</div></th>
               <th><div class="th-p">默认值</div></th>
               <th><div class="th-p">选项</div></th>
+              <th><div class="th-p">完成标识</div></th>
               <th style="width: 150px"><div class="th-p"></div></th>
             </tr>
             </thead>
@@ -69,6 +70,7 @@
                 </div>
                 <div class="td-p" v-else>-</div>
               </td>
+              <td><div class="td-p">{{item.isDone || '-'}}</div></td>
               <td>
                 <div class="td-p">
                   <span class="table-btn" @click="doShowEdit(item)">编辑</span>
@@ -84,6 +86,7 @@
           <EditField
             :curField="curField"
             :curSchemataInfo="actSchemaObj"
+            :hasDone="hasDone"
             @emitCloseEdit="doHideEdit"
           ></EditField>
         </div>
@@ -122,6 +125,9 @@
       },
       actSchemaObj: function () {
         return this.schemaList[this.actSchema] || {}
+      },
+      hasDone: function () {
+        return this.actSchemaObj.fields.find(item => item.type === 'radio' && item.isDone)
       }
     },
     methods: {

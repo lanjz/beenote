@@ -37,6 +37,9 @@ class BookModel extends baseModel{
           default: {
             type: String
           },
+          isDone: {
+            type: String
+          },
           options: {
             type: Array
           }

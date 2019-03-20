@@ -49,22 +49,6 @@
               </div>
             </div>
           </div>
-          <div class="form-group flex" v-if="field.type === 'isDone'">
-            <div class="form-label-layout">
-              选项：
-            </div>
-            <div class="flex flex-1 form-content wrap direction-column">
-              <div class="flex align-items-center wrap">
-                <div class="add-options-item"
-                     v-for="(item, index) in field.options"
-                     @blur="e => todoOptionRename(e, index)"
-                     contenteditable="true">
-                  {{item.name}}
-                </div>
-              </div>
-            </div>
-          </div>
-          <!--单选默认值-->
           <div class="form-group flex" v-if="field.type === 'input'">
             <div class="form-label-layout">
               默认值：
@@ -106,6 +90,31 @@
               </div>
             </div>
           </div>
+          <!--radio isDone值-->
+          <div class="form-group flex"
+               v-if="(!hasDone&&field.type === 'radio'&&field.options.length) ||
+              (hasDone&&hasDone._id === field._id)"
+          >
+            <div class="form-label-layout">
+              完成标识：
+            </div>
+            <div class="flex flex-1 align-items-center">
+              <div
+                class="radio-style"
+                :class="{'act':!field.isDone}"
+                @click="field.isDone = ''"
+              >
+                无
+              </div>
+              <div
+                class="radio-style"
+                v-for="(item, index) in field.options"
+                :class="{'act':item.id === field.isDone}"
+              >
+                <input type="radio" class="form-radio" :value="item.id" :key="item.id" v-model="field.isDone">{{item.name}}
+              </div>
+            </div>
+          </div>
           <!--select默认值-->
           <div class="form-group flex" v-if="field.type === 'select'&&field.options.length">
             <div class="form-label-layout">
@@ -118,21 +127,6 @@
                 :class="{'act':field.arrDefault.indexOf(item.id) > -1}"
               >
                 <input type="checkbox" class="form-radio" :value="item.id" :key="item.id" v-model="field.arrDefault">{{item.name}}
-              </div>
-            </div>
-          </div>
-          <!--radios默认值-->
-          <div class="form-group flex" v-if="field.type === 'isDone'">
-            <div class="form-label-layout">
-              默认值：
-            </div>
-            <div class="flex flex-1 align-items-center">
-              <div
-                class="radio-style"
-                v-for="(item, index) in field.options"
-                :class="{'act':item.id === field.default}"
-              >
-                <input type="radio" class="form-radio" :value="item.id" :key="item.id" v-model="field.default">{{item.name}}
               </div>
             </div>
           </div>
@@ -155,6 +149,7 @@
     options: [],
     default: '',
     arrDefault: [],
+    isDone: ''
   }
   export default {
     props: {
@@ -169,6 +164,11 @@
         default: function () {
           return {}
         }
+      },
+      hasDone: {
+        default: function () {
+          return null
+        }
       }
     },
     data() {
@@ -180,10 +180,9 @@
           {alias: '多行文本', name: 'textarea', type: 'String'},
           {alias: 'markdown', name: 'markdown', type: 'markdown'},
           {alias: '单选', name: 'radio', type: 'String'},
-          {alias: '结果', name: 'isDone', type: 'String'},
           {alias: '多选', name: 'select', type: 'Array'},
-          {alias: '日期', name: 'time', type: 'String'},
-          {alias: '标签', name: 'label', type: 'Array'},
+          // {alias: '日期', name: 'time', type: 'String'},
+          // {alias: '标签', name: 'label', type: 'Array'},
         ],
         newOptionValue: '',
         originData: JSON.stringify(initSchema)
@@ -205,20 +204,6 @@
       doClearSchemaDefault(e) {
         this.field.default = ''
         this.field.arrDefault = []
-        if(this.field.type === 'isDone') {
-          this.field.options = [
-            {
-              name: '未完成',
-              id: 'n'
-            },
-            {
-              name: '完成',
-              id: 'y'
-            }
-
-          ]
-          this.field.default = 'n'
-        }
 
       },
       doAddSchemaOption() {
@@ -257,6 +242,9 @@
           case 'time':
           case 'radio':
             if(this.field.default && validType !== '[object String]') {
+              validErr = new TypeError('类型值不是String类型')
+            }
+            if(this.field.isDone && validType !== '[object String]') {
               validErr = new TypeError('类型值不是String类型')
             }
             break

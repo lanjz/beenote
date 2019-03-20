@@ -130,9 +130,22 @@ class SchematasCtl extends BaseCtl {
         return res
       }
     }
+    if(schema.isDone) {
+      const validType = validator.isStringType(schema.isDone)
+      if(validType.err) {
+        res.err = new TypeError(`isDone: ${validType.err.message}`)
+        return res
+      }
+      const isValidDefault = schema.options.find(item => (item.id === schema.isDone))
+      if(!isValidDefault) {
+        res.err = new RangeError('isDone的值不在options中')
+        return res
+      }
+    }
     res.data = {
       name: schema.name,
       default: schema.default,
+      isDone: schema.isDone,
       type: schema.type.trim(),
       options: schema.options
     }
@@ -318,6 +331,17 @@ class SchematasCtl extends BaseCtl {
         ctx.send(2, '',  `${getParams.name}已存在`)
         return
       }
+      if(field.type === 'radio' && field.isDone) {
+        const findIsDoneInSchema = await this.Model.findOne({
+          _id: schemataId,
+          'fields.isDone': { $exists: true },
+          ...this.dbQuery(ctx)
+        })
+        if(findIsDoneInSchema) {
+          ctx.send(2, '',  `已经存在isDone标识`)
+          return
+        }
+      }
       const result = await this.Model.update(
         {
           _id: schemataId,
@@ -331,6 +355,7 @@ class SchematasCtl extends BaseCtl {
       )
       if(!result.ok) {
         ctx.send(2, result, '添加失败')
+        return
       }
       ctx.send(1, result, '添加成功')
     } catch (e) {
@@ -391,6 +416,19 @@ class SchematasCtl extends BaseCtl {
         ctx.send(2, '',  `type不可修改`)
         return
       }
+      // 如果包含isDone则对isDone进行判断
+      if(field.type === 'radio' && field.isDone && !getFieldItem.isDone) {
+        // 如果当前修改包含了isDone则直接进行修改，如果没有则判断是否存在isDone,如果存在不能修改
+        const findIsDoneInSchema = await this.Model.findOne({
+          _id: schemataId,
+          'fields.isDone': { $exists: true },
+          ...this.dbQuery(ctx)
+        })
+        if(findIsDoneInSchema) {
+          ctx.send(2, '',  `已经存在isDone标识`)
+          return
+        }
+      }
       const validOptions = this.validArrInArr(getFieldItem.options, getParams.options, 'id')
       if(validOptions.err) {
         ctx.send(2, '',  validOptions.err.message)
@@ -405,6 +443,9 @@ class SchematasCtl extends BaseCtl {
       }
       if(field.hasOwnProperty('options')) {
         projection["fields.$.options"] = field['options']
+      }
+      if(field.hasOwnProperty('isDone')) {
+        projection["fields.$.isDone"] = field['isDone']
       }
       const result = await this.Model.update(
         {_id: schemataId,
