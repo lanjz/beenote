@@ -23,6 +23,7 @@
         v-show="(showList&&showEditContent)||!showList"
         @click="isEditContents = true"
         v-click-outside="toDoSaveArticleContent"
+        @keydown.ctrl.83.exact.prevent="toDoSaveArticleContent"
         class="article-content relative flex-1 flex"
         :class="{'noSave': dataHasChange}"
       >
@@ -176,9 +177,9 @@
           this.getContentList()
           this.cacheName = this.articleName = editId === 'new' ? '未命名' : title
           this.showList = list || false
-          this.fields = [ ...fields ]
           this.contents = this.initContent(this.fields, content)
           this.cacheContents = JSON.parse(JSON.stringify(this.contents))
+          this.fields = [ ...fields ]
         })
       },
       /**

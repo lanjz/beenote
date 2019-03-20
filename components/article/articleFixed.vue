@@ -39,8 +39,8 @@
         getShowDir = window.localStorage.getItem('showDir') * 1 === 0 ? false : true
         getShowBrief = window.localStorage.getItem('showBrief') * 1 === 0 ? false : true
       }
-      this.doSetConfig('showDir', getShowDir)
-      this.doSetConfig('showBrief', getShowBrief)
+      // this.doSetConfig('showDir', getShowDir)
+      // this.doSetConfig('showBrief', getShowBrief)
     }
   }
 </script>

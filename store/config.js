@@ -10,7 +10,7 @@ const mutations = {
   [MUTATIONS.CONFIG_TOGGLE_SAVE] (state, { tar, val} ) {
     state[tar] = val
     const temVar = val ? '1' : '0'
-    console.log('temVar', temVar, process.client)
+    // console.log('temVar', temVar, process.client)
     if(process.client) {
       window.localStorage.setItem(tar, temVar)
     }
