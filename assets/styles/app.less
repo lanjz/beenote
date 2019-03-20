@@ -457,21 +457,41 @@ textarea.form-input{
   background: #fff;
   font-family: "微软雅黑";
   code{
-    background: #f8f8f8;
     color: #525252;
-    border-radius: 4px;
     display: inline-block;
     padding: 2px 5px;
+    border: solid 1px #e7e4e4;
+    margin: 0 5px;
   }
   pre{
     padding: 10px;
     background: #2D2D2D;
     border-radius: 4px;
     code{
-      background: none;
       color: #fff;
-      border-radius: 2px;
       display: block;
+      padding: 0;
+      border: none;
+      margin: 0;
     }
+  }
+  blockquote{
+    padding: 10px 18px;
+    margin: 0;
+    position: relative;
+    background: #f5f4f4;
+    color: #636363;
+    p{
+      margin: 0;
+    }
+  }
+  blockquote:after{
+    content: '';
+    position: absolute;
+    width: 3px;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: @highlight-color;
   }
 }
