@@ -143,7 +143,7 @@
         const result = await this[ACTIONS.USER_POST](data)
         this.$hideLoading()
         if(!result.err){
-          this.$router.push('/article')
+          this.$router.push('/')
         }
       },
       async todoLogin(data) {

@@ -169,7 +169,7 @@
         this.editId = editId
         this.schemaId = _id
         this.catalogId = catalogId
-        if(this.articleName = editId === 'new') {
+        if(this.articleName = editId === 'new' || !list) {
           this.fields = []
         }
         setTimeout(() =>{
