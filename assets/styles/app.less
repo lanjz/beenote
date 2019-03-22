@@ -62,12 +62,51 @@ body{
   top: 0;
   left: 0;
 }
-
+.relative-full{
+  position: relative;
+  width: 100%;
+}
 .relative{
   position: relative;
 }
 
-
+.markdown-layout{
+  .markdown-edit-box{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: 20px;
+    background: @bg-color;
+    color: @tree-color;
+    border: none;
+    outline: none;
+    font-size: 14px;
+  }
+  .md-body-layout{
+    overflow: auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 4px 1px #e7eaef inset;
+  }
+  .markdown-operate-layout{
+    position: absolute;
+    z-index: 2;
+    right: 20px;
+    top: 10px;
+    color: #fff;
+    .icon-layout{
+      display: inline-block;
+      background: rgba(0,0,0,0.7);
+      padding: 3px 5px;
+      cursor: pointer;
+      border-radius: 3px;
+      text-align: center;
+    }
+    .icon-layout.act{
+      background: rgba(57,141,238,0.7);
+    }
+  }
+}
 
 .line-ellipsis{
   overflow: hidden;
@@ -460,7 +499,7 @@ textarea.form-input{
     display: inline-block;
     padding: 2px 5px;
     border: solid 1px #e7e4e4;
-    margin: 0 5px;
+    margin: 0 4px;
   }
   pre{
     padding: 10px;
@@ -493,4 +532,35 @@ textarea.form-input{
     height: 100%;
     background: @highlight-color;
   }
+  ul{
+    padding-left: 30px;
+  }
+
+  table{
+    width: 100%;
+  }
+  table td, table th {
+    text-align: left;
+    padding:10px; /*控制cellpadding-单元格间距*/
+  }
+  table th {
+    background: @bg-second-color;
+    font-weight: normal;
+    color: #fff;
+    word-break: keep-all;   /*th里的内容强制不换行，即最小宽度为字段宽度*/
+  }
+  table td {
+    white-space: normal;
+    word-break: break-all;
+    font-size: 14px;
+    padding: 10px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /*background-clip: padding-box;*/
+  }
+  table tr:nth-child(even){  background: #fafafa;  }
+  /*保持单行，超出显示省略号*/
+  table{table-layout: fixed}
+
 }

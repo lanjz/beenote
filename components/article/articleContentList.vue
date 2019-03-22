@@ -16,8 +16,8 @@
             <div class="form-label-layout">
               {{field.name}}：
             </div>
-            <div class="flex flex-1 align-items-center form-content-layout markdown-layout" v-if="field.type==='markdown'">
-              {{contents[field._id]|| '无'}}
+            <div class="flex flex-1  align-items-center form-content-layout markdown-layout" v-if="field.type==='markdown'">
+              <div class="markdown-style relative-full" v-html="markDownValue(contents[field._id])"></div>
             </div>
             <div class="flex flex-1 align-items-center form-content-layout" v-if="field.type==='input'">
               {{contents[field._id]|| '无'}}
@@ -74,6 +74,21 @@
 </template>
 
 <script>
+  import marked from 'marked'
+  import hljs from 'highlight.js'
+  marked.setOptions({
+    renderer: new marked.Renderer(),
+    gfm: true,
+    tables: true,
+    breaks: false,
+    pedantic: false,
+    sanitize: false,
+    smartLists: true,
+    smartypants: false,
+    highlight: function (code) {
+      return hljs.highlightAuto(code).value;
+    }
+  });
   export default {
     props: ['fields', 'contentList', 'curContentId'],
     filters: {
@@ -86,6 +101,9 @@
       }
     },
     methods: {
+      markDownValue: function (val) {
+        return marked(val)
+      },
       textareaFormat(val) {
         if(!val) return ''
         return val.replace(/\n|\r\n/g,"<br>")
