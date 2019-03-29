@@ -1,6 +1,6 @@
 <template>
   <div class="article-layout box-shadow flex direction-column" :class="{'hidden-article': !showBrief}">
-    <div class="flex-1 flex direction-column article-min-width">
+    <div class="flex-1 flex direction-column article-min-width relative">
       <div class="article-layout-input-box align-items-center">
         <input type="text" class="article-layout-input" v-model="filterKeys"/>
         <i class="iconfont icon-sousuo"></i>
@@ -23,6 +23,7 @@
           </div>
         </div>
       </div>
+      <div class="shortcut-add-layout" @click="shortcutAdd"></div>
     </div>
   </div>
 </template>
@@ -102,6 +103,17 @@
           catalogId: item.catalogId
         })
       },
+      shortcutAdd() {
+        /*this.chooseCatalog({
+          schemaId: item._id,
+          catalogId: this.curNode._id,
+          isNew: true
+        })
+        bus.$emit('emitFromCatalog', item || {
+          ...this.curNode,
+          catalogId: this.curNode._id
+        })*/
+      }
     }
   }
 </script>
@@ -217,5 +229,15 @@
   .article-item-box{
     overflow-y: auto;
     overflow-x: hidden;
+  }
+  .shortcut-add-layout{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    border:solid 1px red;
+    z-index: 5;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
   }
 </style>

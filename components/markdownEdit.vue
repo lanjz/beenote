@@ -72,7 +72,12 @@ marked.setOptions({
 
     watch: {
       markDownValue: function (val) {
-        this.markdownHTML = marked(val)
+        if(this.isPreview){
+          clearTimeout(this.timeOut)
+          this.timeOut = setTimeout(() => {
+            this.markdownHTML = marked(val)
+          }, 500)
+        }
         this.$emit('update', val)
       }
     },
