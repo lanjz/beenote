@@ -23,6 +23,7 @@ router.delete('/note', noteCtl.deleteById)
 router.delete('/notes', noteCtl.deleteByIds)
 router.put('/note', noteCtl.modify)
 router.post('/note', noteCtl.add)
+router.get('/recently_notes', noteCtl.findRecentNotes)
 
 router.get('/books', bookCtl.find)
 router.get('/book/:id', bookCtl.findById)

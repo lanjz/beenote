@@ -32,3 +32,10 @@ export const ARTICLE_CONTENT_DELETE = 'ARTICLE_CONTENT_DELETE'
 
 export const LOGIN_POST = 'LOGIN_POST'
 export const USER_POST = 'USER_POST'
+
+export const NOTES_GET =  'NOTES_GET'
+export const NOTES_RECENTLY_GET =  'NOTES_RECENTLY_GET'
+export const NOTE_DES_GET =  'NOTE_DES_GET'
+export const NOTE_POST =  'NOTE_POST'
+export const NOTE_DELETE =  'NOTE_DELETE'
+export const NOTE_PUT =  'NOTE_PUT'

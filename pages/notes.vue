@@ -5,16 +5,17 @@
     </div>
     <ArticleBrief
       @emitToChooseCurArticle="chooseCurArticle"
-      :list="curArticleList"
+      :list="curNoteList"
       :cusArticle="cusArticle"
       @emitInitArticle="doShowArticleFromCatalog"
     ></ArticleBrief>
     <div class="flex-1" v-show="!editMeta.editId"></div>
-   <!-- <articles
+    <articles
       :editMeta="editMeta"
       v-show="editMeta.editId"
       @emitUpdateArticle="doUpdateArticle"
-    ></articles>-->
+    ></articles>
+    <articleFixed></articleFixed>
   </div>
 </template>
 <script>
@@ -48,11 +49,20 @@
       ...mapState({
         schemaList: state => state.schema.list,
         articleList: state => state.articles.catalogMapArticles,
+        noteList: state => state.notes.list,
         curBook: state => state.books.curBook,
         articles: state => state.articles.list,
         showDir: state => state.config.showDir,
+        curCatalog: state => state.catalogs.curCatalog
       }),
       ...mapGetters('catalogs',['treeChainList']),
+      curNoteList: function () {
+        console.log('', this.curCatalog, this.noteList)
+        if(this.curCatalog && this.noteList){
+          return this.noteList[this.curCatalog] || []
+        }
+        return []
+      }
     },
     methods: {
       ...mapMutations('catalogs',[MUTATIONS.CATALOGS_CUR_SAVE,]),
@@ -63,24 +73,27 @@
         ACTIONS.ARTICLE_LIST_GET,
         ACTIONS.ARTICLE_DES_GET,
       ]),
+      ...mapActions('notes', [
+        ACTIONS.NOTES_RECENTLY_GET,
+        ACTIONS.NOTES_GET,
+      ]),
       ...mapActions('catalogs', [
         ACTIONS.CATALOGS_GET,
       ]),
       /**
-       * 初始化的时候，获取book列表 字段 最近文章
+       * 初始化的时候，获取note列表 最近文章
        * 最近文章加载完后，显示预览列表和显示第一篇文章
        * */
-      async getBookData() {
+      async getNoteData() {
         Promise.all([
           this[ACTIONS.BOOK_LIST_GET](),
-          this[ACTIONS.SCHEMA_LIST_GET](),
           this[ACTIONS.CATALOGS_GET]({
             parentId: 'root',
             bookId: this.curBook
           })
         ])
           .then(() => {
-            this[ACTIONS.ARTICLE_RECENTLY_LIST_GET]()
+            this[ACTIONS.NOTES_RECENTLY_GET]()
               .then(() => {
                 this.doShowArticleFromCatalog({
                   catalogId: constKey.recentlyArticlesKey
@@ -320,8 +333,7 @@
         this.curArticleList = [ ...getList ]
       },
       async init() {
-        this[MUTATIONS.CATALOGS_CUR_SAVE](constKey.recentlyArticlesKey)
-        this.getBookData()
+        this.getNoteData()
         /**
          * @params <Object> arg 包含schemaId字段id和当前articleId(如果是添加则为'new')
          * */
@@ -338,7 +350,7 @@
         })
         bus.$on('updateCurBooks', () => {
           this[MUTATIONS.CATALOGS_CUR_SAVE](constKey.recentlyArticlesKey)
-          this.getBookData()
+          this.getNoteData()
         })
       },
     },

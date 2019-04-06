@@ -1,3 +1,4 @@
 export default {
-  recentlyArticlesKey: 'recently'
+  recentlyArticlesKey: 'recently',
+  recentlyNoteKey: 'recently',
 }

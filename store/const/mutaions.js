@@ -18,6 +18,12 @@ export const ARTICLE_CUS_SAVE = 'ARTICLE_CUS_SAVE'
 
 export const USER_SAVE = 'USER_SAVE'
 
+// notes
+
+export const NOTE_LIST_SAVE = 'NOTE_LIST_SAVE'
+export const NOTE_LIST_UPDATE = 'NOTE_LIST_UPDATE'
+export const NOTE_CUR_UPDATE = 'NOTE_CUR_UPDATE'
+
 // config
 
 export const CONFIG_TOGGLE_SAVE = 'CONFIG_TOGGLE_SAVE'

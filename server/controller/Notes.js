@@ -7,6 +7,7 @@ const noteModel  = require('../model/Notes')
 class NoteCtl extends BaseCtl {
   constructor(){
     super()
+    this.findRecentNotes = this.findRecentNotes.bind(this)
   }
   getModel() {
     return noteModel
@@ -61,6 +62,55 @@ class NoteCtl extends BaseCtl {
   }
   todoPreModify(arg, ctx) {
     return this.todoPreAdd(arg, ctx)
+  }
+  async find(ctx, next) {
+    const { start = 0, limit = 0, catalogId, bookId } = ctx.request.query
+    if(!catalogId) {
+      ctx.send(2, '', '缺少catalogId')
+      return
+    }
+    if(!bookId) {
+      ctx.send(2, '', '缺少bookId')
+      return
+    }
+    const dbQuery = {
+      ...this.dbQuery(ctx),
+      catalogId,
+      bookId
+    }
+    // 如果没有提供start和limit则查找全部
+    const findFn = this.Model.listWithPaging({ start, limit, dbQuery })
+    try{
+      const result = await Promise.all([findFn, this.Model.listCount(dbQuery)])
+      ctx.send(1, {
+        list: result[0],
+        count: result[1]
+      }, '')
+    } catch (e) {
+      ctx.send(2, '', hello.dealError(e))
+    }finally {
+      await next()
+    }
+  }
+  async findRecentNotes(ctx, next) {
+    const { start = 0, limit = 20, bookId } = ctx.request.query
+    if (!bookId) {
+      ctx.send(2, '', '缺少bookId')
+      return
+    }
+    const dbQuery = {
+      ...this.dbQuery(ctx),
+      bookId
+    }
+    try{
+      // 如果没有提供start和limit则查找全部
+      const result = await this.Model.listWithPaging({ start, limit, dbQuery, sort: { updateTime: -1 } })
+      ctx.send(1, result, '')
+    } catch (e) {
+      ctx.send(2, '', hello.dealError(e))
+    }finally {
+      await next()
+    }
   }
 }
 
