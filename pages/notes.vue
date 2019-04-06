@@ -3,18 +3,19 @@
     <div class="catalog-layout box-shadow" :class="{'hidden-catalog': !showDir}">
       <TreeItem></TreeItem>
     </div>
-    <ArticleBrief
-      @emitToChooseCurArticle="chooseCurArticle"
+    <NoteBrief
+      @emitToChooseCurNote="chooseCurNote"
+      @emitToCreateNote="toCreateNote"
       :list="curNoteList"
       :cusArticle="cusArticle"
+      @emitUpdateNote="doUpdateNote"
       @emitInitArticle="doShowArticleFromCatalog"
-    ></ArticleBrief>
-    <div class="flex-1" v-show="!editMeta.editId"></div>
-    <articles
-      :editMeta="editMeta"
-      v-show="editMeta.editId"
-      @emitUpdateArticle="doUpdateArticle"
-    ></articles>
+    ></NoteBrief>
+    <note-des
+      :curNote="curEditNote"
+      :createToCatalogId="createToCatalogId"
+      @emitUpdateNote="doUpdateNote"
+    ></note-des>
     <articleFixed></articleFixed>
   </div>
 </template>
@@ -24,16 +25,16 @@
   import * as ACTIONS from '../store/const/actions'
   import bus from '../util/global/eventBus'
   import TreeItem from '../components/tree/index.vue'
-  import ArticleBrief from '../components/article/ArticleBrief.vue'
-  import articles from '../components/article/article.vue'
+  import NoteBrief from '../components/note/NoteBrief.vue'
+  import noteDes from '../components/note/noteDes.vue'
   import articleFixed from '../components/article/articleFixed.vue'
   import constKey from '../util/const'
 
   export default {
     components: {
       TreeItem,
-      ArticleBrief,
-      articles,
+      NoteBrief,
+      noteDes,
       articleFixed
     },
     data: function () {
@@ -42,7 +43,9 @@
           editId: ''
         },
         curArticleList: [],
-        cusArticle: ''
+        cusArticle: '',
+        createToCatalogId: ''
+//        curNote: {}
       }
     },
     computed: {
@@ -51,6 +54,7 @@
         articleList: state => state.articles.catalogMapArticles,
         noteList: state => state.notes.list,
         curBook: state => state.books.curBook,
+        curNote: state => state.notes.curNote,
         articles: state => state.articles.list,
         showDir: state => state.config.showDir,
         curCatalog: state => state.catalogs.curCatalog
@@ -58,14 +62,24 @@
       ...mapGetters('catalogs',['treeChainList']),
       curNoteList: function () {
         console.log('', this.curCatalog, this.noteList)
-        if(this.curCatalog && this.noteList){
-          return this.noteList[this.curCatalog] || []
+        if(this.curCatalog && this.noteList && this.curBook){
+          return this.noteList[this.curBook+'_'+this.curCatalog] || []
         }
         return []
+      },
+      curEditNote: function () {
+        const findNote = this.curNoteList.find(item => item._id === this.curNote)
+        if(!findNote) {
+          return {
+            _id: 'new'
+          }
+        }
+        return findNote
       }
     },
     methods: {
       ...mapMutations('catalogs',[MUTATIONS.CATALOGS_CUR_SAVE,]),
+      ...mapMutations('notes',[MUTATIONS.NOTE_CUR_UPDATE,]),
       ...mapActions('books',[ACTIONS.BOOK_LIST_GET]),
       ...mapActions('schema', [ACTIONS.SCHEMA_LIST_GET]),
       ...mapActions('articles', [
@@ -82,7 +96,6 @@
       ]),
       /**
        * 初始化的时候，获取note列表 最近文章
-       * 最近文章加载完后，显示预览列表和显示第一篇文章
        * */
       async getNoteData() {
         Promise.all([
@@ -94,11 +107,6 @@
         ])
           .then(() => {
             this[ACTIONS.NOTES_RECENTLY_GET]()
-              .then(() => {
-                this.doShowArticleFromCatalog({
-                  catalogId: constKey.recentlyArticlesKey
-                })
-              })
           })
           .catch(err => {
             console.log('err', err)
@@ -110,15 +118,17 @@
       },
       /**
        *  获取文章详情 设置编辑内容 editId设为articleId
-       *  @param <String> catalogId
-       *  @param <String> schemaId
-       *  @param <String> articleId
+       *  如果是创建笔记，则_id为new
+       *  @param <Object> arg
        *  */
-      async chooseCurArticle(arg) {
-        const { catalogId, schemaId, articleId, contentId = '' } = arg
-        this.cusArticle = articleId
-        // this.$router.push(`/article/${articleId}`)
-        this.setEditMeta(catalogId, schemaId, articleId, contentId)
+      async chooseCurNote(arg) {
+        this[MUTATIONS.NOTE_CUR_UPDATE](arg._id)
+      },
+      toCreateNote(arg) {
+        this.createToCatalogId = arg.catalogId
+        this.chooseCurNote({
+          _id: 'new'
+        })
       },
       /**
        * 创建新文章时， editId设为new
@@ -129,22 +139,24 @@
         this.setEditMeta(catalogId, schemaId, 'new')
       },
       /**
-       * @param <String> catalogId
-       * @param <String> articleId
-       * @param <String> contentId 如果有则指定用哪个article的content内容作为编辑内容
+       * @param <String> id 如果有则指定为当前id
        * */
-      async doUpdateArticle(arg) {
-        const { catalogId, articleId, contentId = '', schemaId, getData = '' } = arg
-        if(getData === 'getArticleByCatalogId') {
-          await this.getArticleByCatalogId(catalogId)
+      async doUpdateNote(arg = {}) {
+        const { id } = arg
+        console.log(1111, this.curCatalog)
+        if(this.curCatalog === constKey.recentlyArticlesKey) {
+          await this[ACTIONS.NOTES_RECENTLY_GET]({force: true})
+        } else {
+          await this[ACTIONS.NOTES_GET]({
+            force: true
+          })
         }
-        await this.getData(articleId, true)
-        this.chooseCurArticle({
-          catalogId,
-          schemaId,
-          articleId: articleId,
-          contentId
-        })
+
+        if(id) {
+          this.chooseCurNote({
+            _id: id
+          })
+        }
       },
       /**
        * 根据catalogs和articleId获取文章
@@ -338,14 +350,16 @@
          * @params <Object> arg 包含schemaId字段id和当前articleId(如果是添加则为'new')
          * */
         bus.$on('emitToCreateArticle', (arg) => {
-          this.doCreateArticle(arg)
+          this.toCreateNote(arg)
         })
         bus.$on('emitFromCatalog', (arg) => {
           const { isNew } = arg
           if(isNew) {
-            this.doCreateArticle(arg)
+            this.toCreateNote({
+              catalogId: arg.catalogId
+            })
           } else {
-            this.doShowArticleFromCatalog(arg)
+            this.doUpdateNote(arg)
           }
         })
         bus.$on('updateCurBooks', () => {

@@ -8,7 +8,7 @@ class baseModel {
     this.filterFields = [...this.banUpdateFields(), 'createTime', 'updateTime']
     this.schema = new mongoose.Schema(this.getSchema())
     this.schema.pre('save', function (next){
-      if(!this.createTime) this.createTime = (new Date()).getTime()
+      if(!this.createTime) this.createTime = this.updateTime = (new Date()).getTime()
       next()
     })
     const _this = this

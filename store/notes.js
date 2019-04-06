@@ -7,6 +7,7 @@ const state = () => (
   {
     list: {},
     curNote: "",
+    notesMap: {}
   }
 )
 const getters = {
@@ -18,6 +19,9 @@ const mutations = {
   [MUTATIONS.NOTE_LIST_SAVE](state, { data, start, key }) {
     state.list[key] = data
     state.list = JSON.parse(JSON.stringify(state.list))
+    data.forEach(item => {
+      state.notesMap[item._id] = item
+    })
   },
   [MUTATIONS.NOTE_CUR_UPDATE](state, data) {
     state.curNote = data
@@ -28,8 +32,10 @@ const actions = {
   /**
    * @params <Object> force 是否强制重新获取数据
    * */
-  async [ACTIONS.NOTES_GET]({ state, commit }, arg = {}) {
-    const { limit = 0, start = 0, force = false, bookId, catalogId } = arg
+  async [ACTIONS.NOTES_GET]({ state, commit, rootState }, arg = {}) {
+    const { limit = 0, start = 0, force = false } = arg
+    const bookId = rootState.books.curBook
+    const catalogId = rootState.catalogs.curCatalog
     const key = `${bookId}_${catalogId}`
     if(!force && state.list[key]){
       return { err: null, data: { list: state.list[key] } }
@@ -38,7 +44,9 @@ const actions = {
       url: '/api/notes',
       data: {
         limit,
-        start
+        start,
+        bookId,
+        catalogId
       }
     })
     const { err, data } = result
@@ -48,11 +56,14 @@ const actions = {
     return result
   },
   /* eslint-disable no-unused-vars */
-  async [ACTIONS.NOTE_POST]({ commit }, data) {
+  async [ACTIONS.NOTE_POST]({ commit, rootState }, data) {
     const result = await fetch({
       url: '/api/note',
       method: 'post',
-      data
+      data: {
+        ...data,
+        bookId: rootState.books.curBook
+      }
     })
     return result
   },
@@ -82,7 +93,7 @@ const actions = {
     })
     const { err, data } = result
     if(!err) {
-      const key = constKey.recentlyNoteKey
+      const key = rootState.books.curBook+'_'+constKey.recentlyNoteKey
       commit(MUTATIONS.NOTE_LIST_SAVE, { data, key })
     }
     return result

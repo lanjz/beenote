@@ -71,6 +71,9 @@ marked.setOptions({
     },*/
 
     watch: {
+      data: function (val) {
+        this.markDownValue = this.data || ''
+      },
       markDownValue: function (val) {
         if(this.isPreview){
           clearTimeout(this.timeOut)
@@ -96,6 +99,7 @@ marked.setOptions({
       }
     },
     mounted() {
+      console.log('this.data', this.data)
       this.markDownValue = this.data || ''
     }
   }

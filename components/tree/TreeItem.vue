@@ -44,11 +44,8 @@
         <i class="iconfont icon-tianjiajiahaowubiankuang"></i>
       </div>
       <div class="catalog-operate-layout" v-click-outside="closeMenu" :style="operateMenuStyle" v-if="operateMenuStyle.left !== -1">
-        <div class="catalog-operate-item hadChild">
-          新建文件
-          <div class="operate-item-child">
-            <div class="catalog-operate-item" :class="{'builtIn': item.builtIn}" v-for="(item, index) in schemaList" @click.stop="todoCreateFile(item)">{{item.name}}</div>
-          </div>
+        <div class="catalog-operate-item" @click.stop="todoCreateFile()">
+          新建笔记
         </div>
         <div class="catalog-operate-item" @click.stop="doCreateTemDir">新建文件夹</div>
         <div class="catalog-operate-item" @click.stop="todoRename" v-if="curNode._id !== 'root'">重命名</div>
@@ -175,9 +172,8 @@
         this.closeMenu()
         this.renameCatalog = true
       },
-      todoCreateFile(item) {
+      todoCreateFile() {
         this.chooseCatalog({
-          schemaId: item._id,
           catalogId: this.curNode._id,
           isNew: true
         })
