@@ -113,7 +113,7 @@
         if(this.curNote === item._id) {
           this[MUTATIONS.NOTE_CUR_UPDATE]('')
         }
-        this.$emit('emitUpdateNote')
+        this.$emit('emitUpdateNote', {force: true})
       },
       shortcutAdd() {
         const catalogId = this.notesMap[this.curNote].catalogId

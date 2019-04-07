@@ -117,12 +117,12 @@
        * @param <String> id 如果有则指定为当前id
        * */
       async doUpdateNote(arg = {}) {
-        const { id } = arg
+        const { id, force } = arg
         if(this.curCatalog === constKey.recentlyArticlesKey) {
-          await this[ACTIONS.NOTES_RECENTLY_GET]({force: true})
+          await this[ACTIONS.NOTES_RECENTLY_GET]({ force })
         } else {
           await this[ACTIONS.NOTES_GET]({
-            force: true
+            force
           })
         }
 

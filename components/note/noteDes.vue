@@ -238,7 +238,10 @@
             title: '添加成功'
           })
           const id = result.data.id
-          this.$emit('emitUpdateNote', {id})
+          this.$emit('emitUpdateNote', {
+            id,
+            force: true
+          })
         }
         this.$hideLoading()
       },
@@ -275,7 +278,10 @@
           })
         }
         this.cacheContent = this.content
-        this.$emit('emitUpdateNote')
+        this.$emit('emitUpdateNote',
+          {
+            force: true
+          })
       },
       async init() {
         const { id } = this.$route.params

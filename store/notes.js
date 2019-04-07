@@ -83,7 +83,12 @@ const actions = {
     })
     return result
   },
-  async [ACTIONS.NOTES_RECENTLY_GET]({ commit, rootState }) {
+  async [ACTIONS.NOTES_RECENTLY_GET]({ state, commit, rootState }, arg = {}) {
+    const { force = false } = arg
+    const key = rootState.books.curBook+'_'+constKey.recentlyNoteKey
+  /*  if(!force && state.list[key]){
+      return { err: null, data: { list: state.list[key] } }
+    }*/
     const result = await fetch({
       url: '/api/recently_notes',
       method: 'get',
@@ -93,7 +98,7 @@ const actions = {
     })
     const { err, data } = result
     if(!err) {
-      const key = rootState.books.curBook+'_'+constKey.recentlyNoteKey
+
       commit(MUTATIONS.NOTE_LIST_SAVE, { data, key })
     }
     return result
