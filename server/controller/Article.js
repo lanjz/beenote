@@ -5,7 +5,7 @@ const catalogCtl  = require('./Catalog')
 const schematasCtl  = require('./SchematasCtl')
 const validator  = require('../utils/validator')
 const hello  = require('../utils/hello')
-
+const noteCtl  = require('./Notes')
 
 class ArticleCtl extends BaseCtl {
   constructor() {
@@ -22,6 +22,7 @@ class ArticleCtl extends BaseCtl {
     this.contentCount = this.contentCount.bind(this)
     this.findSchema = this.findSchema.bind(this)
     this.findRecentContent = this.findRecentContent.bind(this)
+    this.copy = this.copy.bind(this)
     this.contentValidator = {
       input: this.stringConValid,
       date: this.dateConValid,
@@ -545,6 +546,46 @@ class ArticleCtl extends BaseCtl {
         $project: { _id: 0, count: { $size: '$contents' } }
       }
     ])
+  }
+  async copy(ctx) {
+    const findFn = await this.Model.listWithPaging({})
+    const copyD = []
+    findFn.forEach(async item =>{
+      let con = ''
+      if(item.contents){
+        item.contents.forEach(async inC => {
+          const content = Object.keys(inC)
+          var temValu = []
+          content.forEach(item2 => {
+
+            if(item2 !== '_id' && item2 !== 'createTime'&& item2 !== 'updateTime'){
+              console.log('item2', item2)
+              temValu.push(inC[item2])
+            }
+          })
+          con = temValu.join('----------------------------------------')
+          const copyData = {
+            content: con,
+            title: item.title,
+            userId: item.userId,
+            bookId: item.bookId,
+            catalogId: item.catalogId,
+            createTime: item.createTime,
+            updateTime: item.updateTime
+          }
+          const result = await noteCtl.Model.save(copyData)
+          copyD.push(copyData)
+        })
+
+      }
+
+      // await noteCtl.Model.save(copyData)
+      // console.log('copyData', copyData)
+    })
+    ctx.send(1, {
+      findFn,
+      copyD
+    }, '')
   }
 }
 

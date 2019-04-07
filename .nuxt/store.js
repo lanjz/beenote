@@ -17,6 +17,7 @@ void (function updateModules() {
   resolveStoreModules(require('@/store/books.js'), 'books.js')
   resolveStoreModules(require('@/store/catalogs.js'), 'catalogs.js')
   resolveStoreModules(require('@/store/config.js'), 'config.js')
+  resolveStoreModules(require('@/store/notes.js'), 'notes.js')
   resolveStoreModules(require('@/store/schema.js'), 'schema.js')
   resolveStoreModules(require('@/store/todos.js'), 'todos.js')
   resolveStoreModules(require('@/store/user.js'), 'user.js')
