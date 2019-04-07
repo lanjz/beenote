@@ -22,7 +22,9 @@
           </div>
         </div>
       </div>
-      <div class="shortcut-add-layout" @click="shortcutAdd"></div>
+      <div class="shortcut-add-layout" @click="shortcutAdd">
+        <i class="iconfont icon-tianjiawenjian"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -93,11 +95,11 @@
         })
           .then(async res => {
             if(res) {
-              this.doDeleteArticle(item)
+              this.doDeleteNote(item)
             }
           })
       },
-      async doDeleteArticle(item = {}) {
+      async doDeleteNote(item = {}) {
         this.$showLoading()
         const result = await this[ACTIONS.NOTE_DELETE]({
           _id: item._id
@@ -256,10 +258,17 @@
     position: absolute;
     bottom: 10px;
     right: 10px;
-    border:solid 1px red;
+    background: @highlight-color;
     z-index: 5;
-    width: 50px;
-    height: 50px;
+    width: 42px;
+    height: 42px;
+    border-radius: 42px;
     cursor: pointer;
+    text-align: center;
+    line-height: 44px;
+    .iconfont{
+      font-size: 30px;
+      color: #2D2D2D;
+    }
   }
 </style>

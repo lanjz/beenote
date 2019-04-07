@@ -274,7 +274,7 @@
             title: '修改成功'
           })
         }
-        this.dataHasChange = this.content
+        this.cacheContent = this.content
         this.$emit('emitUpdateNote')
       },
       async init() {

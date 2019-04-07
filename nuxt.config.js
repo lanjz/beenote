@@ -19,7 +19,7 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: '//at.alicdn.com/t/font_992689_gyvzflq1sbv.css' },
+      { rel: 'stylesheet', href: 'http://at.alicdn.com/t/font_992689_7euoexjry4p.css' },
     ],
     script: [
       {
@@ -70,7 +70,7 @@ module.exports = {
     },
     extend(config, ctx) {
     },
-    
+
   },
   env: {
     MOCK: process.env.MOCK

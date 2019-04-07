@@ -36,7 +36,7 @@ body{
 /*正常时候的主干部分*/
 
 *::-webkit-scrollbar-track {
-  //border-radius: 10px;
+  border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
   background-color: white;
 }
@@ -571,7 +571,10 @@ textarea.form-input{
     background: @highlight-color;
   }
   ul{
-    padding-left: 30px;
+    padding-left: 15px;
+    ul{
+      padding-left: 30px;
+    }
   }
 
   table{

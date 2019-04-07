@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { interopDefault } from './utils'
 
+const _bd67ebe0 = () => interopDefault(import('..\\pages\\articles.vue' /* webpackChunkName: "pages_articles" */))
 const _716d75fa = () => interopDefault(import('..\\pages\\bookList.vue' /* webpackChunkName: "pages_bookList" */))
 const _064c28b4 = () => interopDefault(import('..\\pages\\login.vue' /* webpackChunkName: "pages_login" */))
-const _62f24204 = () => interopDefault(import('..\\pages\\notes.vue' /* webpackChunkName: "pages_notes" */))
 const _231c6398 = () => interopDefault(import('..\\pages\\schema.vue' /* webpackChunkName: "pages_schema" */))
 const _3332488f = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages_index" */))
 
@@ -83,6 +83,10 @@ export function createRouter() {
     scrollBehavior,
 
     routes: [{
+      path: "/articles",
+      component: _bd67ebe0,
+      name: "articles"
+    }, {
       path: "/bookList",
       component: _716d75fa,
       name: "bookList"
@@ -90,10 +94,6 @@ export function createRouter() {
       path: "/login",
       component: _064c28b4,
       name: "login"
-    }, {
-      path: "/notes",
-      component: _62f24204,
-      name: "notes"
     }, {
       path: "/schema",
       component: _231c6398,

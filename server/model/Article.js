@@ -3,7 +3,7 @@ const baseModel = require('./BaseModel')
 class ArticleModel extends baseModel {
   constructor() {
     super()
-    this.assectPath = '_id bookId catalogId userId schemaId title list contents createTime updateTime'
+    this.assectPath = '_id bookId catalogId schemaId title list contents createTime updateTime'
   }
 
   getName() {

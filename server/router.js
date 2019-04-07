@@ -45,7 +45,7 @@ router.delete('/catalog', catalogCtl.deleteById)
 router.put('/catalog', catalogCtl.modify)
 router.post('/catalog', catalogCtl.add)
 
-router.get('/copy', articleCtl.copy)
+// router.get('/copy', articleCtl.copy)
 router.get('/articles', articleCtl.find)
 router.get('/article/:id', articleCtl.findById)
 router.delete('/article', articleCtl.deleteById)

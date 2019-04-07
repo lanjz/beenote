@@ -564,6 +564,7 @@ class ArticleCtl extends BaseCtl {
             }
           })
           con = temValu.join('----------------------------------------')
+          console.log('item', item)
           const copyData = {
             content: con,
             title: item.title,

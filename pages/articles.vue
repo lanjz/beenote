@@ -3,20 +3,18 @@
     <div class="catalog-layout box-shadow" :class="{'hidden-catalog': !showDir}">
       <TreeItem></TreeItem>
     </div>
-    <NoteBrief
-      @emitToChooseCurNote="chooseCurNote"
-      @emitToCreateNote="toCreateNote"
-      :list="curNoteList"
+    <ArticleBrief
+      @emitToChooseCurArticle="chooseCurArticle"
+      :list="curArticleList"
       :cusArticle="cusArticle"
-      @emitUpdateNote="doUpdateNote"
       @emitInitArticle="doShowArticleFromCatalog"
-    ></NoteBrief>
-    <note-des
-      :curNote="curEditNote"
-      :createToCatalogId="createToCatalogId"
-      @emitUpdateNote="doUpdateNote"
-    ></note-des>
-    <articleFixed></articleFixed>
+    ></ArticleBrief>
+    <div class="flex-1" v-show="!editMeta.editId"></div>
+   <!-- <articles
+      :editMeta="editMeta"
+      v-show="editMeta.editId"
+      @emitUpdateArticle="doUpdateArticle"
+    ></articles>-->
   </div>
 </template>
 <script>
@@ -25,16 +23,16 @@
   import * as ACTIONS from '../store/const/actions'
   import bus from '../util/global/eventBus'
   import TreeItem from '../components/tree/index.vue'
-  import NoteBrief from '../components/note/NoteBrief.vue'
-  import noteDes from '../components/note/noteDes.vue'
+  import ArticleBrief from '../components/article/ArticleBrief.vue'
+  import articles from '../components/article/article.vue'
   import articleFixed from '../components/article/articleFixed.vue'
   import constKey from '../util/const'
 
   export default {
     components: {
       TreeItem,
-      NoteBrief,
-      noteDes,
+      ArticleBrief,
+      articles,
       articleFixed
     },
     data: function () {
@@ -43,43 +41,21 @@
           editId: ''
         },
         curArticleList: [],
-        cusArticle: '',
-        createToCatalogId: ''
-//        curNote: {}
+        cusArticle: ''
       }
     },
     computed: {
       ...mapState({
         schemaList: state => state.schema.list,
         articleList: state => state.articles.catalogMapArticles,
-        noteList: state => state.notes.list,
         curBook: state => state.books.curBook,
-        curNote: state => state.notes.curNote,
         articles: state => state.articles.list,
         showDir: state => state.config.showDir,
-        curCatalog: state => state.catalogs.curCatalog
       }),
       ...mapGetters('catalogs',['treeChainList']),
-      curNoteList: function () {
-        console.log('', this.curCatalog, this.noteList)
-        if(this.curCatalog && this.noteList && this.curBook){
-          return this.noteList[this.curBook+'_'+this.curCatalog] || []
-        }
-        return []
-      },
-      curEditNote: function () {
-        const findNote = this.curNoteList.find(item => item._id === this.curNote)
-        if(!findNote) {
-          return {
-            _id: 'new'
-          }
-        }
-        return findNote
-      }
     },
     methods: {
       ...mapMutations('catalogs',[MUTATIONS.CATALOGS_CUR_SAVE,]),
-      ...mapMutations('notes',[MUTATIONS.NOTE_CUR_UPDATE,]),
       ...mapActions('books',[ACTIONS.BOOK_LIST_GET]),
       ...mapActions('schema', [ACTIONS.SCHEMA_LIST_GET]),
       ...mapActions('articles', [
@@ -87,26 +63,29 @@
         ACTIONS.ARTICLE_LIST_GET,
         ACTIONS.ARTICLE_DES_GET,
       ]),
-      ...mapActions('notes', [
-        ACTIONS.NOTES_RECENTLY_GET,
-        ACTIONS.NOTES_GET,
-      ]),
       ...mapActions('catalogs', [
         ACTIONS.CATALOGS_GET,
       ]),
       /**
-       * 初始化的时候，获取note列表 最近文章
+       * 初始化的时候，获取book列表 字段 最近文章
+       * 最近文章加载完后，显示预览列表和显示第一篇文章
        * */
-      async getNoteData() {
+      async getBookData() {
         Promise.all([
           this[ACTIONS.BOOK_LIST_GET](),
+          this[ACTIONS.SCHEMA_LIST_GET](),
           this[ACTIONS.CATALOGS_GET]({
             parentId: 'root',
             bookId: this.curBook
           })
         ])
           .then(() => {
-            this[ACTIONS.NOTES_RECENTLY_GET]()
+            this[ACTIONS.ARTICLE_RECENTLY_LIST_GET]()
+              .then(() => {
+                this.doShowArticleFromCatalog({
+                  catalogId: constKey.recentlyArticlesKey
+                })
+              })
           })
           .catch(err => {
             console.log('err', err)
@@ -118,17 +97,15 @@
       },
       /**
        *  获取文章详情 设置编辑内容 editId设为articleId
-       *  如果是创建笔记，则_id为new
-       *  @param <Object> arg
+       *  @param <String> catalogId
+       *  @param <String> schemaId
+       *  @param <String> articleId
        *  */
-      async chooseCurNote(arg) {
-        this[MUTATIONS.NOTE_CUR_UPDATE](arg._id)
-      },
-      toCreateNote(arg) {
-        this.createToCatalogId = arg.catalogId
-        this.chooseCurNote({
-          _id: 'new'
-        })
+      async chooseCurArticle(arg) {
+        const { catalogId, schemaId, articleId, contentId = '' } = arg
+        this.cusArticle = articleId
+        // this.$router.push(`/article/${articleId}`)
+        this.setEditMeta(catalogId, schemaId, articleId, contentId)
       },
       /**
        * 创建新文章时， editId设为new
@@ -139,24 +116,22 @@
         this.setEditMeta(catalogId, schemaId, 'new')
       },
       /**
-       * @param <String> id 如果有则指定为当前id
+       * @param <String> catalogId
+       * @param <String> articleId
+       * @param <String> contentId 如果有则指定用哪个article的content内容作为编辑内容
        * */
-      async doUpdateNote(arg = {}) {
-        const { id } = arg
-        console.log(1111, this.curCatalog)
-        if(this.curCatalog === constKey.recentlyArticlesKey) {
-          await this[ACTIONS.NOTES_RECENTLY_GET]({force: true})
-        } else {
-          await this[ACTIONS.NOTES_GET]({
-            force: true
-          })
+      async doUpdateArticle(arg) {
+        const { catalogId, articleId, contentId = '', schemaId, getData = '' } = arg
+        if(getData === 'getArticleByCatalogId') {
+          await this.getArticleByCatalogId(catalogId)
         }
-
-        if(id) {
-          this.chooseCurNote({
-            _id: id
-          })
-        }
+        await this.getData(articleId, true)
+        this.chooseCurArticle({
+          catalogId,
+          schemaId,
+          articleId: articleId,
+          contentId
+        })
       },
       /**
        * 根据catalogs和articleId获取文章
@@ -345,26 +320,25 @@
         this.curArticleList = [ ...getList ]
       },
       async init() {
-        this.getNoteData()
+        this[MUTATIONS.CATALOGS_CUR_SAVE](constKey.recentlyArticlesKey)
+        this.getBookData()
         /**
          * @params <Object> arg 包含schemaId字段id和当前articleId(如果是添加则为'new')
          * */
         bus.$on('emitToCreateArticle', (arg) => {
-          this.toCreateNote(arg)
+          this.doCreateArticle(arg)
         })
         bus.$on('emitFromCatalog', (arg) => {
           const { isNew } = arg
           if(isNew) {
-            this.toCreateNote({
-              catalogId: arg.catalogId
-            })
+            this.doCreateArticle(arg)
           } else {
-            this.doUpdateNote(arg)
+            this.doShowArticleFromCatalog(arg)
           }
         })
         bus.$on('updateCurBooks', () => {
           this[MUTATIONS.CATALOGS_CUR_SAVE](constKey.recentlyArticlesKey)
-          this.getNoteData()
+          this.getBookData()
         })
       },
     },
