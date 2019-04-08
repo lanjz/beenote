@@ -2,11 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { interopDefault } from './utils'
 
-const _bd67ebe0 = () => interopDefault(import('..\\pages\\articles.vue' /* webpackChunkName: "pages_articles" */))
-const _716d75fa = () => interopDefault(import('..\\pages\\bookList.vue' /* webpackChunkName: "pages_bookList" */))
-const _064c28b4 = () => interopDefault(import('..\\pages\\login.vue' /* webpackChunkName: "pages_login" */))
-const _231c6398 = () => interopDefault(import('..\\pages\\schema.vue' /* webpackChunkName: "pages_schema" */))
-const _3332488f = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages_index" */))
+const _0897e516 = () => interopDefault(import('..\\pages\\articles.vue' /* webpackChunkName: "pages_articles" */))
+const _68550d42 = () => interopDefault(import('..\\pages\\bookList.vue' /* webpackChunkName: "pages_bookList" */))
+const _29762a61 = () => interopDefault(import('..\\pages\\login.vue' /* webpackChunkName: "pages_login" */))
+const _555d66d9 = () => interopDefault(import('..\\pages\\schema.vue' /* webpackChunkName: "pages_schema" */))
+const _5fce874a = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages_index" */))
 
 Vue.use(Router)
 
@@ -77,30 +77,30 @@ const scrollBehavior = function (to, from, savedPosition) {
 export function createRouter() {
   return new Router({
     mode: 'history',
-    base: decodeURI('/'),
+    base: '/',
     linkActiveClass: 'nuxt-link-active',
     linkExactActiveClass: 'nuxt-link-exact-active',
     scrollBehavior,
 
     routes: [{
       path: "/articles",
-      component: _bd67ebe0,
+      component: _0897e516,
       name: "articles"
     }, {
       path: "/bookList",
-      component: _716d75fa,
+      component: _68550d42,
       name: "bookList"
     }, {
       path: "/login",
-      component: _064c28b4,
+      component: _29762a61,
       name: "login"
     }, {
       path: "/schema",
-      component: _231c6398,
+      component: _555d66d9,
       name: "schema"
     }, {
       path: "/",
-      component: _3332488f,
+      component: _5fce874a,
       name: "index"
     }],
 

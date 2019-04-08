@@ -21,10 +21,8 @@
       >
         <!--<div class="noSave" v-show="dataHasChange"></div>-->
         <div class="flex-1 relative">
-          <div class="scroll-box" >
-            <div class="form-layout theme-1">
-              <markdown-edit v-model="content"></markdown-edit>
-            </div>
+          <div class="form-layout theme-1">
+            <markdown-edit v-model="content"></markdown-edit>
           </div>
         </div>
       </div>
@@ -329,7 +327,7 @@
     }
     .markdown-layout{
       min-height: 500px;
-      position: relative;
+      /*position: relative;*/
       padding: 10px;
     }
   }

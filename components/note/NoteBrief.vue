@@ -22,7 +22,7 @@
           </div>
         </div>
       </div>
-      <div class="shortcut-add-layout" @click="shortcutAdd">
+      <div class="shortcut-add-layout" @click="shortcutAdd" v-if="notesMap[curNote]">
         <i class="iconfont icon-tianjiawenjian"></i>
       </div>
     </div>

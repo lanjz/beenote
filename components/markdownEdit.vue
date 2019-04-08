@@ -7,7 +7,7 @@
       </div>
       <div class="tags-item-2 default-btn" @click="editAndPre":class="{'act': editMode === 3}" >Edit | Pre</div>
     </div>-->
-    <div class="flex-1 flex relative" :class="{'hideSplit': editMode !== 3}">
+    <div class="flex-1 flex absolute-full" :class="{'hideSplit': editMode !== 3}">
       <div class="markdown-operate-layout">
         <div class="icon-layout" @click="toggleEdit" :class="{'act': isEdit}" ><i class="iconfont icon-bianji2" ></i></div>
         <div class="icon-layout" @click="togglePreview" :class="{'act': isPreview}" ><i class="iconfont icon-yulan" ></i></div>

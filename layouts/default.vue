@@ -1,5 +1,5 @@
 <template>
-  <div class="app flex direction-column">
+  <div class="app flex direction-column absolute-full">
     <Header/>
     <div class="flex flex-1">
       <bookShelveNav></bookShelveNav>
