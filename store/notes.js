@@ -62,6 +62,7 @@ const actions = {
       method: 'post',
       data: {
         ...data,
+        catalogId: data.catalogId || rootState.catalogs.curCatalog,
         bookId: rootState.books.curBook
       }
     })
