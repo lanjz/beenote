@@ -117,33 +117,12 @@
       async todoEdit(force = false) {
         if(!force){
           if(!this.articleName ||
-            this.editId === 'new' ||
             this.cacheName === this.articleName
           ) {
             return
           }
         }
-        this.$showLoading()
-        const result = await this[ACTIONS.ARTICLE_PUT]({
-          _id: this.editId,
-          content: this.contents,
-          title: this.articleName,
-          list: this.showList
-        })
-        if(!result.err) {
-          this.$toast({
-            title: '保存成功'
-          })
-          const id = this.editId
-          await this.getData(id, true)
-          this.$emit('emitUpdateArticle', {
-            schemaId: this.schemaId,
-            catalogId: this.catalogId,
-            articleId: id,
-            getData: 'getArticleByCatalogId'
-          })
-        }
-        this.$hideLoading()
+        this.doPutNote()
       },
       async todoSave() {
         if(!this.articleName) return
@@ -183,11 +162,15 @@
       },
       async toDoPutNote() {
         if(!this.dataHasChange || this.curNote._id === 'new') return
+        this.doPutNote()
+      },
+      async doPutNote() {
         this.isEditContents = false
         this.$showLoading()
         const result = await this[ACTIONS.NOTE_PUT](
           {
             _id: this.curNote._id,
+            title: this.articleName,
             content: this.content,
           }
         )
@@ -197,6 +180,7 @@
             title: '修改成功'
           })
         }
+        this.cacheName = this.articleName
         this.cacheContent = this.content
         this.$emit('emitUpdateNote',
           {
