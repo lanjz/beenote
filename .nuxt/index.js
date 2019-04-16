@@ -116,7 +116,8 @@ async function createApp(ssrContext) {
     payload: ssrContext ? ssrContext.payload : undefined,
     req: ssrContext ? ssrContext.req : undefined,
     res: ssrContext ? ssrContext.res : undefined,
-    beforeRenderFns: ssrContext ? ssrContext.beforeRenderFns : undefined
+    beforeRenderFns: ssrContext ? ssrContext.beforeRenderFns : undefined,
+    ssrContext
   })
 
   const inject = function (key, value) {
@@ -154,11 +155,25 @@ async function createApp(ssrContext) {
 
   // Plugin execution
 
-  if (typeof nuxt_plugin_loading_0a3fd5f4 === 'function') await nuxt_plugin_loading_0a3fd5f4(app.context, inject)
-  if (typeof nuxt_plugin_messageBox_2594f43a === 'function') await nuxt_plugin_messageBox_2594f43a(app.context, inject)
-  if (typeof nuxt_plugin_toast_3357971e === 'function') await nuxt_plugin_toast_3357971e(app.context, inject)
-  if (typeof nuxt_plugin_filters_98405076 === 'function') await nuxt_plugin_filters_98405076(app.context, inject)
-  if (typeof nuxt_plugin_directive_36717199 === 'function') await nuxt_plugin_directive_36717199(app.context, inject)
+  if (typeof nuxt_plugin_loading_0a3fd5f4 === 'function') {
+    await nuxt_plugin_loading_0a3fd5f4(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_messageBox_2594f43a === 'function') {
+    await nuxt_plugin_messageBox_2594f43a(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_toast_3357971e === 'function') {
+    await nuxt_plugin_toast_3357971e(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_filters_98405076 === 'function') {
+    await nuxt_plugin_filters_98405076(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_directive_36717199 === 'function') {
+    await nuxt_plugin_directive_36717199(app.context, inject)
+  }
 
   // If server-side, wait for async component to be resolved first
   if (process.server && ssrContext && ssrContext.url) {
