@@ -6,7 +6,7 @@
           <input type="text" class="article-layout-input" v-model="filterKeys"/>
           <i class="iconfont icon-sousuo"></i>
         </div>
-        <div class="flex-1" >
+        <div class="flex-1 relative">
           <div class="absolute-full article-item-box">
             <div
               class="article-item"
