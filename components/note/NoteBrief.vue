@@ -1,33 +1,31 @@
 <template>
   <div class="article-layout box-shadow flex direction-column" :class="{'hidden-article': !showBrief}">
     <div class="flex-1 flex direction-column article-min-width relative">
-      <div class="absolute-full">
-        <div class="article-layout-input-box align-items-center">
-          <input type="text" class="article-layout-input" v-model="filterKeys"/>
-          <i class="iconfont icon-sousuo"></i>
-        </div>
-        <div class="flex-1 relative">
-          <div class="absolute-full article-item-box">
-            <div
-              class="article-item"
-              v-for="(item, index) in filterList"
-              :key="index"
-              :class="{'act': item._id === curNote}"
-              @click="chooseNote(item)">
-              <div class="article-item-title">{{item.title}}</div>
-              <div class="article-label">
-                <span class="article-label-item">{{item.bookId|getBookName(bookList)}}</span>
-              </div>
-              <div class="article-item-mark">{{item.createTime | timestampToBriefTime}}~{{item.updateTime | timestampToBriefTime}}</div>
-              <div class="operate-icon" @click.stop="todoDelete(item)">
-                <i class="iconfont icon-shanchu1"></i>
-              </div>
+      <div class="article-layout-input-box align-items-center">
+        <input type="text" class="article-layout-input" v-model="filterKeys"/>
+        <i class="iconfont icon-sousuo"></i>
+      </div>
+      <div class="flex-1 relative">
+        <div class="absolute-full article-item-box">
+          <div
+            class="article-item"
+            v-for="(item, index) in filterList"
+            :key="index"
+            :class="{'act': item._id === curNote}"
+            @click="chooseNote(item)">
+            <div class="article-item-title">{{item.title}}</div>
+            <div class="article-label">
+              <span class="article-label-item">{{item.bookId|getBookName(bookList)}}</span>
+            </div>
+            <div class="article-item-mark">{{item.createTime | timestampToBriefTime}}~{{item.updateTime | timestampToBriefTime}}</div>
+            <div class="operate-icon" @click.stop="todoDelete(item)">
+              <i class="iconfont icon-shanchu1"></i>
             </div>
           </div>
         </div>
-        <div class="shortcut-add-layout" @click="shortcutAdd" v-if="notesMap[curNote]">
-          <i class="iconfont icon-tianjiawenjian"></i>
-        </div>
+      </div>
+      <div class="shortcut-add-layout" @click="shortcutAdd" v-if="notesMap[curNote]">
+        <i class="iconfont icon-tianjiawenjian"></i>
       </div>
     </div>
   </div>
