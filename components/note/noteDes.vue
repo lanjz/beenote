@@ -116,7 +116,9 @@
       },
       async todoEdit(force = false) {
         if(!force){
-          if(!this.articleName ||
+          if(
+            this.curNote._id==='new'||
+            !this.articleName ||
             this.cacheName === this.articleName
           ) {
             return
