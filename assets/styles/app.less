@@ -603,5 +603,22 @@ textarea.form-input{
   table tr:nth-child(even){  background: #fafafa;  }
   /*保持单行，超出显示省略号*/
   table{table-layout: fixed}
-
+  .marked-checkBox{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    background: #5f5f5f;
+    margin-right: 5px;
+    cursor: pointer;
+    position: relative;
+    transform: translateY(3px);
+  }
+  .marked-checkBox .iconfont{
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    position: absolute;
+    transform: translateX(2px);
+  }
 }

@@ -69,7 +69,7 @@
               }"
                   >
                     <div class=" flex align-items-center">
-                      <div class="select-iconfont"><i class="iconfont icon-gou"></i></div>
+                      <div class="select-iconfont"><i class="iconfont icon-gou1"></i></div>
                       <div>{{optionsItem.name}}</div>
                     </div>
                     <input type="checkBox"

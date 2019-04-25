@@ -35,8 +35,9 @@
 import marked from 'marked'
 import hljs from 'highlight.js'
 
+const renderer = new marked.Renderer()
 marked.setOptions({
-  renderer: new marked.Renderer(),
+  renderer,
   gfm: true,
   tables: true,
   breaks: false,
@@ -78,13 +79,20 @@ marked.setOptions({
         if(this.isPreview){
           clearTimeout(this.timeOut)
           this.timeOut = setTimeout(() => {
-            this.markdownHTML = marked(val)
+            this.markdownHTML = this.DIYMarked(marked(val))
           }, 500)
         }
         this.$emit('update', val)
       }
     },
     methods: {
+      DIYMarked(text) {
+        const result = text
+          .replace(/C\(N\)/g, '<span class="marked-checkBox"></span>')
+          .replace(/C\(Y\)/g, '<span class="marked-checkBox"><i class="iconfont icon-gou1"></i></span>')
+        console.log('text', result)
+        return result
+      },
       toggleEdit() {
         this.isEdit = !this.isEdit
         if(!this.isEdit) {
