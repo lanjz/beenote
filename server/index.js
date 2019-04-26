@@ -3,7 +3,11 @@ const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 const middleware = require('./middleware/index.js')
 const app = new Koa()
+const { initSchedule } = require('./utils/sendEmail.js')
 
+if(initSchedule) {
+  initSchedule()
+}
 
 // Import and Set Nuxt.js options
 let config = require('../nuxt.config.js')
