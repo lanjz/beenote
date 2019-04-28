@@ -40,8 +40,8 @@ function sendMsg(file) {
 function getSendFilePath() {
   const isWin = /^win/.test(process.platform)
   const basePath = isWin ? 'D:\\Project' : '/data'
-  const backupNowPath = path.join(basePath, 'backup', 'mongod_bak_now')
-  const backupListPath = path.join(basePath, 'backup', 'mongod_bak_list')
+  const backupNowPath = path.join(basePath, 'backup', 'mongod_bak', 'mongod_bak_now')
+  const backupListPath = path.join(basePath, 'backup', 'mongod_bak', 'mongod_bak_list')
   const findBackupName = fs.readdirSync(backupNowPath)
   const sendFileName = path.join(backupListPath, ` mongod_bak_${findBackupName[0]}.tar.gz`)
   return sendFileName
