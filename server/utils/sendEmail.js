@@ -91,7 +91,7 @@ function initSchedule() {
   }
 }
 
-sendMsg()
+todoSend()
 
 module.exports = {
   initSchedule
