@@ -1,5 +1,3 @@
-import modules from "../../justvue/src/store/modules";
-
 const path = require('path')
 const fs = require('fs')
 const crypto = require('crypto');
