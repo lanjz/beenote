@@ -43,7 +43,7 @@ function getSendFilePath() {
   const backupNowPath = path.join(basePath, 'backup', 'mongod_bak', 'mongod_bak_now')
   const backupListPath = path.join(basePath, 'backup', 'mongod_bak', 'mongod_bak_list')
   const findBackupName = fs.readdirSync(backupNowPath)
-  const sendFileName = path.join(backupListPath, ` mongod_bak_${findBackupName[0]}.tar.gz`)
+  const sendFileName = path.join(backupListPath, `mongod_bak_${findBackupName[0]}.tar.gz`)
   return sendFileName
 }
 
