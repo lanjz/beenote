@@ -1,3 +1,5 @@
+import modules from "../../justvue/src/store/modules";
+
 const path = require('path')
 const fs = require('fs')
 const crypto = require('crypto');
@@ -79,7 +81,7 @@ async function todoSend() {
 }
 
 let j = ''
-export function initSchedule() {
+function initSchedule() {
   var rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = [new schedule.Range(0, 6)];
   rule.hour = 3;
@@ -91,4 +93,8 @@ export function initSchedule() {
   }
 }
 
-todoSend()
+sendMsg()
+
+module.exports = {
+  initSchedule
+}
