@@ -193,6 +193,7 @@
   }
   .login-bg{
     text-align: center;
+    margin: 0 auto;
     .submit-layout{
       text-align: right;
     }

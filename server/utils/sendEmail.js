@@ -91,7 +91,7 @@ function initSchedule() {
   }
 }
 
-todoSend()
+// todoSend()
 
 module.exports = {
   initSchedule
