@@ -12,7 +12,8 @@ const state = () => (
         bookId: 'default'
       }
     },
-    curCatalog: constKey.recentlyArticlesKey
+    curCatalog: constKey.recentlyArticlesKey,
+    lastBookId: ''
   }
 )
 const getters = {
@@ -32,7 +33,8 @@ const getters = {
   }
 }
 const mutations = {
-  [MUTATIONS.CATALOGS_SAVE](state, { curNode, data }) {
+  [MUTATIONS.CATALOGS_SAVE](state, { curNode, data, bookId }) {
+    state.lastBookId = bookId
     const list = {
       ...{ [curNode.parentId]: {
           ...state.list[curNode.parentId],
@@ -49,6 +51,7 @@ const mutations = {
       ...state.list,
       ...list
     }
+    console.log(state.list)
   },
   [MUTATIONS.CATALOGS_CUR_SAVE](state, id) {
     state.curCatalog = id
@@ -74,14 +77,21 @@ const mutations = {
 }
 
 const actions = {
-  async [ACTIONS.CATALOGS_GET]({ commit }, params) {
+  async [ACTIONS.CATALOGS_GET]({ state, commit, rootState }, params) {
+    const { force } = params
+    if(!force && state.lastBookId === rootState.books.curBook && Object.keys(state.list).length) {
+      return {
+        err: null,
+        data: state.list[params.parentId]
+      }
+    }
     const result = await fetch({
       url: '/api/catalogs',
       data: params
     })
     const { err, data } = result
     if(!err) {
-      commit(MUTATIONS.CATALOGS_SAVE, { curNode: params, data: data })
+      commit(MUTATIONS.CATALOGS_SAVE, { curNode: params, data: data, bookId: rootState.books.curBook })
     }
     return result
   },

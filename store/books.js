@@ -41,7 +41,7 @@ const actions = {
    * */
   async [ACTIONS.BOOK_LIST_GET]({ state, commit }, arg = {}) {
     const { limit = 0, start = 0, force = false } = arg
-    if(!force && Object.keys(state.list).length > 1){
+    if(!force && Object.keys(state.list).length > 0){
       return { err: null, data: { list: state.list } }
     }
     const result = await fetch({

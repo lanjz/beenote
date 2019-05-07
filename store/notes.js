@@ -107,9 +107,9 @@ const actions = {
   async [ACTIONS.NOTES_RECENTLY_GET]({ state, commit, rootState }, arg = {}) {
     const { force = false } = arg
     const key = rootState.books.curBook+'_'+constKey.recentlyNoteKey
-  /*  if(!force && state.list[key]){
+    if(!force && state.list[key]){
       return { err: null, data: { list: state.list[key] } }
-    }*/
+    }
     const result = await fetch({
       url: '/api/recently_notes',
       method: 'get',

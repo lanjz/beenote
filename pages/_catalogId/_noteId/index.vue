@@ -83,7 +83,7 @@
        * 初始化的时候，获取note列表 最近文章
        * */
       async getNoteData() {
-        const {  catalogId, noteId } = $nuxt._route.params
+        const { catalogId, noteId } = $nuxt._route.params
         const getCatalogsData = catalogId === constKey.recentlyArticlesKey ?
           this[ACTIONS.NOTES_RECENTLY_GET] : this[ACTIONS.NOTES_GET]
         Promise.all([

@@ -147,7 +147,8 @@
         this[MUTATIONS.CATALOGS_CUR_SAVE](this.curNode._id)
         bus.$emit('emitFromCatalog', item || {
           ...this.curNode,
-          catalogId: this.curNode._id
+          catalogId: this.curNode._id,
+          force: true
         })
       },
       async getRecentlyArticles() {
