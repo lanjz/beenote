@@ -54,6 +54,7 @@
     },
     computed: {
       ...mapState({
+        curCatalog: state => state.catalogs.curCatalog,
         showBrief: state => state.config.showBrief,
         bookList: state => state.books.list,
         schemaList: state => state.schema.list,
@@ -89,7 +90,9 @@
       ]),
       ...mapMutations('notes',[MUTATIONS.NOTE_CUR_UPDATE]),
       chooseNote: function (item) {
+        // todo
         this.$emit('emitToChooseCurNote', item)
+        // this.$router.push(`/${this.curCatalog}/${item._id}`)
       },
       todoDelete(item) {
         this.$alert({

@@ -25,6 +25,9 @@ const mutations = {
   },
   [MUTATIONS.NOTE_CUR_UPDATE](state, data) {
     state.curNote = data
+  },
+  [MUTATIONS.NOTE_MAP_SAVE](state, { data, id }) {
+    state.notesMap[id] = data
   }
 }
 
@@ -53,6 +56,23 @@ const actions = {
     if(!err) {
       commit(MUTATIONS.NOTE_LIST_SAVE, { data: data.list, start, key })
     }
+    return result
+  },
+  /**
+   * @params <Object> force 是否强制重新获取数据
+   * */
+  async [ACTIONS.NOTE_DES_GET]({ state, commit, rootState }, arg = {}) {
+    const { id, force = false } = arg
+    if(!force && state.notesMap[id]){
+      return { err: null, data: state.notesMap[id] }
+    }
+    const result = await fetch({
+      url: `/api/note/${id}`,
+    })
+    const { err, data } = result
+    if(!err) {
+      commit(MUTATIONS.NOTE_MAP_SAVE, { data, id })
+  }
     return result
   },
   /* eslint-disable no-unused-vars */
@@ -99,7 +119,6 @@ const actions = {
     })
     const { err, data } = result
     if(!err) {
-
       commit(MUTATIONS.NOTE_LIST_SAVE, { data, key })
     }
     return result

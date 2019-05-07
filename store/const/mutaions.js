@@ -23,6 +23,7 @@ export const USER_SAVE = 'USER_SAVE'
 export const NOTE_LIST_SAVE = 'NOTE_LIST_SAVE'
 export const NOTE_LIST_UPDATE = 'NOTE_LIST_UPDATE'
 export const NOTE_CUR_UPDATE = 'NOTE_CUR_UPDATE'
+export const NOTE_MAP_SAVE = 'NOTE_MAP_SAVE'
 
 // config
 
