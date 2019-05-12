@@ -100,12 +100,13 @@
           show: false,
           isNew: true
         },
-        isOpen: false
+//        isOpen: false
       }
     },
     computed: {
       ...mapState({
         catalogs: state => state.catalogs.list,
+        catalogsIsOpen: state => state.catalogs.isOpen,
         actCatalog: state => state.catalogs.curCatalog,
         schemaList: state => Object.values(state.schema.list).filter(item => item.fields.length),
         curBook: state => state.books.curBook
@@ -115,12 +116,15 @@
         return this.catalogs[this.curNode['_id']]
           && this.catalogs[this.curNode['_id']]['childNodes']
           && this.catalogs[this.curNode['_id']]['childNodes'].length
+      },
+      isOpen() {
+        return this.catalogsIsOpen.indexOf(this.curNode._id) > -1 ? true : false
       }
     },
     watch: {
       curNode: {
         handler() {
-          this.getDate()
+//          this.getDate()
         },
         deep: true
       }
@@ -128,7 +132,9 @@
     methods: {
       ...mapMutations('catalogs', [
         MUTATIONS.CATALOGS_CUR_SAVE,
-        MUTATIONS.CATALOGS_TEMPLATE_CREATE
+        MUTATIONS.CATALOGS_TEMPLATE_CREATE,
+        MUTATIONS.CATALOGS_OPEN_TOGGLE,
+        MUTATIONS.CATALOGS_OPEN_RESET
       ]),
       ...mapActions('catalogs', [
         ACTIONS.CATALOGS_GET,
@@ -140,10 +146,17 @@
         ACTIONS.ARTICLE_RECENTLY_LIST_GET,
       ]),
       toggleOpenDir() {
-        this.isOpen = !this.isOpen
+        this[MUTATIONS.CATALOGS_OPEN_TOGGLE]({
+          id: this.curNode._id
+        })
+//        this.isOpen = !this.isOpen
       },
       async chooseCatalog(item) {
-        this.isOpen = true
+        this[MUTATIONS.CATALOGS_OPEN_TOGGLE]({
+          id: this.curNode._id,
+          force: true
+        })
+//        this.isOpen = true
         this[MUTATIONS.CATALOGS_CUR_SAVE](this.curNode._id)
         bus.$emit('emitFromCatalog', item || {
           ...this.curNode,
@@ -199,7 +212,7 @@
           this.$toast({
             title: '删除成功'
           })
-          await this.getDate(this.curNode, true)
+          await this.getDate(this.curNode, true, true)
         }
       },
       /**
@@ -231,7 +244,7 @@
           parentId
         })
         if(!result.err) {
-          this.getDate(item, true)
+          this.getDate(item, true, true)
         }
       },
       async addCatalog(name, parentId) {
@@ -243,28 +256,31 @@
         this.$emit('emitExitNewDir')
       },
       exitNewDir() {
-        this.getDate(this.curNode, true)
+        this.getDate(this.curNode, true, true)
         this.newDir.parentId = ''
       },
       doCreateTemDir() {
-        this.isOpen = true
+        this[MUTATIONS.CATALOGS_OPEN_TOGGLE]({
+          id: this.curNode._id,
+          force: true
+        })
+//        this.isOpen = true
         this.closeMenu()
         this.newDir.parentId = this.curNode['_id']
         this.newDir.parentParentId = this.curNode['parentId']
       },
-      async getDate(treeNode, isParentId){
+      async getDate(treeNode, isParentId, force){
         const params = treeNode || this.curNode
         await this[ACTIONS.CATALOGS_GET]({
           parentId: isParentId ? params.parentId || 'root' : params._id,
-          bookId: this.curBook
+          bookId: this.curBook,
+          force
         })
       },
       init() {
         // 如果就新建文件夹则直接执行todoRename函数
         if(this.isNewDir) {
           this.todoRename()
-        } else if(this.curNode.hasChild){
-          this.getDate()
         }
         document.addEventListener('click', (e) => {
           !this.$el.contains(e.target)

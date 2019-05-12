@@ -9,18 +9,26 @@
   </div>
 </template>
 <script>
+  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   import constKey from '../../util/const'
   import TreeItem from './TreeItem'
   export default {
     name: 'Tree',
+    data() {
+      return {
+      }
+    },
     components: {
       TreeItem
     },
-    data() {
-      return {
-        catalogList: [
+    computed: {
+      ...mapState({
+        curBook: state => state.books.curBook
+      }),
+      catalogList() {
+        return [
           {  _id: constKey.recentlyArticlesKey, name: '最近文档', hasChild: false, icon: 'icon-wendang' },
-          { _id: 'root', name: '我的文件夹', hasChild: true },
+          { _id: this.curBook+'_root', name: '我的文件夹', hasChild: true },
         ]
       }
     },

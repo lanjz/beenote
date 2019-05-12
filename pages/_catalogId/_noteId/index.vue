@@ -89,10 +89,7 @@
         Promise.all([
           getCatalogsData(),
           this[ACTIONS.BOOK_LIST_GET](),
-          this[ACTIONS.CATALOGS_GET]({
-            parentId: 'root',
-            bookId: this.curBook
-          })
+          this[ACTIONS.CATALOGS_GET]()
         ])
           .then(() => {
             // this[ACTIONS.NOTES_RECENTLY_GET]()

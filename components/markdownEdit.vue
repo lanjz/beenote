@@ -90,7 +90,6 @@ marked.setOptions({
         const result = text
           .replace(/C\(N\)/g, '<span class="marked-checkBox"></span>')
           .replace(/C\(Y\)/g, '<span class="marked-checkBox"><i class="iconfont icon-gou1"></i></span>')
-        console.log('text', result)
         return result
       },
       toggleEdit() {
@@ -107,7 +106,6 @@ marked.setOptions({
       }
     },
     mounted() {
-      console.log('this.data', this.data)
       this.markDownValue = this.data || ''
     }
   }

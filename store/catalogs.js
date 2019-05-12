@@ -13,7 +13,7 @@ const state = () => (
       }
     },
     curCatalog: constKey.recentlyArticlesKey,
-    lastBookId: ''
+    isOpen: []
   }
 )
 const getters = {
@@ -34,9 +34,9 @@ const getters = {
 }
 const mutations = {
   [MUTATIONS.CATALOGS_SAVE](state, { curNode, data, bookId }) {
-    state.lastBookId = bookId
+    const key = curNode.parentId === 'root' ? bookId+'_root' : curNode.parentId
     const list = {
-      ...{ [curNode.parentId]: {
+      ...{ [key]: {
           ...state.list[curNode.parentId],
           updateTime: (new Date()).getTime(),
           childNodes: data
@@ -51,7 +51,6 @@ const mutations = {
       ...state.list,
       ...list
     }
-    console.log(state.list)
   },
   [MUTATIONS.CATALOGS_CUR_SAVE](state, id) {
     state.curCatalog = id
@@ -73,13 +72,28 @@ const mutations = {
       ...state.list,
       ...{ [id]: addCatalog }
     }
-  }
+  },
+  [MUTATIONS.CATALOGS_OPEN_TOGGLE](state, { id, force }) {
+    const findInd = state.isOpen.indexOf(id)
+    if(findInd < 0) {
+      state.isOpen = [ ...state.isOpen, id]
+    } else if(!force && findInd > -1 ){
+      state.isOpen.splice(findInd, 1)
+    }
+  },
+  [MUTATIONS.CATALOGS_OPEN_RESET](state, id) {
+    state.isOpen = []
+  },
 }
 
 const actions = {
-  async [ACTIONS.CATALOGS_GET]({ state, commit, rootState }, params) {
-    const { force } = params
-    if(!force && state.lastBookId === rootState.books.curBook && Object.keys(state.list).length) {
+  async [ACTIONS.CATALOGS_GET]({ state, commit, rootState, dispatch }, params = {
+    force: false,
+    parentId: rootState.books.curBook+'_root',
+    bookId: rootState.books.curBook
+  }) {
+    let { force, parentId, bookId } = params
+    if(!force && state.list[params.parentId] && state.list[params.parentId].childNodes) {
       return {
         err: null,
         data: state.list[params.parentId]
@@ -87,11 +101,23 @@ const actions = {
     }
     const result = await fetch({
       url: '/api/catalogs',
-      data: params
+      data: {
+        parentId: parentId.indexOf('root') > 0 ?  'root' : parentId,
+        bookId
+      }
     })
     const { err, data } = result
     if(!err) {
       commit(MUTATIONS.CATALOGS_SAVE, { curNode: params, data: data, bookId: rootState.books.curBook })
+      data.forEach(item => {
+        if(item.hasChild) {
+          dispatch(ACTIONS.CATALOGS_GET, {
+            parentId: item._id,
+            bookId: item.bookId,
+            force
+          })
+        }
+      })
     }
     return result
   },
