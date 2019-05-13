@@ -12,7 +12,11 @@
       :curNote="curEditNote"
       :createToCatalogId="createToCatalogId"
       @emitUpdateNote="doUpdateNote"
+      v-if="!noData"
     ></note-des>
+    <div v-else class="no-data">
+      暂无数据
+    </div>
     <articleFixed></articleFixed>
   </div>
 </template>
@@ -36,7 +40,8 @@
     },
     data: function () {
       return {
-        createToCatalogId: ''
+        createToCatalogId: '',
+        noData: false
       }
     },
     computed: {
@@ -130,7 +135,7 @@
         if(getData.data.list.length && !cusNodeId){
           cusNodeId = getData.data.list[0]._id
         }
-        this.$router.push(`/${catalogId||this.curCatalog}/${cusNodeId || 'new'}`)
+        this.$router.push(`/${catalogId||this.curCatalog}/${cusNodeId||'none'}`)
       },
       initEmitOn() {
         /**
@@ -168,6 +173,10 @@
         this[MUTATIONS.CATALOGS_CUR_SAVE](catalogId)
         this[MUTATIONS.NOTE_CUR_UPDATE](noteId)
         if(noteId === 'new') return
+        if(noteId === 'none') {
+          this.noData = true
+          return
+        }
         const {err, data} = await this[ACTIONS.NOTE_DES_GET]({
           id: noteId
         })
@@ -280,5 +289,10 @@
     padding: 15px 0;
     max-width: 0;
     overflow: hidden;
+  }
+  .no-data{
+    flex: 1;
+    font-size: 20px;
+    padding: 20px;
   }
 </style>
