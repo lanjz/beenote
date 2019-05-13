@@ -4,7 +4,6 @@
       <TreeItem></TreeItem>
     </div>
     <NoteBrief
-      @emitToChooseCurNote="chooseCurNote"
       @emitToCreateNote="toCreateNote"
       :list="curNoteList"
       @emitUpdateNote="doUpdateNote"
@@ -18,7 +17,7 @@
   </div>
 </template>
 <script>
-  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+  import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
   import * as MUTATIONS from '../../../store/const/mutaions'
   import * as ACTIONS from '../../../store/const/actions'
   import bus from '../../../util/global/eventBus'
@@ -49,16 +48,16 @@
         showDir: state => state.config.showDir,
         curCatalog: state => state.catalogs.curCatalog
       }),
-      ...mapGetters('catalogs',['treeChainList']),
+      ...mapGetters('catalogs', ['treeChainList']),
       curNoteList: function () {
-        if(this.curCatalog && this.noteList && this.curBook){
-          return this.noteList[this.curBook+'_'+this.curCatalog] || []
+        if (this.curCatalog && this.noteList && this.curBook) {
+          return this.noteList[this.curBook + '_' + this.curCatalog] || []
         }
         return []
       },
       curEditNote: function () {
         const findNote = this.curNoteList.find(item => item._id === this.curNote)
-        if(!findNote) {
+        if (!findNote) {
           return {
             _id: 'new'
           }
@@ -67,10 +66,10 @@
       }
     },
     methods: {
-      ...mapMutations('catalogs',[MUTATIONS.CATALOGS_CUR_SAVE,]),
-      ...mapMutations('notes',[MUTATIONS.NOTE_CUR_UPDATE,]),
-      ...mapMutations('books',[MUTATIONS.BOOK_CUR_UPDATE,]),
-      ...mapActions('books',[ACTIONS.BOOK_LIST_GET]),
+      ...mapMutations('catalogs', [MUTATIONS.CATALOGS_CUR_SAVE,]),
+      ...mapMutations('notes', [MUTATIONS.NOTE_CUR_UPDATE,]),
+      ...mapMutations('books', [MUTATIONS.BOOK_CUR_UPDATE,]),
+      ...mapActions('books', [ACTIONS.BOOK_LIST_GET]),
       ...mapActions('notes', [
         ACTIONS.NOTES_RECENTLY_GET,
         ACTIONS.NOTES_GET,
@@ -83,7 +82,7 @@
        * 初始化的时候，获取note列表 最近文章
        * */
       async getNoteData() {
-        const { catalogId, noteId } = $nuxt._route.params
+        const {catalogId, noteId} = $nuxt._route.params
         const getCatalogsData = catalogId === constKey.recentlyArticlesKey ?
           this[ACTIONS.NOTES_RECENTLY_GET] : this[ACTIONS.NOTES_GET]
         Promise.all([
@@ -111,40 +110,43 @@
         this[MUTATIONS.NOTE_CUR_UPDATE](arg._id)
       },
       toCreateNote(arg) {
-        this.createToCatalogId = arg.catalogId
-        this.chooseCurNote({
-          _id: 'new'
-        })
+
+        this.$router.push(`/${arg.catalogId}/new`)
       },
       /**
        * @param <String> id 如果有则指定为当前id
        * */
       async doUpdateNote(arg = {}) {
-        const { id, force } = arg
-        if(this.curCatalog === constKey.recentlyArticlesKey) {
-          await this[ACTIONS.NOTES_RECENTLY_GET]({ force })
+        const {id, force} = arg
+        let getData = ''
+        if (this.curCatalog === constKey.recentlyArticlesKey) {
+          getData = await this[ACTIONS.NOTES_RECENTLY_GET]({force})
         } else {
-          await this[ACTIONS.NOTES_GET]({
+          getData = await this[ACTIONS.NOTES_GET]({
             force
           })
         }
-
-        if(id) {
-          this.chooseCurNote({
-            _id: id
-          })
+        let cusNodeId = id
+        if(getData.data.list.length && !cusNodeId){
+          cusNodeId = getData.data.list[0]._id
         }
+        console.log('this.curCatalog', this.curCatalog)
+        this.$router.push(`/${this.curCatalog}/${cusNodeId || 'new'}`)
       },
       initEmitOn() {
         /**
          * @params <Object> arg 包含schemaId字段id和当前articleId(如果是添加则为'new')
          * */
+        bus.$off("emitToCreateArticle")
+        bus.$off("updateCurBooks")
+        bus.$off("emitFromCatalog")
+
         bus.$on('emitToCreateArticle', (arg) => {
           this.toCreateNote(arg)
         })
         bus.$on('emitFromCatalog', (arg) => {
-          const { isNew } = arg
-          if(isNew) {
+          const {isNew} = arg
+          if (isNew) {
             this.toCreateNote({
               catalogId: arg.catalogId
             })
@@ -162,14 +164,16 @@
         this.initEmitOn()
       },
       async dealParams() {
-        const {  catalogId, noteId } = $nuxt._route.params
-        // this[MUTATIONS.CATALOGS_CUR_SAVE](catalogId)
+        const {catalogId, noteId} = $nuxt._route.params
+        this.createToCatalogId = catalogId
+        this[MUTATIONS.CATALOGS_CUR_SAVE](catalogId)
         this[MUTATIONS.NOTE_CUR_UPDATE](noteId)
-        const { err, data }= await this[ACTIONS.NOTE_DES_GET]({
+        if(noteId === 'new') return
+        const {err, data} = await this[ACTIONS.NOTE_DES_GET]({
           id: noteId
         })
-        if(err) return
-        const { bookId } = data
+        if (err) return
+        const {bookId} = data
         this[MUTATIONS.BOOK_CUR_UPDATE](bookId)
         this.init()
       }
@@ -180,18 +184,19 @@
   }
 </script>
 <style lang="less" scoped>
-  .book-slider-layout{
+  .book-slider-layout {
     padding: 15px;
     background: @bg-second-color;
   }
-  .book-layout{
+
+  .book-layout {
     margin-top: 40px;
     width: 38px;
     height: 38px;
     cursor: pointer;
     position: relative;
     z-index: 1;
-    .book-icon-layout{
+    .book-icon-layout {
       line-height: 38px;
       width: 100%;
       height: 100%;
@@ -201,12 +206,12 @@
       overflow: hidden;
       position: relative;
     }
-    .iconfont{
+    .iconfont {
       font-size: 26px;
     }
-    .book-list-layout{
+    .book-list-layout {
       max-width: 300px;
-      padding:7px 20px;
+      padding: 7px 20px;
       background: @bg-second-color;
       position: absolute;
       left: 100%;
@@ -214,20 +219,20 @@
       transition: .3s;
       transform: scale(0);
       transform-origin: 0 15px;
-      .book-list-item-layout{
+      .book-list-item-layout {
         color: #fff;
         text-align: center;
-        .icon{
+        .icon {
           width: 25px;
           height: 25px;
           line-height: 22px;
           border: solid 1px #fff;
           border-radius: 50%;
-          .iconfont{
+          .iconfont {
             font-size: 16px;
           }
         }
-        .book-name{
+        .book-name {
           font-size: 12px;
           margin-left: 10px;
         }
@@ -235,40 +240,44 @@
       .book-list-item-layout:not(:last-child) {
         margin-bottom: 10px;
       }
-      .book-list-item-layout.act{
-        .icon{
-          border:solid 1px @highlight-color;
+      .book-list-item-layout.act {
+        .icon {
+          border: solid 1px @highlight-color;
           background: @highlight-color;
         }
       }
     }
   }
 
-  .show-book-list:hover  .book-list-layout{
+  .show-book-list:hover .book-list-layout {
     transform: scale(1);
   }
-  .book-layout.act{
+
+  .book-layout.act {
     transform: scale(1.2);
-    .book-icon-layout{
+    .book-icon-layout {
       background: @highlight-color;
-      .iconfont{
+      .iconfont {
         color: #fff;
       }
     }
   }
+
   .book-layout:not(:last-child) {
     margin-bottom: 10px;
   }
-  .catalog-layout{
+
+  .catalog-layout {
     padding: 15px 2px;
     overflow: auto;
     background: @tree-bg-color;
     color: @tree-color;
     width: 200px;
     max-width: 200px;
-    transition: .3s ;
+    transition: .3s;
   }
-  .hidden-catalog{
+
+  .hidden-catalog {
     padding: 15px 0;
     max-width: 0;
     overflow: hidden;

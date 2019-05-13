@@ -157,11 +157,11 @@
           force: true
         })
 //        this.isOpen = true
+        console.log('this.curNode._id', this.curNode._id)
         this[MUTATIONS.CATALOGS_CUR_SAVE](this.curNode._id)
         bus.$emit('emitFromCatalog', item || {
           ...this.curNode,
-          catalogId: this.curNode._id,
-          force: true
+          catalogId: this.curNode._id
         })
       },
       async getRecentlyArticles() {

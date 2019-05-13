@@ -72,7 +72,7 @@
     watch: {
       list: function (val) {
         if(val.length && (!this.curNode || this.curNode === 'new')) {
-          this.chooseNote(val[0])
+//          this.chooseNote(val[0])
         }
       }
     },
