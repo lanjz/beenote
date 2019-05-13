@@ -58,6 +58,7 @@
         v-for="(item, index) in catalogs[curNode['_id']].childNodes"
         :key="index"
         :curNode="item"
+        @toInitOpenCatalog="initOpenCatalog"
       ></TreeItem>
     </div>
     <TreeItem
@@ -145,19 +146,16 @@
       ...mapActions('articles', [
         ACTIONS.ARTICLE_RECENTLY_LIST_GET,
       ]),
-      toggleOpenDir() {
+      toggleOpenDir(force = false, catalogId) {
         this[MUTATIONS.CATALOGS_OPEN_TOGGLE]({
-          id: this.curNode._id
+          id: catalogId || this.curNode._id,
+          force
         })
 //        this.isOpen = !this.isOpen
       },
       async chooseCatalog(item) {
-        this[MUTATIONS.CATALOGS_OPEN_TOGGLE]({
-          id: this.curNode._id,
-          force: true
-        })
+        this.toggleOpenDir(true)
 //        this.isOpen = true
-        console.log('this.curNode._id', this.curNode._id)
         this[MUTATIONS.CATALOGS_CUR_SAVE](this.curNode._id)
         bus.$emit('emitFromCatalog', item || {
           ...this.curNode,
@@ -260,10 +258,7 @@
         this.newDir.parentId = ''
       },
       doCreateTemDir() {
-        this[MUTATIONS.CATALOGS_OPEN_TOGGLE]({
-          id: this.curNode._id,
-          force: true
-        })
+        this.toggleOpenDir(true)
 //        this.isOpen = true
         this.closeMenu()
         this.newDir.parentId = this.curNode['_id']
@@ -277,7 +272,15 @@
           force
         })
       },
+      initOpenCatalog() {
+        this.toggleOpenDir(true, this.curNode.parentId)
+      },
       init() {
+        const { catalogId } = $nuxt._route.params
+        if(catalogId === this.curNode._id) {
+          this.initOpenCatalog()
+          this.$emit('toInitOpenCatalog')
+        }
         // 如果就新建文件夹则直接执行todoRename函数
         if(this.isNewDir) {
           this.todoRename()

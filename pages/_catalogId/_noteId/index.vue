@@ -117,7 +117,7 @@
        * @param <String> id 如果有则指定为当前id
        * */
       async doUpdateNote(arg = {}) {
-        const {id, force} = arg
+        const {id, force, catalogId} = arg
         let getData = ''
         if (this.curCatalog === constKey.recentlyArticlesKey) {
           getData = await this[ACTIONS.NOTES_RECENTLY_GET]({force})
@@ -130,8 +130,7 @@
         if(getData.data.list.length && !cusNodeId){
           cusNodeId = getData.data.list[0]._id
         }
-        console.log('this.curCatalog', this.curCatalog)
-        this.$router.push(`/${this.curCatalog}/${cusNodeId || 'new'}`)
+        this.$router.push(`/${catalogId||this.curCatalog}/${cusNodeId || 'new'}`)
       },
       initEmitOn() {
         /**
@@ -160,7 +159,7 @@
         })
       },
       async init() {
-        this.getNoteData()
+        this.getNoteData('init')
         this.initEmitOn()
       },
       async dealParams() {
