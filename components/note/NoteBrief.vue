@@ -90,7 +90,7 @@
       ]),
       ...mapMutations('notes',[MUTATIONS.NOTE_CUR_UPDATE]),
       chooseNote: function (item) {
-         this.$router.push(`/${item.bookId}/${item.catalogId}/${item._id}`)
+         this.$router.push(`/${item.bookId}/${this.curCatalog}/${item._id}`)
       },
       todoDelete(item) {
         this.$alert({

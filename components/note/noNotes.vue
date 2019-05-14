@@ -1,16 +1,26 @@
 <template>
   <div class="no-data flex direction-column justify-content-center align-items-center">
     <i class="iconfont icon-wushuju"></i>
-    <div>还没任何有笔记，<span class="create-btn" @click="toCreateNote">快速创建</span></div>
+    <div>还没任何有笔记，<span v-if="!isRecently" class="create-btn" @click="toCreateNote">快速创建</span></div>
   </div>
 </template>
 <script>
+  import constKey from '@/util/const'
   export default {
+    data() {
+      return {
+        isRecently:''
+      }
+    },
     methods: {
       toCreateNote(arg) {
         const {bookId, catalogId} = $nuxt._route.params
         this.$router.push(`/${bookId}/${catalogId}/new`)
       },
+    },
+    mounted() {
+      const {catalogId} = $nuxt._route.params
+      this.isRecently = catalogId === constKey.recentlyArticlesKey
     }
   }
 </script>
