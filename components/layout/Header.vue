@@ -6,8 +6,12 @@
     </div>
     <div class="flex flex-1 align-items-center justify-content-end">
       <div class="head-nav flex">
-        <!--<router-link to="/">书架</router-link>-->
-        <!--<router-link to="/github">Github</router-link>-->
+        <nuxt-link to="/default/recently/">
+          最近笔记
+        </nuxt-link>
+        <nuxt-link to="/BookList">
+          本子
+        </nuxt-link>
       </div>
       <router-link to="/login" class="user-avatar-layout">
         <img :src="userName.avatar" v-if="userName.avatar">
@@ -49,6 +53,10 @@
       padding: 0 10px;
       text-decoration: none;
     }
+    .nuxt-link-active{
+      color: @highlight-color;
+      text-decoration: underline;
+    }
     border-right: solid 1px @border-color;
     margin-right: 20px;
   }
@@ -67,4 +75,5 @@
     font-size: 35px;
     color: #fff;
   }
+
 </style>

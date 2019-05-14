@@ -98,7 +98,7 @@
           this[ACTIONS.CATALOGS_GET]()
         ])
           .then((res) => {
-            const data = this.catalogId === constKey.recentlyArticlesKey ? res[0].data : res[0].data.list
+            const data = res[0].data.list
             if (data.length && !this.noteId) {
               this.$router.push(`/${this.bookId}/${this.catalogId}/${data[0]._id}`)
             } else {

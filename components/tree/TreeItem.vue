@@ -15,7 +15,7 @@
         :class="{
         'in-chain': isOpen||(isOpen&&hasChild&&treeChainList&&treeChainList.indexOf(curNode['_id']) > -1),
       }"
-        @click.stop="toggleOpenDir"
+        @click.stop="toggleOpenDir(false)"
         v-if="catalogs[curNode['_id']]&&hasChild"></div>
       <i class="iconfont" :class="curNode.icon" :id="curNode._id" v-if="curNode.icon"></i>
       <i class="iconfont icon-wenjianjia" :class="curNode.icon" :id="curNode._id" v-else-if="treeChainList&&treeChainList.indexOf(curNode['_id']) > -1"></i>
@@ -119,7 +119,8 @@
           && this.catalogs[this.curNode['_id']]['childNodes'].length
       },
       isOpen() {
-        const curNodeId = this.curNode._id.indexOf('root') > -1 ? 'root' : this.curNode._id
+//        const curNodeId = this.curNode._id.indexOf('root') > -1 ? 'root' : this.curNode._id
+        const curNodeId = this.curNode._id
         return this.catalogsIsOpen.indexOf(curNodeId) > -1 ? true : false
       }
     },
@@ -148,6 +149,7 @@
         ACTIONS.ARTICLE_RECENTLY_LIST_GET,
       ]),
       toggleOpenDir(force = false, catalogId) {
+        console.log('data', force)
         this[MUTATIONS.CATALOGS_OPEN_TOGGLE]({
           id: catalogId || this.curNode._id,
           force

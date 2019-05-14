@@ -49,7 +49,7 @@ const actions = {
         limit,
         start,
         bookId,
-        catalogId
+        catalogId: catalogId.indexOf('root') > -1 ? 'root' : catalogId
       }
     })
     const { err, data } = result
@@ -121,7 +121,7 @@ const actions = {
     if(!err) {
       commit(MUTATIONS.NOTE_LIST_SAVE, { data, key })
     }
-    return result
+    return { err: null, data: { list: data } }
   },
 
 }

@@ -1,35 +1,26 @@
 <template>
   <div class="left-layout flex">
     <div class="book-slider-layout">
-      <div class="relative book-layout show-book-list">
-        <div class="book-icon-layout" @click="goArticle" v-if="curBookInfo">
-         <!-- <div class="cur-book-icon">
-            <i class="iconfont icon-bianji1"></i>
-          </div>-->
+      <!--<div class="relative book-layout show-book-list">
+        <div class="book-icon-layout" @click="goArticle" v-for="(item, index) in bookList" >
           <div class="book-icon-layout flex justify-content-center align-items-center">
             <svg class="icon shelve-svg-icon" aria-hidden="true">
               <use xlink:href="#icon-wenjianjia1"></use>
             </svg>
-            <div class="cur-book-name line-ellipsis" v-if="curBookInfo">{{curBookInfo.name}}</div>
+            <div class="cur-book-name line-ellipsis">{{item.name}}</div>
           </div>
+          <div class="line-ellipsis">{{item.name}}</div>
         </div>
-        <div class="book-list-layout  flex justify-content-start direction-column">
-          <div>
-            <div
-              v-for="(item, index) in bookList"
-              @click.stop="todoSetCurBook(item)"
-              class="book-list-item-layout flex align-items-center">
-              <div>
-                <svg class="icon shelve-svg-icon" aria-hidden="true">
-                  <use xlink:href="#icon-wenjianjia1"></use>
-                </svg>
-              </div>
-              <div class="book-name line-ellipsis">{{item.name}}</div>
-            </div>
-          </div>
+      </div>-->
+      <div class="book-layout" @click="todoSetCurBook(item)" v-for="(item, index) in bookList">
+        <div>
+          <svg class="icon shelve-svg-icon" aria-hidden="true">
+            <use xlink:href="#icon-wenjianjia1"></use>
+          </svg>
         </div>
+        <div class="book-layout-name">{{item.name}}</div>
       </div>
-      <div class="book-layout" @click="goBook">
+    <!--  <div class="book-layout" @click="goBook">
         <nuxt-link class="book-icon-layout" to="/BookList">
           <i class="iconfont icon-shuji"></i>
         </nuxt-link>
@@ -40,7 +31,7 @@
           <i class="iconfont icon-neirong"></i>
         </nuxt-link>
         <div class="book-layout-name">字段</div>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
@@ -75,8 +66,7 @@
         this.$router.push('/Bar')
       },
       todoSetCurBook(item) {
-        this[MUTATIONS.BOOK_CUR_UPDATE](item._id)
-        bus.$emit('updateCurBooks')
+        this.$router.push(`/${item._id}/${item._id}_root`)
       },
     }
   }
@@ -93,6 +83,7 @@
     cursor: pointer;
     position: relative;
     z-index: 1;
+    text-align: center;
     a.book-icon-layout{
       display: inline-block;
     }
@@ -172,18 +163,18 @@
       height: 20px;
       line-height: 20px;
       position: absolute;
-      bottom: -22px;
+      bottom: -15px;
       width: 40px;
       font-size: 12px;
-      transform: translateY(-10px);
-      opacity: 0;
+  /*    transform: translateY(-10px);
+      opacity: 0;*/
       transition: .2s
     }
   }
-  .book-layout:hover .book-layout-name{
+/*  .book-layout:hover .book-layout-name{
     transform: translateY(0);
     opacity: 1;
-  }
+  }*/
   .show-book-list:hover  .book-list-layout{
     transform: scale(1);
   }
