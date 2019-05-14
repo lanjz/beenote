@@ -7,8 +7,9 @@ const _716d75fa = () => interopDefault(import('..\\pages\\bookList.vue' /* webpa
 const _064c28b4 = () => interopDefault(import('..\\pages\\login.vue' /* webpackChunkName: "pages_login" */))
 const _231c6398 = () => interopDefault(import('..\\pages\\schema.vue' /* webpackChunkName: "pages_schema" */))
 const _3332488f = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages_index" */))
-const _5137fcda = () => interopDefault(import('..\\pages\\_catalogId\\index.vue' /* webpackChunkName: "pages__catalogId_index" */))
-const _3ebb912e = () => interopDefault(import('..\\pages\\_catalogId\\_noteId\\index.vue' /* webpackChunkName: "pages__catalogId__noteId_index" */))
+const _17f440fc = () => interopDefault(import('..\\pages\\_bookId\\index.vue' /* webpackChunkName: "pages__bookId_index" */))
+const _cc8c8166 = () => interopDefault(import('..\\pages\\_bookId\\_catalogId\\index.vue' /* webpackChunkName: "pages__bookId__catalogId_index" */))
+const _5c11e01b = () => interopDefault(import('..\\pages\\_bookId\\_catalogId\\_noteId\\index.vue' /* webpackChunkName: "pages__bookId__catalogId__noteId_index" */))
 
 Vue.use(Router)
 
@@ -105,13 +106,17 @@ export function createRouter() {
       component: _3332488f,
       name: "index"
     }, {
-      path: "/:catalogId",
-      component: _5137fcda,
-      name: "catalogId"
+      path: "/:bookId",
+      component: _17f440fc,
+      name: "bookId"
     }, {
-      path: "/:catalogId/:noteId",
-      component: _3ebb912e,
-      name: "catalogId-noteId"
+      path: "/:bookId/:catalogId",
+      component: _cc8c8166,
+      name: "bookId-catalogId"
+    }, {
+      path: "/:bookId/:catalogId/:noteId",
+      component: _5c11e01b,
+      name: "bookId-catalogId-noteId"
     }],
 
     fallback: false

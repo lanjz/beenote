@@ -11,7 +11,7 @@ import _6f6c098b from '..\\layouts\\default.vue'
 const layouts = { "_blog": _2d21d098,"_default": _6f6c098b }
 
 export default {
-  head: {"title":"beenote","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"beenote"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","href":"\u002F\u002Fat.alicdn.com\u002Ft\u002Ffont_992689_2rlkoi94rtv.css"}],"script":[{"src":"\u002F\u002Fat.alicdn.com\u002Ft\u002Ffont_992689_pswgkexoa3.js"}],"style":[]},
+  head: {"title":"beenote","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"beenote"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","href":"\u002F\u002Fat.alicdn.com\u002Ft\u002Ffont_992689_nubdyhk248d.css"}],"script":[{"src":"\u002F\u002Fat.alicdn.com\u002Ft\u002Ffont_992689_pswgkexoa3.js"}],"style":[]},
 
   render(h, props) {
     const loadingEl = h('NuxtLoading', { ref: 'loading' })

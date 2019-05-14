@@ -80,6 +80,7 @@ const mutations = {
     } else if(!force && findInd > -1 ){
       state.isOpen.splice(findInd, 1)
     }
+    state.isOpen = [ ...state.isOpen ]
   },
   [MUTATIONS.CATALOGS_OPEN_RESET](state, id) {
     state.isOpen = []

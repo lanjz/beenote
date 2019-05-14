@@ -14,29 +14,32 @@
       @emitUpdateNote="doUpdateNote"
       v-if="!noData"
     ></note-des>
-    <div v-else class="no-data">
-      暂无数据
-    </div>
+    <noNotes v-else></noNotes>
     <articleFixed></articleFixed>
   </div>
 </template>
 <script>
   import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-  import * as MUTATIONS from '../../../store/const/mutaions'
-  import * as ACTIONS from '../../../store/const/actions'
-  import bus from '../../../util/global/eventBus'
-  import TreeItem from '../../../components/tree/index.vue'
-  import NoteBrief from '../../../components/note/NoteBrief.vue'
-  import noteDes from '../../../components/note/noteDes.vue'
-  import articleFixed from '../../../components/article/articleFixed.vue'
-  import constKey from '../../../util/const'
+  import * as MUTATIONS from '@/store/const/mutaions'
+  import * as ACTIONS from '@/store/const/actions'
+  import bus from '@/util/global/eventBus'
+  import TreeItem from '@/components/tree/index.vue'
+  import NoteBrief from '@/components/note/NoteBrief.vue'
+  import noteDes from '@/components/note/noteDes.vue'
+  import noNotes from '@/components/note/noNotes.vue'
+  import articleFixed from '@/components/article/articleFixed.vue'
+  import constKey from '@/util/const'
 
   export default {
     components: {
       TreeItem,
       NoteBrief,
       noteDes,
-      articleFixed
+      articleFixed,
+      bookId: '',
+      catalogId: '',
+      noteId: '',
+      noNotes
     },
     data: function () {
       return {
@@ -87,36 +90,33 @@
        * 初始化的时候，获取note列表 最近文章
        * */
       async getNoteData() {
-        const {catalogId, noteId} = $nuxt._route.params
-        const getCatalogsData = catalogId === constKey.recentlyArticlesKey ?
-          this[ACTIONS.NOTES_RECENTLY_GET] : this[ACTIONS.NOTES_GET]
+        const getCatalogsData = this.catalogId === constKey.recentlyArticlesKey ?
+          this[ACTIONS.NOTES_RECENTLY_GET]() : this[ACTIONS.NOTES_GET]()
         Promise.all([
-          getCatalogsData(),
+          getCatalogsData,
           this[ACTIONS.BOOK_LIST_GET](),
           this[ACTIONS.CATALOGS_GET]()
         ])
-          .then(() => {
+          .then((res) => {
+            if (res[0].data.list.length && !this.noteId) {
+              this.$router.push(`/${this.bookId}/${this.catalogId}/${res[0].data.list[0]._id}`)
+            } else {
+              if (!this.noteId) {
+                this.noData = true
+              }
+            }
             // this[ACTIONS.NOTES_RECENTLY_GET]()
           })
           .catch(err => {
-            console.log('err', err)
             this.$alert({
               title: 'getBookData',
               content: err.message
             })
           })
       },
-      /**
-       *  获取文章详情 设置编辑内容 editId设为articleId
-       *  如果是创建笔记，则_id为new
-       *  @param <Object> arg
-       *  */
-      async chooseCurNote(arg) {
-        this[MUTATIONS.NOTE_CUR_UPDATE](arg._id)
-      },
-      toCreateNote(arg) {
 
-        this.$router.push(`/${arg.catalogId}/new`)
+      toCreateNote(arg) {
+        this.$router.push(`/${this.curBook}/${arg.catalogId}/new`)
       },
       /**
        * @param <String> id 如果有则指定为当前id
@@ -132,10 +132,11 @@
           })
         }
         let cusNodeId = id
-        if(getData.data.list.length && !cusNodeId){
+        if (getData.data.list.length && !cusNodeId) {
           cusNodeId = getData.data.list[0]._id
         }
-        this.$router.push(`/${catalogId||this.curCatalog}/${cusNodeId||'none'}`)
+
+        this.$router.push(`/${this.curBook}/${catalogId || this.curCatalog}/${cusNodeId || ''}`)
       },
       initEmitOn() {
         /**
@@ -164,25 +165,18 @@
         })
       },
       async init() {
-        this.getNoteData('init')
+        this.getNoteData()
         this.initEmitOn()
       },
       async dealParams() {
-        const {catalogId, noteId} = $nuxt._route.params
+        const {bookId, catalogId, noteId} = $nuxt._route.params
+        this.bookId = bookId
+        this.catalogId = catalogId
+        this.noteId = noteId
         this.createToCatalogId = catalogId
+        this[MUTATIONS.BOOK_CUR_UPDATE](bookId)
         this[MUTATIONS.CATALOGS_CUR_SAVE](catalogId)
         this[MUTATIONS.NOTE_CUR_UPDATE](noteId)
-        if(noteId === 'new') return
-        if(noteId === 'none') {
-          this.noData = true
-          return
-        }
-        const {err, data} = await this[ACTIONS.NOTE_DES_GET]({
-          id: noteId
-        })
-        if (err) return
-        const {bookId} = data
-        this[MUTATIONS.BOOK_CUR_UPDATE](bookId)
         this.init()
       }
     },
@@ -290,9 +284,5 @@
     max-width: 0;
     overflow: hidden;
   }
-  .no-data{
-    flex: 1;
-    font-size: 20px;
-    padding: 20px;
-  }
+
 </style>

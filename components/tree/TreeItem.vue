@@ -119,7 +119,8 @@
           && this.catalogs[this.curNode['_id']]['childNodes'].length
       },
       isOpen() {
-        return this.catalogsIsOpen.indexOf(this.curNode._id) > -1 ? true : false
+        const curNodeId = this.curNode._id.indexOf('root') > -1 ? 'root' : this.curNode._id
+        return this.catalogsIsOpen.indexOf(curNodeId) > -1 ? true : false
       }
     },
     watch: {

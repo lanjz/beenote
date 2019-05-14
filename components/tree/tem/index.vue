@@ -100,7 +100,7 @@
         return this.newDir.parentId === item['_id']
       },
       chooseCatalog(data, index) {
-        this[ MUTATIONS.CATALOGS_CUR_SAVE]({
+        this[MUTATIONS.CATALOGS_CUR_SAVE]({
           data,
           treeNode: this.getTreeNode(data, index)
         })
