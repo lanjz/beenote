@@ -1,8 +1,12 @@
 <template>
   <div class="head flex">
-    <div class="logo">
+<!--    <div class="logo">
+      Black Hook - N
       <i class="iconfont icon-biji"></i>
-      <!--<img src="../../assets/imgs/small-LOGO.png">-->
+      &lt;!&ndash;<img src="../../assets/imgs/small-LOGO.png">&ndash;&gt;
+    </div>-->
+    <div class="logo-test">
+      <small>Black<br/>Hook </small> <big>- N</big>
     </div>
     <div class="flex flex-1 align-items-center justify-content-end">
       <div class="head-nav flex">
@@ -43,6 +47,7 @@
     border-radius: 50%;
     left: 10px;
     top: 10px;
+    color: #fff;
     img{
       height: 65px;
     }
@@ -76,4 +81,11 @@
     color: #fff;
   }
 
+  .logo-test{
+    color: #fff;
+    small{
+      font-size: 15px;
+      display: inline-block;
+    }
+  }
 </style>
