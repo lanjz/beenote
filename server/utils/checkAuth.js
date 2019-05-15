@@ -11,6 +11,14 @@ function passValidAuth(ctx = {}) {
     post: ['/api/login', '/api/user']
   }
   const getMethod = ctx.method.toLowerCase()
+  // 开放所有get请求
+  if(getMethod === 'get') {
+    return true
+  }
+  // 所有的delete和put都需要权限
+  if(getMethod === 'delete' || getMethod === 'put') {
+    return false
+  }
   if(!getMethod || !passPath[getMethod]) {
     return false
   }
