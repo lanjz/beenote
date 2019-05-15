@@ -32,6 +32,28 @@
   import { returnCatalog } from '@/util/blackHole'
 
   export default {
+    asyncData ({ params }) {
+     /* console.log("params", params)
+      function test() {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {resolve(134)}, 2000)
+        })
+      }
+      return test()
+        .then((res) => {
+          return { test: res }
+        })*/
+    },
+    async fetch ({ store, params }) {
+      console.log('params', params)
+      const { noteId } = params
+      const result = await store.dispatch('notes/NOTE_DES_GET', {id: noteId})
+      console.log('res', result)
+      /*return axios.get('http://my-api/stars')
+        .then((res) => {
+          store.commit('setStars', res.data)
+        })*/
+    },
     components: {
       TreeItem,
       NoteBrief,

@@ -30,7 +30,7 @@ class BaseCtl {
     }
     return {}
   }
- 
+
   todoPreAdd(params) {
     const res = { err: null, data: params }
     return res
@@ -86,6 +86,7 @@ class BaseCtl {
       ctx.send(2, '', 'id不能为空')
       return
     }
+    console.log(1111111111111)
     try{
       const dbQuery = this.dbQuery(ctx)
       const result = await this.Model.findById(id, dbQuery)

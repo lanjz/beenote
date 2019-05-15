@@ -1,5 +1,6 @@
 import { stringify } from 'querystring'
 import Vue from 'vue'
+import fetch from 'node-fetch'
 import middleware from './middleware.js'
 import { applyAsyncData, getMatchedComponents, middlewareSeries, promisify, urlJoin, sanitizeComponent } from './utils.js'
 import { createApp, NuxtError } from './index.js'
@@ -8,6 +9,8 @@ import NuxtLink from './components/nuxt-link.server.js' // should be included af
 // Component: <NuxtLink>
 Vue.component(NuxtLink.name, NuxtLink)
 Vue.component('NLink', NuxtLink)
+
+if (!global.fetch) { global.fetch = fetch }
 
 const debug = require('debug')('nuxt:render')
 debug.color = 4 // force blue color
@@ -80,6 +83,8 @@ export default async (ssrContext) => {
     app.context.error({ statusCode: 404, path: ssrContext.url, message: `This page could not be found` })
     return renderErrorPage()
   }
+
+  const s = Date.now()
 
   // Components are already resolved by setContext -> getRouteData (app/utils.js)
   const Components = getMatchedComponents(router.match(ssrContext.url))
@@ -210,6 +215,8 @@ export default async (ssrContext) => {
 
     return Promise.all(promises)
   }))
+
+  if (asyncDatas.length) debug('Data fetching ' + ssrContext.url + ': ' + (Date.now() - s) + 'ms')
 
   // datas are the first row of each
   ssrContext.nuxt.data = asyncDatas.map(r => r[0] || {})

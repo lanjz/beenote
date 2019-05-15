@@ -112,6 +112,23 @@ class NoteCtl extends BaseCtl {
       await next()
     }
   }
+  async findById(ctx, next) {
+    const { id } = ctx.params
+    if(!id) {
+      ctx.send(2, '', 'id不能为空')
+      return
+    }
+    try{
+      const dbQuery = this.dbQuery(ctx)
+      const result = await this.Model.findById(id, dbQuery)
+      console.log('result', result)
+      ctx.send(1, result, '')
+    } catch (e) {
+      ctx.send(2, '', hello.dealError(e, id))
+    } finally {
+      await next()
+    }
+  }
 }
 
 module.exports = new NoteCtl()
