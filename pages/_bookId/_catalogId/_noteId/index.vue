@@ -29,6 +29,7 @@
   import noNotes from '@/components/note/noNotes.vue'
   import articleFixed from '@/components/article/articleFixed.vue'
   import constKey from '@/util/const'
+  import { returnCatalog } from '@/util/blackHole'
 
   export default {
     components: {
@@ -117,7 +118,7 @@
       },
 
       toCreateNote(arg) {
-        this.$router.push(`/${this.curBook}/${arg.catalogId}/new`)
+        this.$router.push(`/${this.curBook}/${returnCatalog(arg.catalogId)}/new`)
       },
       /**
        * @param <String> id 如果有则指定为当前id
@@ -137,7 +138,7 @@
           cusNodeId = getData.data.list[0]._id
         }
 
-        this.$router.push(`/${this.curBook}/${catalogId || this.curCatalog}/${cusNodeId || ''}`)
+        this.$router.push(`/${this.curBook}/${returnCatalog(catalogId || this.curCatalog)}/${cusNodeId || ''}`)
       },
       initEmitOn() {
         /**
@@ -176,7 +177,8 @@
         this.noteId = noteId
         this.createToCatalogId = catalogId
         this[MUTATIONS.BOOK_CUR_UPDATE](bookId)
-        this[MUTATIONS.CATALOGS_CUR_SAVE](catalogId)
+        const realCatalogId = catalogId === 'root' ? `${bookId}_root` : catalogId
+        this[MUTATIONS.CATALOGS_CUR_SAVE](realCatalogId)
         this[MUTATIONS.NOTE_CUR_UPDATE](noteId)
         this.init()
       }

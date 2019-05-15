@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import fetch from 'unfetch'
 import middleware from './middleware.js'
 import {
   applyAsyncData,
@@ -22,8 +21,6 @@ import NuxtLink from './components/nuxt-link.client.js' // should be included af
 // Component: <NuxtLink>
 Vue.component(NuxtLink.name, NuxtLink)
 Vue.component('NLink', NuxtLink)
-
-if (!global.fetch) { global.fetch = fetch }
 
 // Global shared references
 let _lastPaths = []
@@ -80,9 +77,8 @@ const errorHandler = Vue.config.errorHandler || console.error
 createApp()
   .then(mountApp)
   .catch((err) => {
-    const wrapperError = new Error(err)
-    wrapperError.message = '[nuxt] Error while mounting app: ' + wrapperError.message
-    errorHandler(wrapperError)
+    err.message = '[nuxt] Error while mounting app: ' + err.message
+    errorHandler(err)
   })
 
 function componentOption(component, key, ...args) {
@@ -155,7 +151,7 @@ async function loadAsyncComponents(to, from, next) {
 
     // Handle chunk loading errors
     // This may be due to a new deployment or a network problem
-    if (/^Loading( CSS)? chunk (\d)+ failed\./.test(message)) {
+    if (/^Loading chunk (\d)+ failed\./.test(message)) {
       window.location.reload(true /* skip cache */)
       return // prevent error page blinking for user
     }
@@ -481,7 +477,6 @@ function fixPrepatch(to, ___) {
       if (
         instance.constructor._dataRefresh &&
         Components[i] === instance.constructor &&
-        instance.$vnode.data.keepAlive !== true &&
         typeof instance.constructor.options.data === 'function'
       ) {
         const newData = instance.constructor.options.data.call(instance)

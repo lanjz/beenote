@@ -1,7 +1,7 @@
 <template>
   <div class="no-data flex direction-column justify-content-center align-items-center">
     <i class="iconfont icon-wushuju"></i>
-    <div>还没任何有笔记，<span v-if="!isRecently" class="create-btn" @click="toCreateNote">快速创建</span></div>
+    <div>还没任何有笔记<span v-if="!isRecently">，<span class="create-btn" @click="toCreateNote">快速创建</span</span>></div>
   </div>
 </template>
 <script>

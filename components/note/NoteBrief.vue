@@ -37,6 +37,7 @@
 
   import bus from '../../util/global/eventBus'
   import constKey from '../../util/const'
+  import { returnCatalog } from '@/util/blackHole'
 
   export default {
     props: {
@@ -90,7 +91,7 @@
       ]),
       ...mapMutations('notes',[MUTATIONS.NOTE_CUR_UPDATE]),
       chooseNote: function (item) {
-         this.$router.push(`/${item.bookId}/${this.curCatalog}/${item._id}`)
+         this.$router.push(`/${item.bookId}/${returnCatalog(this.curCatalog)}/${item._id}`)
       },
       todoDelete(item) {
         this.$alert({

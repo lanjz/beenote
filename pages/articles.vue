@@ -104,7 +104,6 @@
       async chooseCurArticle(arg) {
         const { catalogId, schemaId, articleId, contentId = '' } = arg
         this.cusArticle = articleId
-        // this.$router.push(`/article/${articleId}`)
         this.setEditMeta(catalogId, schemaId, articleId, contentId)
       },
       /**

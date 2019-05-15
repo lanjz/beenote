@@ -66,7 +66,7 @@
         this.$router.push('/Bar')
       },
       todoSetCurBook(item) {
-        this.$router.push(`/${item._id}/${item._id}_root`)
+        this.$router.push(`/${item._id}/recently`)
       },
     }
   }
