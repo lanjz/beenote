@@ -75,6 +75,24 @@ const actions = {
   }
     return result
   },
+  /**
+   * @params <Object> force 是否强制重新获取数据
+   * */
+  async [ACTIONS.NOTE_GET_BY_ID]({ state, commit, rootState }, arg = {}) {
+    const { id, bookId, catalogId } = arg
+    const key = `${bookId}_${catalogId}`
+    if(state.list[key]){
+      return { err: null, data: { list: state.list[key] } }
+    }
+    const result = await fetch({
+      url: `/api/notes/${id}`,
+    })
+    const { err, data } = result
+    if(!err) {
+      commit('NOTE_LIST_SAVE', { data: data.list, start: 0, key })
+    }
+    return result
+  },
   /* eslint-disable no-unused-vars */
   async [ACTIONS.NOTE_POST]({ commit, rootState }, data) {
     const result = await fetch({

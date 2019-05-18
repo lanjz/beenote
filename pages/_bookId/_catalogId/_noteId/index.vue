@@ -45,14 +45,12 @@
         })*/
     },
     async fetch ({ store, params }) {
-      console.log('params', params)
-      const { noteId } = params
-      const result = await store.dispatch('notes/NOTE_DES_GET', {id: noteId})
-      console.log('res', result)
-      /*return axios.get('http://my-api/stars')
-        .then((res) => {
-          store.commit('setStars', res.data)
-        })*/
+      const { noteId, bookId, catalogId } = params
+      const result = await store.dispatch('notes/NOTE_GET_BY_ID', {id: noteId, bookId, catalogId})
+      const { err, data } = result
+      if(!err) {
+        store.commit('user/ISVISITOR_SAVE', data.extend.isVisitor)
+      }
     },
     components: {
       TreeItem,
@@ -203,7 +201,7 @@
         const realCatalogId = catalogId === 'root' ? `${bookId}_root` : catalogId
         this[MUTATIONS.CATALOGS_CUR_SAVE](realCatalogId)
         this[MUTATIONS.NOTE_CUR_UPDATE](noteId)
-        this.init()
+//        this.init()
       }
     },
     mounted() {

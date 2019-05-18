@@ -141,7 +141,7 @@ class NoteCtl extends BaseCtl {
       ctx.send(1, {
         list: result[0],
         count: result[1],
-        extends: {
+        extend: {
           isVisitor,
         }
       }, '')
