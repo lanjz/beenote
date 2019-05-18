@@ -142,6 +142,7 @@
       toCreateNote(arg) {
         this.$router.push(`/${this.curBook}/${returnCatalog(arg.catalogId)}/new`)
       },
+
       /**
        * @param <String> id 如果有则指定为当前id
        * */
