@@ -18,7 +18,7 @@ router.put('/user', userCtl.modify)
 router.post('/user', userCtl.add)
 
 router.get('/notes', noteCtl.find)
-router.get('/note/:id', noteCtl.findById)
+router.get('/note/:id', noteCtl.findNotesById)
 router.delete('/note', noteCtl.deleteById)
 router.delete('/notes', noteCtl.deleteByIds)
 router.put('/note', noteCtl.modify)

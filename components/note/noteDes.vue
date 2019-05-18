@@ -2,9 +2,10 @@
   <div class="article-layout flex direction-column flex-1 markdown">
     <div class="article-title flex ">
       <div class="flex-1 schema-title-layout relative">
-        <input class="full-input" v-model.trim="articleName" @blur="todoEdit(false)" />
+        <input class="full-input" v-model.trim="articleName" @blur="todoEdit(false)" v-if="!isVisitor"/>
+        <div class="full-input" v-else>{{articleName}}</div>
       </div>
-      <div class="schema-operate">
+      <div class="schema-operate" v-if="!isVisitor">
         <span class="schema-operate-btn"
               :class="{'disable-btn': !true}"
               v-show="curNote._id==='new'"
@@ -22,7 +23,7 @@
         <!--<div class="noSave" v-show="dataHasChange"></div>-->
         <div class="flex-1 relative">
           <div class="form-layout theme-1">
-            <markdown-edit v-model="content"></markdown-edit>
+            <markdown-edit v-model="content" :onlyView="isVisitor"></markdown-edit>
           </div>
         </div>
       </div>
@@ -67,6 +68,7 @@
     },
     computed: {
       ...mapState({
+        isVisitor: state => state.user.isVisitor,
         catalogs: state => state.catalogs.list,
         bookList: state => state.books.list,
         articles: state => state.articles.list,
@@ -163,6 +165,7 @@
         this.$hideLoading()
       },
       async toDoPutNote() {
+        if(this.isVisitor) return
         if(!this.dataHasChange || this.curNote._id === 'new') return
         this.doPutNote()
       },

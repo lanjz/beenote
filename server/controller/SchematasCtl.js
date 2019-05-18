@@ -317,7 +317,7 @@ class SchematasCtl extends BaseCtl {
         ctx.send(2, '', `${schemataId}不可修改`)
         return
       }
-      const findSchema = await this.Model.findById(schemataId)
+      const findSchema = await this.Model.findById({ id: schemataId })
       if(!findSchema) {
         ctx.send(2, '', `${schemataId}不存在`)
         return
@@ -394,7 +394,7 @@ class SchematasCtl extends BaseCtl {
         ctx.send(2, '', hello.dealError(err))
         return
       }
-      const findSchema = await this.Model.findById(schemataId)
+      const findSchema = await this.Model.findById({ id: schemataId })
       if(!findSchema) {
         ctx.send(2, '',  `${schemataId}不存在`)
         return

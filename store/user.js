@@ -4,7 +4,8 @@ import * as ACTIONS from './const/actions'
 
 const state = () => (
   {
-    userInfo: {}
+    userInfo: {},
+    isVisitor: true
   }
 )
 
@@ -13,6 +14,9 @@ const mutations = {
     state.userInfo = {
       ...data
     }
+  },
+  [MUTATIONS.ISVISITOR_SAVE](state, bol) {
+    state.isVisitor = bol
   }
 }
 

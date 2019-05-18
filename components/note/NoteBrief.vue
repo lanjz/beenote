@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      <div class="shortcut-add-layout" @click="shortcutAdd" v-if="notesMap[curNote]">
+      <div class="shortcut-add-layout" @click="shortcutAdd" v-if="notesMap[curNote] && !isVisitor">
         <i class="iconfont icon-tianjiawenjian"></i>
       </div>
     </div>
@@ -55,6 +55,7 @@
     },
     computed: {
       ...mapState({
+        isVisitor: state => state.user.isVisitor,
         curCatalog: state => state.catalogs.curCatalog,
         showBrief: state => state.config.showBrief,
         bookList: state => state.books.list,
@@ -203,7 +204,7 @@
   }
   .article-layout {
     padding: 15px 0;
-    background: @bg-color;
+    background: @bg-second-color;
     color: @tree-color;
     max-width: 500px;
     transition: .3s ;

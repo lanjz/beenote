@@ -2,7 +2,7 @@
   <div class="app flex direction-column absolute-full">
     <Header/>
     <div class="flex flex-1">
-      <bookShelveNav></bookShelveNav>
+      <bookShelveNav v-if="!isVisitor"></bookShelveNav>
       <div class="flex flex-1">
         <nuxt />
       </div>
@@ -11,12 +11,18 @@
   </div>
 </template>
 <script>
+  import { mapState } from 'vuex'
   import Header from '../components/layout/Header'
   import bookShelveNav from '../components/layout/bookShelveNav'
   export default {
     components: {
       Header,
       bookShelveNav
+    },
+    computed: {
+      ...mapState({
+        isVisitor: state => state.user.isVisitor
+      })
     }
   }
 </script>

@@ -56,7 +56,7 @@
 <style lang="less" scoped>
   .book-slider-layout{
     padding: 15px;
-    background: @bg-second-color;
+    background: @bg-color;
   }
   .book-layout{
     margin-top: 35px;
@@ -85,8 +85,8 @@
     box-shadow: 0 0 2px 1px #171717 inset;
   }
   .book-layout.act{
-    background: @bg-color;
+    background: @bg-second-color;
     border-radius: 4px;
-    box-shadow: 0 0 3px 1px #171717 inset;
+    box-shadow: 0 0 3px 1px #100f0f inset;
   }
 </style>

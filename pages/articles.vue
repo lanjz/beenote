@@ -429,7 +429,7 @@
   .catalog-layout{
     padding: 15px 2px;
     overflow: auto;
-    background: @tree-bg-color;
+    background: @bg-color;
     color: @tree-color;
     width: 200px;
     max-width: 200px;

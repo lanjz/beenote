@@ -8,6 +8,7 @@ class NoteCtl extends BaseCtl {
   constructor(){
     super()
     this.findRecentNotes = this.findRecentNotes.bind(this)
+    this.findNotesById = this.findNotesById.bind(this)
   }
   getModel() {
     return noteModel
@@ -29,7 +30,7 @@ class NoteCtl extends BaseCtl {
       // 查看Book
       const findBook = bookId === bookCtl.defaultBook._id ?
         bookCtl.defaultBook :
-        bookCtl.Model.findById(bookId, this.dbQuery(ctx))
+        bookCtl.Model.findById({ id: bookId, query: this.dbQuery(ctx) })
       tempPromise[0] = findBook
     }
     if (isPost && !catalogId) {
@@ -112,7 +113,7 @@ class NoteCtl extends BaseCtl {
       await next()
     }
   }
-  async findById(ctx, next) {
+  async findNotesById(ctx, next) {
     const { id } = ctx.params
     if(!id) {
       ctx.send(2, '', 'id不能为空')
@@ -120,9 +121,30 @@ class NoteCtl extends BaseCtl {
     }
     try{
       const dbQuery = this.dbQuery(ctx)
-      const result = await this.Model.findById(id, dbQuery)
-      console.log('result', result)
-      ctx.send(1, result, '')
+      const note = await this.Model.findById({ id, query: dbQuery, assectPath: false })
+      // 获取这个笔记应对所有分类的所有笔记
+      const {
+        bookId,
+        catalogId,
+        userId
+      } = note
+      const findNotesParams = {
+        bookId,
+        catalogId,
+        userId
+      }
+      const findFn = this.Model.listWithPaging({ start: 0, limit: 0, dbQuery:findNotesParams })
+      const result = await Promise.all([findFn, this.Model.listCount(findNotesParams)])
+      const isVisitor = (ctx.state.curUser &&
+        ctx.state.curUser._id.toString() === userId.toString()) ?
+        false : true
+      ctx.send(1, {
+        list: result[0],
+        count: result[1],
+        extends: {
+          isVisitor,
+        }
+      }, '')
     } catch (e) {
       ctx.send(2, '', hello.dealError(e, id))
     } finally {

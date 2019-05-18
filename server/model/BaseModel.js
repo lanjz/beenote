@@ -79,10 +79,13 @@ class baseModel {
   findOne(query, projection = null) {
     return this.Model.findOne(query, projection)
   }
-  findById(id, query, addLean) {
+  findById({ id = '', query = {}, addLean = false, assectPath = true }) {
     let fn = this.Model.findOne({ _id: id, ...query })
     if(addLean){
       fn = fn.lean()
+    }
+    if(!assectPath) {
+      return fn.exec()
     }
     return fn.select(this.assectPath).exec()
   }

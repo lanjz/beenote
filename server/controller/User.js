@@ -18,7 +18,7 @@ class UserCtl extends BaseCtl {
     return {}
   }
   userAuth(id) {
-    return this.Model.findById(id)
+    return this.Model.findById({ id })
   }
   setUserCookie(ctx, result) {
     const userTokenInfo = { clientUser: result._id, }
@@ -29,6 +29,9 @@ class UserCtl extends BaseCtl {
         path: '/'
       }
     )
+  }
+  clearUserCookie(ctx, result) {
+    ctx.cookies.set('helloToken','',{signed:false,maxAge:0})
   }
   async login(ctx, next) {
     const { username, password } = ctx.request.body
@@ -55,7 +58,7 @@ class UserCtl extends BaseCtl {
     }
   }
   async doAfterAdd(ctx, next, result) {
-    const infoResult = await this.Model.findById(result._id)
+    const infoResult = await this.Model.findById({ id: result._id })
     this.setUserCookie(ctx, infoResult)
     ctx.send(1, infoResult, '')
   }

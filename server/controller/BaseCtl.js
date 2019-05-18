@@ -89,7 +89,7 @@ class BaseCtl {
     console.log(1111111111111)
     try{
       const dbQuery = this.dbQuery(ctx)
-      const result = await this.Model.findById(id, dbQuery)
+      const result = await this.Model.findById({ id, query: dbQuery })
       ctx.send(1, result, '')
     } catch (e) {
       ctx.send(2, '', hello.dealError(e, id))

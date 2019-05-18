@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-1">
-    <div class="catalog-layout box-shadow" :class="{'hidden-catalog': !showDir}">
+    <div class="catalog-layout box-shadow" :class="{'hidden-catalog': !showDir}" v-if="!isVisitor">
       <TreeItem></TreeItem>
     </div>
     <NoteBrief
@@ -15,7 +15,7 @@
       v-if="!noData"
     ></note-des>
     <noNotes v-else></noNotes>
-    <articleFixed></articleFixed>
+    <articleFixed v-if="!isVisitor"></articleFixed>
   </div>
 </template>
 <script>
@@ -72,6 +72,7 @@
     },
     computed: {
       ...mapState({
+        isVisitor: state => state.user.isVisitor,
         schemaList: state => state.schema.list,
         noteList: state => state.notes.list,
         curBook: state => state.books.curBook,
@@ -142,7 +143,6 @@
       toCreateNote(arg) {
         this.$router.push(`/${this.curBook}/${returnCatalog(arg.catalogId)}/new`)
       },
-
       /**
        * @param <String> id 如果有则指定为当前id
        * */
@@ -298,7 +298,7 @@
   .catalog-layout {
     padding: 15px 2px;
     overflow: auto;
-    background: @tree-bg-color;
+    background: @bg-color;
     color: @tree-color;
     width: 200px;
     max-width: 200px;

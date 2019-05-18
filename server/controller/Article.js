@@ -170,7 +170,7 @@ class ArticleCtl extends BaseCtl {
       // 查看Book
       const findBook = bookId === bookCtl.defaultBook._id ?
         bookCtl.defaultBook :
-        bookCtl.Model.findById(bookId, this.dbQuery(ctx))
+        bookCtl.Model.findById({ id: bookId, query: this.dbQuery(ctx) })
       tempPromise[0] = findBook
     }
     if (isPost && !catalogId) {
@@ -236,7 +236,7 @@ class ArticleCtl extends BaseCtl {
     const findBuiltInSchema = schematasCtl.buitInSchema.find(item => item._id === schemaId)
     const findResult = findBuiltInSchema ?
       Promise.resolve(findBuiltInSchema) :
-      schematasCtl.Model.findById(schemaId, this.dbQuery(ctx))
+      schematasCtl.Model.findById({ id: schemaId, query: this.dbQuery(ctx) })
     return findResult
   }
   async findById(ctx, next) {
@@ -247,7 +247,7 @@ class ArticleCtl extends BaseCtl {
     }
     try {
       const dbQuery = this.dbQuery(ctx)
-      const result = await this.Model.findById(id, dbQuery, true)
+      const result = await this.Model.findById({ id, query: dbQuery, addLean:　true })
       if (result.schemaId) {
         const findSchema = await this.findSchema(ctx, result.schemaId)
         result.schema = findSchema
@@ -282,7 +282,7 @@ class ArticleCtl extends BaseCtl {
         }
         helloRes.data.contents = helloRes.data.content ? [helloRes.data.content] : []
         const result = await this.Model.save(helloRes.data)
-        // const infoResult = await this.Model.findById(result._id)
+        // const infoResult = await this.Model.findById({ id: result._id })
         // ctx.send(1, infoResult, '')
         // ctx.send(1, { id: result._id }, '')
         await this.doAfterAdd(ctx, next, result)
@@ -310,7 +310,7 @@ class ArticleCtl extends BaseCtl {
       res.err = new Error('缺少_id(article)')
       return res
     }
-    const findArticle = await this.Model.findById(merge._id)
+    const findArticle = await this.Model.findById({id: merge._id })
     if (!findArticle) {
       res.err = new Error(`${merge._id}不存在`)
       return res
@@ -318,7 +318,7 @@ class ArticleCtl extends BaseCtl {
     const findBuiltInSchema = schematasCtl.buitInSchema
       .find(item => item._id === findArticle.schemaId)
     const findSchema = findBuiltInSchema ? findBuiltInSchema :
-      await schematasCtl.Model.findById(findArticle.schemaId, this.dbQuery(ctx))
+      await schematasCtl.Model.findById({ id: findArticle.schemaId, query: this.dbQuery(ctx)})
     const {err, data} = await this.filterCon(merge.content, findSchema.fields)
     if (err) {
       res.err = err

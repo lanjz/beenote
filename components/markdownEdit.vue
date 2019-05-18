@@ -8,7 +8,7 @@
       <div class="tags-item-2 default-btn" @click="editAndPre":class="{'act': editMode === 3}" >Edit | Pre</div>
     </div>-->
     <div class="flex-1 flex absolute-full" :class="{'hideSplit': editMode !== 3}">
-      <div class="markdown-operate-layout">
+      <div class="markdown-operate-layout" v-if="!onlyView">
         <div class="icon-layout" @click="toggleEdit" :class="{'act': isEdit}" ><i class="iconfont icon-bianji2" ></i></div>
         <div class="icon-layout" @click="togglePreview" :class="{'act': isPreview}" ><i class="iconfont icon-yulan" ></i></div>
       </div>
@@ -16,7 +16,8 @@
         <textarea class="markdown-edit-box box-shadow-inset" v-model="markDownValue"></textarea>
       </div>
       <div class="flex-1 md-body-layout edit-layout relative" v-if="isPreview">
-        <div class="markdown-style" v-html="markdownHTML"></div>
+        <div class="markdown-style" :class="{'black-theme' :onlyView}" v-html="markdownHTML"></div>
+        <!--<div :class="onlyView ? 'markdown-edit-box box-shadow-inset' : 'markdown-style'" v-html="markdownHTML"></div>-->
       </div>
     </div>
   </div>
@@ -55,7 +56,12 @@ marked.setOptions({
       event: 'update'
     },
     props: {
-      data: String
+      data: String,
+      onlyView: {
+        default() {
+          return true
+        }
+      }
     },
     data() {
       return {
@@ -107,6 +113,9 @@ marked.setOptions({
     },
     mounted() {
       this.markDownValue = this.data || ''
+      if(this.isEdit) {
+        this.isEdit = false
+      }
     }
   }
 </script>
@@ -181,8 +190,8 @@ marked.setOptions({
     }
     .md-body-layout{
       overflow: auto;
-      padding: 20px;
       background: #fff;
+      padding: 0;
       box-shadow: 0 0 4px 1px #e7eaef inset;
     }
     .markdown-operate-layout{

@@ -28,6 +28,7 @@
   export default {
     computed:{
       ...mapState({
+        isVisitor: state => state.user.isVisitor,
         userName: state => state.user.userInfo
       })
     }

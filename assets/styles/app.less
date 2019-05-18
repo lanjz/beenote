@@ -530,6 +530,15 @@ textarea.form-input{
 
 .markdown-style{
   background: #fff;
+  padding: 0 20px 20px 20px;
+  p:first-child{
+    margin-top: 0;
+    padding-top: 14px;
+  }
+  p:last-child{
+    margin-bottom: 0;
+    padding-bottom: 14px;
+  }
   code{
     color: #525252;
     display: inline-block;
@@ -618,5 +627,23 @@ textarea.form-input{
     font-size: 12px;
     position: absolute;
     transform: translateX(2px);
+  }
+}
+
+.black-theme{
+  background: #202020;
+  color: #919191;
+  blockquote{
+    color: #f5f4f4;
+    background: #636363;
+  }
+  code{
+    border: solid 1px #000;
+    color: #919191;
+  }
+  table {
+    tr:nth-child(even){
+      background: #2D2D2D;
+    }
   }
 }
