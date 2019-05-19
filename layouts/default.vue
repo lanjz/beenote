@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import Header from '../components/layout/Header'
   import bookShelveNav from '../components/layout/bookShelveNav'
   export default {
@@ -20,9 +20,7 @@
       bookShelveNav
     },
     computed: {
-      ...mapState({
-        isVisitor: state => state.user.isVisitor
-      })
+      ...mapGetters('user', ['isVisitor']),
     }
   }
 </script>

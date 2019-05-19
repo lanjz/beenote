@@ -55,7 +55,6 @@
     },
     computed: {
       ...mapState({
-        isVisitor: state => state.user.isVisitor,
         curCatalog: state => state.catalogs.curCatalog,
         showBrief: state => state.config.showBrief,
         bookList: state => state.books.list,
@@ -70,6 +69,7 @@
         }
 
       }),
+      ...mapGetters('user', ['isVisitor']),
     },
     watch: {
       list: function (val) {

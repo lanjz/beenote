@@ -24,13 +24,13 @@
   </div>
 </template>
 <script>
-  import { mapState, mapGetter, mapMutations, mapActions } from 'vuex'
+  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   export default {
     computed:{
       ...mapState({
-        isVisitor: state => state.user.isVisitor,
         userName: state => state.user.userInfo
-      })
+      }),
+      ...mapGetters('user', ['isVisitor']),
     }
   }
 </script>

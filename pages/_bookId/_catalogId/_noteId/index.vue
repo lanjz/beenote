@@ -12,6 +12,7 @@
       :curNote="curEditNote"
       :createToCatalogId="createToCatalogId"
       @emitUpdateNote="doUpdateNote"
+      :curNoteContent="curNoteContent"
       v-if="!noData"
     ></note-des>
     <noNotes v-else></noNotes>
@@ -30,26 +31,29 @@
   import articleFixed from '@/components/article/articleFixed.vue'
   import constKey from '@/util/const'
   import { returnCatalog } from '@/util/blackHole'
+  import fetch from '@/util/fetch/fetch.js'
 
   export default {
-    asyncData ({ params }) {
-     /* console.log("params", params)
-      function test() {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {resolve(134)}, 2000)
-        })
-      }
-      return test()
-        .then((res) => {
-          return { test: res }
-        })*/
-    },
+   /* async asyncData ({ params }) {
+      const { noteId } = params
+      const result = await fetch({
+        url: `/api/note/${noteId}`,
+      })
+//      console.log('result', result)
+      return { curNoteContent: result.data, noData: false }
+    },*/
     async fetch ({ store, params }) {
       const { noteId, bookId, catalogId } = params
+      store.commit('books/BOOK_CUR_UPDATE', bookId)
+      store.commit('catalogs/CATALOGS_CUR_SAVE', catalogId)
+      store.commit('notes/NOTE_CUR_UPDATE', noteId)
+      if(store.state.notes.list[`${bookId}_${catalogId}`]){
+        return
+      }
       const result = await store.dispatch('notes/NOTE_GET_BY_ID', {id: noteId, bookId, catalogId})
-      const { err, data } = result
-      if(!err) {
-        store.commit('user/ISVISITOR_SAVE', data.extend.isVisitor)
+      const { extend } = result.data
+      if(extend && extend.user) {
+        store.commit('user/CUR_USER_INFO_SAVE', extend.user)
       }
     },
     components: {
@@ -65,12 +69,13 @@
     data: function () {
       return {
         createToCatalogId: '',
-        noData: false
+        noData: false,
+        curNoteContent: {}
+//        curEditNote: {}
       }
     },
     computed: {
       ...mapState({
-        isVisitor: state => state.user.isVisitor,
         schemaList: state => state.schema.list,
         noteList: state => state.notes.list,
         curBook: state => state.books.curBook,
@@ -79,6 +84,7 @@
         curCatalog: state => state.catalogs.curCatalog
       }),
       ...mapGetters('catalogs', ['treeChainList']),
+      ...mapGetters('user', ['isVisitor']),
       curNoteList: function () {
         if (this.curCatalog && this.noteList && this.curBook) {
           return this.noteList[this.curBook + '_' + this.curCatalog] || []
@@ -111,6 +117,35 @@
       /**
        * 初始化的时候，获取note列表 最近文章
        * */
+/*      async getNoteData() {
+        const getCatalogsData = this.catalogId === constKey.recentlyArticlesKey ?
+          this[ACTIONS.NOTES_RECENTLY_GET]() : this[ACTIONS.NOTES_GET]()
+        Promise.all([
+          getCatalogsData,
+          this[ACTIONS.BOOK_LIST_GET](),
+          this[ACTIONS.CATALOGS_GET]()
+        ])
+          .then((res) => {
+            const data = res[0].data.list
+            if (data.length && !this.noteId) {
+              this.$router.push(`/${this.bookId}/${this.catalogId}/${data[0]._id}`)
+            } else {
+              if (!this.noteId) {
+                this.noData = true
+              }
+            }
+            // this[ACTIONS.NOTES_RECENTLY_GET]()
+          })
+          .catch(err => {
+            this.$alert({
+              title: 'getBookData',
+              content: err.message
+            })
+          })
+      },*/
+      /**
+       * 初始化的时候，获取note列表 最近文章
+       * */
       async getNoteData() {
         const getCatalogsData = this.catalogId === constKey.recentlyArticlesKey ?
           this[ACTIONS.NOTES_RECENTLY_GET]() : this[ACTIONS.NOTES_GET]()
@@ -137,7 +172,6 @@
             })
           })
       },
-
       toCreateNote(arg) {
         this.$router.push(`/${this.curBook}/${returnCatalog(arg.catalogId)}/new`)
       },
@@ -188,6 +222,7 @@
         })
       },
       async init() {
+        if(this.isVisitor) return
         this.getNoteData()
         this.initEmitOn()
       },
@@ -197,11 +232,7 @@
         this.catalogId = catalogId
         this.noteId = noteId
         this.createToCatalogId = catalogId
-        this[MUTATIONS.BOOK_CUR_UPDATE](bookId)
-        const realCatalogId = catalogId === 'root' ? `${bookId}_root` : catalogId
-        this[MUTATIONS.CATALOGS_CUR_SAVE](realCatalogId)
-        this[MUTATIONS.NOTE_CUR_UPDATE](noteId)
-//        this.init()
+        this.init()
       }
     },
     mounted() {

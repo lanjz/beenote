@@ -7,7 +7,8 @@ const state = () => (
   {
     list: {},
     curNote: "",
-    notesMap: {}
+    notesMap: {},
+    curNoteContent: {},
   }
 )
 const getters = {
@@ -28,6 +29,9 @@ const mutations = {
   },
   [MUTATIONS.NOTE_MAP_SAVE](state, { data, id }) {
     state.notesMap[id] = data
+  },
+  [MUTATIONS.NOTE_CUR_CONTENT_UPDATE](state, data) {
+    state.curNoteContent = data
   }
 }
 
@@ -85,7 +89,7 @@ const actions = {
       return { err: null, data: { list: state.list[key] } }
     }
     const result = await fetch({
-      url: `/api/notes/${id}`,
+      url: `/api/notes/${id}?catalogId=${catalogId}`,
     })
     const { err, data } = result
     if(!err) {

@@ -29,6 +29,7 @@ function passValidAuth(ctx = {}) {
 async function checkAuth(ctx, next) {
   try{
     const getHelloToken = ctx.cookies.get('helloToken')
+
     if(!getHelloToken) {
       // 无token且需要登录的，直接返回4
       if(!passValidAuth(ctx)) {

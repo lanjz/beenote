@@ -5,10 +5,17 @@ import * as ACTIONS from './const/actions'
 const state = () => (
   {
     userInfo: {},
-    isVisitor: true
+    curUserInfo: {}
   }
 )
-
+const getters = {
+  isVisitor: state => {
+    if(!state.userInfo['_id']){
+      return true
+    }
+    return state.userInfo['_id'] !== state.curUserInfo['_id']
+  }
+}
 const mutations = {
   [MUTATIONS.USER_SAVE](state, data) {
     state.userInfo = {
@@ -17,6 +24,9 @@ const mutations = {
   },
   [MUTATIONS.ISVISITOR_SAVE](state, bol) {
     state.isVisitor = bol
+  },
+  [MUTATIONS.CUR_USER_INFO_SAVE](state, info) {
+    state.curUserInfo = info
   }
 }
 
@@ -48,6 +58,7 @@ const actions = {
 }
 export default {
   state,
+  getters,
   mutations,
   actions
 }

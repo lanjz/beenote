@@ -9,7 +9,7 @@
         <span class="schema-operate-btn"
               :class="{'disable-btn': !true}"
               v-show="curNote._id==='new'"
-              @click="todoSave" >保存</span>
+              @click="todoSave">保存</span>
       </div>
     </div>
     <div class="flex-1 flex">
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-  import { mapState, mapGetter, mapMutations, mapActions } from 'vuex'
+  import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
   import * as MUTATIONS from '../../store/const/mutaions'
   import * as ACTIONS from '../../store/const/actions'
   import MarkdownEdit from '../markdownEdit.vue'
@@ -44,13 +44,18 @@
       },
       createToCatalogId: {
         type: String
+      },
+      curNoteContent: {
+        type: Object
       }
     },
     data: function () {
+      console.log('this.curNoteContent', this.curNoteContent)
+      const { title = '未命名', content = '' } = this.curNoteContent || {}
       return {
-        articleName: '未命名',
-        cacheName: '未命名',
-        content: '',
+        articleName: title,
+        cacheName: title,
+        content,
         editId: 'new',
         schemaId: '',
         catalogId: '',
@@ -68,18 +73,21 @@
     },
     computed: {
       ...mapState({
-        isVisitor: state => state.user.isVisitor,
         catalogs: state => state.catalogs.list,
         bookList: state => state.books.list,
         articles: state => state.articles.list,
       }),
+      ...mapGetters('user', ['isVisitor']),
       dataHasChange() {
         return JSON.stringify(this.content) !== JSON.stringify(this.cacheContent)
       }
     },
     watch: {
-      curNote: function (val) {
-        this.setContent(val)
+      curNote: {
+        handler: function (val) {
+          this.setContent(val)
+        },
+        immediate: true
       },
       editId: function (val) {
         this[MUTATIONS.ARTICLE_CUS_SAVE](val)
@@ -106,7 +114,7 @@
         ACTIONS.NOTE_DELETE,
       ]),
       setContent(val = {}) {
-        if(!val._id) {
+        if (!val._id) {
           this.$alert({
             title: 'setContent',
             content: 'val值不正确'
@@ -117,9 +125,9 @@
         this.cacheName = this.articleName = val.title || '未命名'
       },
       async todoEdit(force = false) {
-        if(!force){
-          if(
-            this.curNote._id==='new'||
+        if (!force) {
+          if (
+            this.curNote._id === 'new' ||
             !this.articleName ||
             this.cacheName === this.articleName
           ) {
@@ -129,14 +137,14 @@
         this.doPutNote()
       },
       async todoSave() {
-        if(!this.articleName) return
+        if (!this.articleName) return
         this.$showLoading()
         const result = await this[ACTIONS.NOTE_POST]({
           content: this.content,
           title: this.articleName,
           catalogId: this.createToCatalogId
         })
-        if(!result.err) {
+        if (!result.err) {
           this.$toast({
             title: '添加成功'
           })
@@ -155,18 +163,18 @@
           _id: id,
           force
         })
-        if(!result.err) {
-          const { bookId, catalogId } = result.data
-          const { MOCK } = process.env
-          if(!MOCK){
+        if (!result.err) {
+          const {bookId, catalogId} = result.data
+          const {MOCK} = process.env
+          if (!MOCK) {
             this[MUTATIONS.BOOK_CUR_UPDATE](bookId)
           }
         }
         this.$hideLoading()
       },
       async toDoPutNote() {
-        if(this.isVisitor) return
-        if(!this.dataHasChange || this.curNote._id === 'new') return
+        if (this.isVisitor) return
+        if (!this.dataHasChange || this.curNote._id === 'new') return
         this.doPutNote()
       },
       async doPutNote() {
@@ -180,7 +188,7 @@
           }
         )
         this.$hideLoading()
-        if(!result.err) {
+        if (!result.err) {
           this.$toast({
             title: '修改成功'
           })
@@ -193,8 +201,8 @@
           })
       },
       async init() {
-        const { id } = this.$route.params
-        if(id) {
+        const {id} = this.$route.params
+        if (id) {
           this.editId = id
           await this.getData(id)
         }
@@ -210,63 +218,65 @@
     background: #eee;
     position: relative;
 
-    .form-label-layout{
+    .form-label-layout {
       width: 100%;
       text-align: left;
       font-size: 12px;
       color: #adabab;
       padding-left: 0;
     }
-    .form-content-layout{
+    .form-content-layout {
       background: #fff;
       padding: 7px 20px;
     }
-    .add-options-item{
+    .add-options-item {
       margin: 5px;
     }
-    .from-select, .form-input{
+    .from-select, .form-input {
       border: none;
       outline: none;
       padding: 0;
     }
-    .form-group:not(:first-child){
+    .form-group:not(:first-child) {
       margin: 0;
     }
-    .form-content-layout-select{
+    .form-content-layout-select {
       padding-top: 18px;
       padding-bottom: 18px;
     }
-    .markdown-layout{
+    .markdown-layout {
       min-height: 500px;
       /*position: relative;*/
       padding: 10px;
     }
   }
-  .article-layout-theme1{
-    .article-content{
+
+  .article-layout-theme1 {
+    .article-content {
       padding: 40px;
     }
-    .form-label-layout{
+    .form-label-layout {
       display: none;
     }
-    .from-select, .form-input{
+    .from-select, .form-input {
       border: none;
       outline: none;
       font-size: 20px;
     }
   }
+
   .article-title {
     border-bottom: solid 1px @border-color;
     background: #fff;
     height: 45px;
     line-height: 45px;
     padding: 0 15px;
-    .operate-list-operate{
-      .iconfont{
+    .operate-list-operate {
+      .iconfont {
         font-size: 20px;
         cursor: pointer;
       }
-      .icon-box{
+      .icon-box {
         border: solid 1px @tree-color;
         border-radius: 50%;
         width: 30px;
@@ -275,7 +285,7 @@
         text-align: center;
         display: inline-block;
       }
-      .icon-box.act{
+      .icon-box.act {
         background: @highlight-color;
         color: #fff;
       }
@@ -292,27 +302,29 @@
     color: @tree-light-bg-color;
   }
 
-  .markdown{
-    .form-label-layout{
+  .markdown {
+    .form-label-layout {
       display: none;
     }
-    .markdown-layout{
+    .markdown-layout {
       padding: 0;
     }
-    .article-content{
+    .article-content {
       padding: 0;
     }
-    .scroll-box{
+    .scroll-box {
       overflow: hidden;
     }
-    .form-group, .form-layout{
+    .form-group, .form-layout {
       height: 100%;
     }
   }
-  .article-content.noSave{
+
+  .article-content.noSave {
     border: solid 1px @warn-color
   }
-  .schema-operate-btn{
+
+  .schema-operate-btn {
     height: 30px;
     line-height: 30px;
     width: 80px;

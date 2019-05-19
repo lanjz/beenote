@@ -20,6 +20,7 @@ export const ARTICLE_CUS_SAVE = 'ARTICLE_CUS_SAVE'
 
 export const USER_SAVE = 'USER_SAVE'
 export const ISVISITOR_SAVE = 'ISVISITOR_SAVE'
+export const CUR_USER_INFO_SAVE = 'CUR_USER_INFO_SAVE'
 
 // notes
 
@@ -27,6 +28,7 @@ export const NOTE_LIST_SAVE = 'NOTE_LIST_SAVE'
 export const NOTE_LIST_UPDATE = 'NOTE_LIST_UPDATE'
 export const NOTE_CUR_UPDATE = 'NOTE_CUR_UPDATE'
 export const NOTE_MAP_SAVE = 'NOTE_MAP_SAVE'
+export const NOTE_CUR_CONTENT_UPDATE = 'NOTE_CUR_CONTENT_UPDATE'
 
 // config
 
