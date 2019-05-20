@@ -7,12 +7,11 @@ function passValidAuth(ctx = {}) {
     return true
   }
   const passPath = {
-    get: [''],
+    get: ['/api/getUserInfo'],
     post: ['/api/login', '/api/user']
   }
   const getMethod = ctx.method.toLowerCase()
-  // 开放所有get请求
-  if(getMethod === 'get') {
+  if(ctx.url.indexOf('/notes/') > -1) {
     return true
   }
   // 所有的delete和put都需要权限
