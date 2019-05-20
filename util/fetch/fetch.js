@@ -35,7 +35,7 @@ function fetchData(options) {
     url = `http://67.209.187.22:3000/mock/15${url}`
   } else {
     const env = process.DEV
-    url = `http://67.209.187.22:3001${url}`
+    url = `${url}`
   }
   options.url = url
   options.method = options.method || 'get'
