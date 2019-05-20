@@ -61,7 +61,6 @@ class baseModel {
     return this.Model.countDocuments(query);
   }
   save(data) {
-    console.log("data", data)
     const model = new this.Model(data)
     const error = model.validateSync()
     if (error) {

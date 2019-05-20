@@ -10,7 +10,7 @@ function cookeyToJson(req) {
   return Cookies
 }
 
-export default function ({ store, redirect, req }) {
+export default function ({ store, redirect, req, app, params }) {
   if(store.state.user.userInfo['_id']) {
     return
   }

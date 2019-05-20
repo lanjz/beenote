@@ -50,6 +50,7 @@ module.exports = {
     '~/plugins/toast',
     '~/plugins/filters',
     '~/plugins/directive',
+    '~/plugins/route'
   ],
 
   /*

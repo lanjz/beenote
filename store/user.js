@@ -28,9 +28,6 @@ const mutations = {
       ...data
     }
   },
-  [MUTATIONS.ISVISITOR_SAVE](state, bol) {
-    state.isVisitor = bol
-  },
   [MUTATIONS.CUR_USER_INFO_SAVE](state, info) {
     state.curUserInfo = {
       ...info

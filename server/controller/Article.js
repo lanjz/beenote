@@ -559,12 +559,10 @@ class ArticleCtl extends BaseCtl {
           content.forEach(item2 => {
 
             if(item2 !== '_id' && item2 !== 'createTime'&& item2 !== 'updateTime'){
-              console.log('item2', item2)
               temValu.push(inC[item2])
             }
           })
           con = temValu.join('----------------------------------------')
-          console.log('item', item)
           const copyData = {
             content: con,
             title: item.title,

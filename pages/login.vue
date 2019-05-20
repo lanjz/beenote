@@ -111,6 +111,9 @@
       }
     },
     methods: {
+      ...mapMutations('user', [
+        MUTATIONS.CUR_USER_INFO_SAVE
+      ]),
       ...mapActions('user', [
         ACTIONS.LOGIN_POST,
         ACTIONS.USER_POST
@@ -162,6 +165,7 @@
         })
         this.$hideLoading()
         if(!result.err){
+          this[MUTATIONS.CUR_USER_INFO_SAVE]({_id: ''})
           this.$router.push('/')
         }
       },

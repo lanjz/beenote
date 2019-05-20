@@ -226,7 +226,7 @@
       },
       async init() {
         // await this[ACTIONS.USER_INFO_GET]()
-        if(this.isVisitor) return
+        if(this.isVisitor && this.noteId) return
         this.getNoteData()
         this.initEmitOn()
       },
