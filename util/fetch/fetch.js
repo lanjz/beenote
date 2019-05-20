@@ -34,7 +34,9 @@ function fetchData(options) {
   if (MOCK) {
     url = `http://67.209.187.22:3000/mock/15${url}`
   } else {
-    url = process.env.NODE_ENV === 'development' ? `http://localhost:3001${url}` : `http://127.0.0.1:3001${url}`
+    url = process.env.NODE_ENV === 'development' ?
+      `http://localhost:3001${url}` :
+      process.client ? `${url}`: `http://127.0.0.1:3001${url}`
   }
   options.url = url
   options.method = options.method || 'get'
