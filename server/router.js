@@ -16,6 +16,7 @@ router.delete('/user', userCtl.deleteById)
 router.delete('/users', userCtl.deleteByIds)
 router.put('/user', userCtl.modify)
 router.post('/user', userCtl.add)
+router.get('/getUserInfo', userCtl.findByCookie)
 
 router.get('/notes', noteCtl.find)
 router.get('/note/:id', noteCtl.findById)

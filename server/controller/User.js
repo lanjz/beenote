@@ -7,6 +7,7 @@ class UserCtl extends BaseCtl {
     super()
     this.userAuth = this.userAuth.bind(this)
     this.login = this.login.bind(this)
+    this.findByCookie = this.findByCookie.bind(this)
   }
   /**
    * @POST：'/login' 登录验证
@@ -61,6 +62,16 @@ class UserCtl extends BaseCtl {
     const infoResult = await this.Model.findById({ id: result._id })
     this.setUserCookie(ctx, infoResult)
     ctx.send(1, infoResult, '')
+  }
+  async findByCookie(ctx, next) {
+    if(ctx.state.curUser && ctx.state.curUser._id) {
+      ctx.send(1, ctx.state.curUser, '')
+    } else {
+      ctx.send(1, {
+        userId: '未登录'
+      }, '')
+    }
+    await next()
   }
 }
 

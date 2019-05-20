@@ -11,9 +11,12 @@
   </div>
 </template>
 <script>
-  import { mapState, mapGetters } from 'vuex'
+  import * as MUTATIONS from '@/store/const/mutaions'
+  import * as ACTIONS from '@/store/const/actions'
+  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   import Header from '../components/layout/Header'
   import bookShelveNav from '../components/layout/bookShelveNav'
+  import constKey from '@/util/const'
   export default {
     components: {
       Header,
@@ -21,6 +24,51 @@
     },
     computed: {
       ...mapGetters('user', ['isVisitor']),
+    },
+    methods: {
+      ...mapMutations('catalogs', [MUTATIONS.CATALOGS_CUR_SAVE,]),
+      ...mapMutations('notes', [MUTATIONS.NOTE_CUR_UPDATE,]),
+      ...mapMutations('books', [MUTATIONS.BOOK_CUR_UPDATE,]),
+      ...mapActions('books', [ACTIONS.BOOK_LIST_GET]),
+      ...mapActions('notes', [
+        ACTIONS.NOTES_RECENTLY_GET,
+        ACTIONS.NOTES_GET,
+        ACTIONS.NOTE_DES_GET
+      ]),
+      ...mapActions('catalogs', [
+        ACTIONS.CATALOGS_GET,
+      ]),
+
+      ...mapActions('user', [
+        ACTIONS.USER_INFO_GET
+      ]),
+      /**
+       * 初始化的时候，获取note列表 最近文章
+       * */
+      async getNoteData() {
+        console.log('11')
+        Promise.all([
+          this[ACTIONS.BOOK_LIST_GET](),
+          this[ACTIONS.CATALOGS_GET]()
+        ])
+          .then((res) => {
+          })
+          .catch(err => {
+            this.$alert({
+              title: 'getBookData',
+              content: err.message
+            })
+          })
+      },
+      async init(){
+        await this[ACTIONS.USER_INFO_GET]()
+        if(this.isVisitor) return
+        this.getNoteData()
+      }
+    },
+    mounted() {
+      // this.init()
+
     }
   }
 </script>

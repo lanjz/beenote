@@ -5,7 +5,7 @@
       @click.left="chooseCatalog(null)"
       @click.right.stop.prevent="(e) => showOperateMenu(e)"
       :class="{
-        'act': actCatalog === curNode['_id'],
+        'act': actCatalog === curNode['_id'] || curNode['_id'].indexOf(actCatalog) > -1,
         'catalogs-item-hover': !(isNewDir || renameCatalog)
       }"
     >
@@ -18,16 +18,17 @@
         @click.stop="toggleOpenDir(false)"
         v-if="catalogs[curNode['_id']]&&hasChild"></div>
       <i class="iconfont" :class="curNode.icon" :id="curNode._id" v-if="curNode.icon"></i>
-      <i class="iconfont icon-wenjianjia" :class="curNode.icon" :id="curNode._id" v-else-if="treeChainList&&treeChainList.indexOf(curNode['_id']) > -1"></i>
+      <i class="iconfont icon-wenjianjia" :class="curNode.icon" :id="curNode._id"
+         v-else-if="treeChainList&&treeChainList.indexOf(curNode['_id']) > -1"></i>
       <i class="iconfont icon-wendang1" :id="curNode._id" v-else></i>
-   <!--   <div class="iconfont" v-else>
-        <svg class="icon icon-close" aria-hidden="true">
-          <use xlink:href="#icon-wenjian2"></use>
-        </svg>
-        <svg class="icon  icon-open" aria-hidden="true">
-          <use xlink:href="#icon-wenjian-"></use>
-        </svg>
-      </div>-->
+      <!--   <div class="iconfont" v-else>
+           <svg class="icon icon-close" aria-hidden="true">
+             <use xlink:href="#icon-wenjian2"></use>
+           </svg>
+           <svg class="icon  icon-open" aria-hidden="true">
+             <use xlink:href="#icon-wenjian-"></use>
+           </svg>
+         </div>-->
       <input
         v-if="curNode.isNew||renameCatalog"
         v-model.trim="renameValue"
@@ -43,7 +44,8 @@
       >
         <i class="iconfont icon-tianjiajiahaowubiankuang"></i>
       </div>
-      <div class="catalog-operate-layout" v-click-outside="closeMenu" :style="operateMenuStyle" v-if="operateMenuStyle.left !== -1">
+      <div class="catalog-operate-layout" v-click-outside="closeMenu" :style="operateMenuStyle"
+           v-if="operateMenuStyle.left !== -1">
         <div class="catalog-operate-item" @click.stop="todoCreateFile()">
           新建笔记
         </div>
@@ -52,7 +54,8 @@
         <div class="catalog-operate-item" @click.stop="todoDelete" v-if="curNode._id !== 'root'">删除</div>
       </div>
     </div>
-    <div v-if="catalogs[curNode['_id']]&&catalogs[curNode['_id']].childNodes&&catalogs[curNode['_id']].childNodes.length">
+    <div
+      v-if="catalogs[curNode['_id']]&&catalogs[curNode['_id']].childNodes&&catalogs[curNode['_id']].childNodes.length">
       <TreeItem
         v-show="isOpen"
         v-for="(item, index) in catalogs[curNode['_id']].childNodes"
@@ -93,7 +96,7 @@
     data() {
       return {
         renameCatalog: false,
-        operateMenuStyle: { left: -1, top: '50%'},
+        operateMenuStyle: { left: -1, top: '50%' },
         renameValue: '',
         newDir: {
           parentId: '',
@@ -221,7 +224,7 @@
        * */
       doRename() {
         this.renameCatalog = false
-        if(this.isNewDir){
+        if(this.isNewDir) {
           this.addCatalog(this.renameValue, this.curNode.parentId)
           return
         }
@@ -267,7 +270,7 @@
         this.newDir.parentId = this.curNode['_id']
         this.newDir.parentParentId = this.curNode['parentId']
       },
-      async getDate(treeNode, isParentId, force){
+      async getDate(treeNode, isParentId, force) {
         const params = treeNode || this.curNode
         await this[ACTIONS.CATALOGS_GET]({
           parentId: isParentId ? params.parentId || 'root' : params._id,
@@ -299,28 +302,31 @@
   }
 </script>
 <style lang="less" scoped>
-  .catalogs-layout{
-    .catalogs-layout{
+  .catalogs-layout {
+    .catalogs-layout {
       padding-left: 20px;
     }
   }
-  .iconfont{
+
+  .iconfont {
     font-size: 25px;
     position: relative;
   }
-  .catalogs-item-layout{
-    cursor:pointer;
+
+  .catalogs-item-layout {
+    cursor: pointer;
     padding: 7px 25px;
     position: relative;
     transition: .3s;
-    .icon-open{
+    .icon-open {
       display: none;
     }
-    .icon-close{
+    .icon-close {
       display: block;
     }
   }
-  .catalogs-item-layout:after{
+
+  .catalogs-item-layout:after {
     content: '';
     background: transparent;
     position: absolute;
@@ -330,23 +336,25 @@
     left: -100%;
     transition: .3s;
   }
-  .operate-triangle-btn{
+
+  .operate-triangle-btn {
     display: none;
     position: absolute;
-/*    border-left: solid 6px @tree-color;
-    border-top: solid 5px transparent;
-    border-bottom: solid 5px transparent;*/
+    /*    border-left: solid 6px @tree-color;
+        border-top: solid 5px transparent;
+        border-bottom: solid 5px transparent;*/
     width: 16px;
     height: 16px;
     right: 12px;
     top: 50%;
-    .iconfont{
+    .iconfont {
       font-size: 15px;
     }
     transform: translateY(-50%);
   }
+
   // 有子文件夹且未打开
-  .catalogs-item-layout .has-child{
+  .catalogs-item-layout .has-child {
     position: absolute;
     border-left: solid 6px @tree-color;
     border-top: solid 5px transparent;
@@ -358,7 +366,8 @@
     transform: translateY(-6px);
     transition: .2s;
   }
-  .catalogs-item-layout .has-child:after{
+
+  .catalogs-item-layout .has-child:after {
     content: '';
     width: 20px;
     height: 20px;
@@ -367,49 +376,59 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
+
   // 有子目录且打开状态
-  .catalogs-item-layout .has-child.in-chain{
+  .catalogs-item-layout .has-child.in-chain {
     transform: translateY(-6px) rotate(90deg);
   }
-/*  .catalogs-item-layout.act.has-child:before{
-    border-left: solid 6px @tree-light-color;
-  }*/
-  .catalogs-item-hover:hover{
+
+  /*  .catalogs-item-layout.act.has-child:before{
+      border-left: solid 6px @tree-light-color;
+    }*/
+  .catalogs-item-hover:hover {
     background: @tree-hover-bg-color;
     color: @tree-light-color;
   }
-  .catalogs-item-hover:hover .operate-triangle-btn{
+
+  .catalogs-item-hover:hover .operate-triangle-btn {
     display: block;
     color: @tree-light-color;
   }
-  .catalogs-item-hover:hover:after{
+
+  .catalogs-item-hover:hover:after {
     background: @tree-hover-bg-color;
   }
-  .catalogs-item-layout.act{
+
+  .catalogs-item-layout.act {
     background: @tree-light-bg-color;
     color: @tree-light-color;
-    .icon-open{
+    .icon-open {
       display: block;
     }
-    .icon-close{
+    .icon-close {
       display: none;
     }
   }
-  .catalogs-item-layout.act:hover{
+
+  .catalogs-item-layout.act:hover {
     background: @tree-light-bg-color;
   }
-  .catalogs-item-layout.act:hover:after{
+
+  .catalogs-item-layout.act:hover:after {
     background: @tree-light-bg-color;
   }
-  .catalogs-item-layout.act:after{
+
+  .catalogs-item-layout.act:after {
     background: @tree-light-bg-color;
   }
-  .catalogs-name{
+
+  .catalogs-name {
     position: relative;
     max-width: 150px;
     padding: 0 5px;
   }
-  .edit-catalogs-input{
+
+  .edit-catalogs-input {
     position: relative;
     z-index: 1;
     max-width: 150px;
@@ -421,51 +440,53 @@
     height: 25px;
     padding: 0 5px;
   }
+
   // 右键类型菜单
-  .catalog-operate-layout{
+  .catalog-operate-layout {
     position: fixed;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     left: 50%;
     top: 50%;
     color: #fff;
     z-index: 999;
     border-radius: 5px;
-    .catalog-operate-item{
+    .catalog-operate-item {
       width: 150px;
       padding: 10px 20px;
       position: relative;
     }
-    .catalog-operate-item:not(:last-child){
-      border-bottom: solid 1px rgba(255,255,255,.2);
+    .catalog-operate-item:not(:last-child) {
+      border-bottom: solid 1px rgba(255, 255, 255, .2);
     }
-    .catalog-operate-item.hadChild:after{
+    .catalog-operate-item.hadChild:after {
       content: '';
       position: absolute;
-      border-left:solid 4px #fff;
+      border-left: solid 4px #fff;
       border-top: solid 4px transparent;
       border-bottom: solid 4px transparent;
       right: 10px;
       top: 50%;
       transform: translateY(-50%);
     }
-    .catalog-operate-item:hover .operate-item-child{
+    .catalog-operate-item:hover .operate-item-child {
       display: block;
     }
-    .operate-item-child{
+    .operate-item-child {
       position: absolute;
       left: 100%;
       top: 0;
       width: 100%;
       border-radius: 0 5px 5px 0;
-      background: rgba(0,0,0,0.8);
-      border-left:solid 1px rgba(255,255,255,.2);
+      background: rgba(0, 0, 0, 0.8);
+      border-left: solid 1px rgba(255, 255, 255, .2);
       display: none
     }
-    .catalog-operate-item.builtIn{
-      border-bottom: solid 1px rgba(255,255,255,.6);
+    .catalog-operate-item.builtIn {
+      border-bottom: solid 1px rgba(255, 255, 255, .6);
     }
   }
-  #hello_recent{
+
+  #hello_recent {
     font-size: 24px;
   }
 </style>

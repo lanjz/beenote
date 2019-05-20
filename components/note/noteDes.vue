@@ -50,7 +50,6 @@
       }
     },
     data: function () {
-      console.log('this.curNoteContent', this.curNoteContent)
       const { title = '未命名', content = '' } = this.curNoteContent || {}
       return {
         articleName: title,

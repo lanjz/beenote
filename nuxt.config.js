@@ -4,7 +4,7 @@ const pkg = require('./package')
 module.exports = {
   mode: 'universal',
   router: {
-    // middleware: 'check-auth'
+    middleware: 'check-auth'
   },
 
   /*

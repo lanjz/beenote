@@ -31,7 +31,7 @@
   import articleFixed from '@/components/article/articleFixed.vue'
   import constKey from '@/util/const'
   import { returnCatalog } from '@/util/blackHole'
-  import fetch from '@/util/fetch/fetch.js'
+  import fetch from '@/util/fetch/fetch'
 
   export default {
    /* async asyncData ({ params }) {
@@ -113,6 +113,9 @@
       ]),
       ...mapActions('catalogs', [
         ACTIONS.CATALOGS_GET,
+      ]),
+      ...mapActions('user', [
+        ACTIONS.USER_INFO_GET
       ]),
       /**
        * 初始化的时候，获取note列表 最近文章
@@ -222,6 +225,7 @@
         })
       },
       async init() {
+        await this[ACTIONS.USER_INFO_GET]()
         if(this.isVisitor) return
         this.getNoteData()
         this.initEmitOn()

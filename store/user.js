@@ -26,7 +26,9 @@ const mutations = {
     state.isVisitor = bol
   },
   [MUTATIONS.CUR_USER_INFO_SAVE](state, info) {
-    state.curUserInfo = info
+    state.curUserInfo = {
+      ...info
+    }
   }
 }
 
@@ -49,6 +51,21 @@ const actions = {
       url: '/api/login',
       method: 'post',
       data
+    })
+    if(!result.err) {
+      commit(MUTATIONS.USER_SAVE, result.data)
+    }
+    return result
+  },
+  async [ACTIONS.USER_INFO_GET]({ state, commit }, data) {
+    if(state.userInfo._id) {
+      return {
+        err: null,
+        data: state.userInfo
+      }
+    }
+    const result = await fetch({
+      url: '/api/getUserInfo'
     })
     if(!result.err) {
       commit(MUTATIONS.USER_SAVE, result.data)
