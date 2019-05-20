@@ -1,20 +1,7 @@
 <template>
-  <div class="flex flex-1">
-    <div class="catalog-layout box-shadow" :class="{'hidden-catalog': !showDir}">
-      <TreeItem></TreeItem>
-    </div>
-    <NoteBrief
-      @emitToChooseCurNote="chooseCurNote"
-      @emitToCreateNote="toCreateNote"
-      :list="curNoteList"
-      @emitUpdateNote="doUpdateNote"
-    ></NoteBrief>
-    <note-des
-      :curNote="curEditNote"
-      :createToCatalogId="createToCatalogId"
-      @emitUpdateNote="doUpdateNote"
-    ></note-des>
-    <articleFixed></articleFixed>
+  <div class="flex flex-1 no-data flex direction-column justify-content-center align-items-center">
+    <i class="iconfont icon-jingdian"></i>
+    <div>从左侧选择你的书架</div>
   </div>
 </template>
 <script>
@@ -157,7 +144,7 @@
       },
     },
     mounted() {
-      this.init()
+      this[ACTIONS.BOOK_LIST_GET]()
     }
   }
 </script>
@@ -254,5 +241,19 @@
     padding: 15px 0;
     max-width: 0;
     overflow: hidden;
+  }
+  .no-data{
+    flex: 1;
+    font-size: 20px;
+    padding: 20px;
+    color: #7e8896;
+    background: #faf9f9;
+    .iconfont{
+      font-size: 100px;
+    }
+    .create-btn{
+      color: @highlight-color;
+      cursor: pointer;
+    }
   }
 </style>
