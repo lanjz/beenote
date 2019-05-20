@@ -10,9 +10,15 @@ const state = () => (
 )
 const getters = {
   isVisitor: state => {
+    // 有登录状且没有当前页面所属用户则非游客
+    if(state.userInfo['_id'] && !state.curUserInfo['_id']){
+      return false
+    }
+    // 没有登录状则为游客
     if(!state.userInfo['_id']){
       return true
     }
+    // 有登录状且有当前页面所属用户则判断他们是否相等
     return state.userInfo['_id'] !== state.curUserInfo['_id']
   }
 }
@@ -58,7 +64,7 @@ const actions = {
     return result
   },
   async [ACTIONS.USER_INFO_GET]({ state, commit }, data) {
-    if(state.userInfo._id) {
+    if(state.userInfo.username) {
       return {
         err: null,
         data: state.userInfo

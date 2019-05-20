@@ -225,7 +225,7 @@
         })
       },
       async init() {
-        await this[ACTIONS.USER_INFO_GET]()
+        // await this[ACTIONS.USER_INFO_GET]()
         if(this.isVisitor) return
         this.getNoteData()
         this.initEmitOn()

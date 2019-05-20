@@ -61,13 +61,11 @@
           })
       },
       async init(){
-        await this[ACTIONS.USER_INFO_GET]()
-        if(this.isVisitor) return
-        this.getNoteData()
+        this[ACTIONS.USER_INFO_GET]()
       }
     },
     mounted() {
-      // this.init()
+      this.init()
 
     }
   }
