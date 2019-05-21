@@ -21,6 +21,9 @@
         <img :src="userName.avatar" v-if="userName.avatar">
       </router-link>
     </div>
+    <div class="user-layout">
+      <div class="avatar-layout"></div>
+    </div>
   </div>
 </template>
 <script>
@@ -87,6 +90,20 @@
     small{
       font-size: 15px;
       display: inline-block;
+    }
+  }
+  .user-layout{
+    display: none;
+    position: fixed;
+    width: 500px;
+    height: 100%;
+    right: 0;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+    box-shadow: 1px 1px 5px #7f828b;
+    .avatar-layout{
+
     }
   }
 </style>
