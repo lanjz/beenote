@@ -58,8 +58,10 @@
     padding: 15px;
     background: @bg-color;
   }
+  .book-layout:not(:first-child) {
+    margin-top: 15px;
+  }
   .book-layout{
-    margin-top: 35px;
     width: 38px;
     cursor: pointer;
     position: relative;

@@ -227,6 +227,8 @@
       async init() {
         // await this[ACTIONS.USER_INFO_GET]()
         if(this.isVisitor && this.noteId) return
+        this[MUTATIONS.BOOK_CUR_UPDATE](this.bookId)
+        this[MUTATIONS.CATALOGS_CUR_SAVE](this.catalogId)
         this.getNoteData()
         this.initEmitOn()
       },

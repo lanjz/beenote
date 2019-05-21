@@ -89,7 +89,11 @@ const actions = {
       return { err: null, data: { list: state.list[key] } }
     }
     const result = await fetch({
-      url: `/api/notes/${id}?catalogId=${catalogId}`,
+      url: `/api/notes/${id}`,
+      data: {
+        bookId,
+        catalogId
+      }
     })
     const { err, data } = result
     if(!err) {

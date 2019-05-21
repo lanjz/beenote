@@ -115,7 +115,7 @@ class NoteCtl extends BaseCtl {
   }
   async findNotesById(ctx, next) {
     const { id } = ctx.params
-    const { catalogId } = ctx.request.query
+    const { catalogId: queryCatalogId, bookId: queryBookId } = ctx.request.query
     if(!id) {
       ctx.send(2, '', 'id不能为空')
       return
@@ -134,8 +134,9 @@ class NoteCtl extends BaseCtl {
         catalogId,
         userId
       }
-      const findFn = catalogId||(catalogId === 'recently') ? this.Model.listWithPaging({ start: 0, limit: 0, dbQuery:findNotesParams }) :
-        this.Model.listWithPaging({ start:0, limit:0, dbQuery: { bookId, userId }, sort: { updateTime: -1 } })
+      const findFn = queryCatalogId !== 'recently' ?
+        this.Model.listWithPaging({ start: 0, limit: 0, dbQuery:findNotesParams }) :
+        this.Model.listWithPaging({ start:0, limit:0, dbQuery: { bookId: queryBookId, userId }, sort: { updateTime: -1 } })
       const result = await Promise.all([findFn, this.Model.listCount(findNotesParams)])
       ctx.send(1, {
         list: result[0],
