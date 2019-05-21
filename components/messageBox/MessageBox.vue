@@ -3,7 +3,8 @@
     <div class="hello-message-box">
       <div class="hello-content">
         <div class="hello-title" v-if="title">{{title}}</div>
-        <div class="hello-des" v-if="content">{{content}}</div>
+        <div class="hello-des" v-if="type === 'test' && content">{{content}}</div>
+        <div class="hello-des" v-if="type === 'html' && content" v-html="content"></div>
       </div>
       <div class="hello-btn-operate">
         <div class="hello-btn cancel" v-show="showCancel" @click="cancel(false)">{{cancelText}}</div>
@@ -20,6 +21,7 @@
         content: '',
         confirmText: '',
         cancelText: '',
+        type: 'test',
         visible: false,
         showCancel: true
       }
@@ -34,7 +36,7 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
   .hello-message-box-bg{
     position: fixed;
     width: 100%;
@@ -65,6 +67,9 @@
     padding: 15px;
     text-align: center;
   }
+  .hello-des{
+    word-break: break-all;
+  }
   .hello-btn-operate{
     text-align: right;
     display: flex;
@@ -83,5 +88,13 @@
   }
   .hello-btn:not(:last-child) {
     border-right: solid 1px #c7c7c7;
+  }
+</style>
+<style lang="less">
+  .hello-message-box-bg{
+    img{
+      max-width: 200px;
+      max-height: 500px;
+    }
   }
 </style>

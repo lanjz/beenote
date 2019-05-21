@@ -41,6 +41,7 @@ const defaultOptions = {
   title: '',
   content: '',
   theme: 'confirm', // 'confirm',  'warn'
+  type: 'test',
   confirmText: '确定',
   cancelText: '取消',
   showCancel: true

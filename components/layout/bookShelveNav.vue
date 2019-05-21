@@ -13,11 +13,28 @@
         </div>
         <div class="book-layout-name">{{item.name}}</div>
       </div>
+      <div class="tool-box">
+        <div
+          class="book-layout">
+          <div>
+            <svg class="icon shelve-svg-icon" aria-hidden="true">
+              <use xlink:href="#icon-tubiaozhizuomoban"></use>
+            </svg>
+          </div>
+          <input
+            ref="inputer"
+            type="file"
+            class="file-input-hide"
+            @change="uploadFile"/>
+        </div>
+      </div>
     </div>
+    <div class="preview-img"></div>
   </div>
 </template>
 <script>
   import { mapState, mapGetters, mapMutations } from 'vuex'
+  import { uploadFile } from '@/util/fetch/fetch'
   import * as MUTATIONS from '../../store/const/mutaions'
   import bus from '../../util/global/eventBus'
   export default {
@@ -26,6 +43,7 @@
         treeChain: state => state.catalogs.treeChain,
         curBook: state => state.books.curBook,
         bookList: state => Object.values(state.books.list),
+        userInfo: state => state.user.userInfo,
       }),
       ...mapGetters('books', [
         'curBookInfo'
@@ -50,6 +68,33 @@
       todoSetCurBook(item) {
         this.$router.push(`/${item._id}/recently`)
       },
+      uploadFile() {
+        const inputDOM = this.$refs.inputer;
+        if(!inputDOM.files.length) return
+        const getFile = inputDOM.files[0];
+        console.log('getFile', getFile)
+        if(getFile.type.indexOf('image') > -1 && getFile.size > 1048576 * 5) {
+          this.$alert({
+            title: '上传图片失败',
+            content: '图片不应大于5M'
+          })
+        }
+        uploadFile({
+          file: inputDOM.files[0]
+        })
+          .then((res) => {
+            console.log('res', res)
+            const { err, data } = res
+            if(!err) {
+              this.$alert({
+                title: '图片上传成功',
+                // content: `<img src="${data[0]}"/>`,
+                content: data[0],
+                showCancel: false
+              })
+            }
+          })
+      }
     }
   }
 </script>
@@ -90,5 +135,9 @@
     background: @bg-second-color;
     border-radius: 4px;
     box-shadow: 0 0 3px 1px #100f0f inset;
+  }
+  .tool-box{
+    margin-top: 20px;
+    border-top: solid 1px #000;
   }
 </style>

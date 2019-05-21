@@ -169,7 +169,13 @@ class BaseCtl {
       ctx.send(2, '', hello.dealError(result.err, id))
       return
     }
-    ctx.send(1, result.data, '')
+    const imgResult = []
+    const curNet = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'http://67.209.187.22'
+    result.data.imgUrl.forEach((item) => {
+      const realUrl = item.replace(`${process.cwd()}${path.sep}static`, curNet)
+      imgResult.push(realUrl)
+    })
+    ctx.send(1, imgResult, '')
   }
   async uploadFile(ctx, saveCatalog = 'common'){
     const res = {
@@ -191,7 +197,7 @@ class BaseCtl {
         file.on('data', function(data) {
           console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
         });
-        let fileName = Math.random().toString(16).substr(2) + '_' + filename
+        let fileName = Math.random().toString(16).substr(2) + '_'  + ctx.state.curUser._id + '_' + filename
         let saveTo = path.join( filePath, fileName )
         // 文件保存到制定路径
         file.pipe(fs.createWriteStream(saveTo))

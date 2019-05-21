@@ -8,6 +8,9 @@ const noteCtl = require('./controller/Notes.js')
 const BaseCtl = require('./controller/BaseCtl.js')
 const baseCtl = new BaseCtl()
 const router = new Router({ prefix: '/api' })
+
+router.post('/uploadImg', baseCtl.uploadImg)
+
 router.post('/login', userCtl.login)
 
 router.get('/users', userCtl.find)
@@ -68,7 +71,7 @@ router.get('/', async function (ctx, next) {
   await next()
 })
 
-router.post('/uploadImg', baseCtl.uploadImg)
+
 
 router.get('/qa', async (ctx, next) => {
   ctx.body = 'Hello World2222!'

@@ -45,7 +45,7 @@ function fetchData(options) {
   if (options.method.toLowerCase() === 'get') {
     options.params = options.data
   }
-  /* if(options.method.toLowerCase() === 'post') {
+   if(options.type === 'formData') {
     options.headers = { 'Content-Type': 'multipart/form-data' }
     const formData = new FormData();
     const forDataKeys = Object.keys(options.data)
@@ -53,7 +53,7 @@ function fetchData(options) {
       formData.append(value, options.data[value]);
     })
     options.data = formData
-  } */
+  }
   return axios(options)
 }
 
@@ -83,9 +83,19 @@ const doFetchData = function (options) {
   })
 }
 
+const uploadFile = function (params) {
+  const options = {
+    data: params,
+    type: 'formData',
+    method: 'post',
+    url: '/api/uploadImg'
+  }
+  return doFetchData(options)
+}
 
 export default doFetchData
 
 export {
-  fetchData
+  fetchData,
+  uploadFile
 }
