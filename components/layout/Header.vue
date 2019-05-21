@@ -21,14 +21,64 @@
         <img :src="userName.avatar" v-if="userName.avatar">
       </router-link>
     </div>
-    <div class="user-layout">
-      <div class="avatar-layout"></div>
+    <div class="user-layout" v-if="showUserEdit">
+      <div class="avatar-layout">
+        <img src="http://s2.sinaimg.cn/mw690/006VYTdfzy7pano0kENd1&690" />
+      </div>
+      <div class="flex flex-1 direction-column">
+        <div class="flex-1 form-bg bg-fff">
+          <div class="form-layout">
+            <div class="form-group flex">
+              <div class="form-label-layout">
+                别名：
+              </div>
+              <div class="flex flex-1 align-items-center">
+                <input class="form-input" v-model="user.username"/>
+              </div>
+            </div>
+            <div class="form-group flex">
+              <div class="form-label-layout">
+                性别：
+              </div>
+              <div class="flex flex-1 align-items-center">
+                <div class="radio-style" :class="{'act': user.sex === 1 }">
+                  <input type="radio" class="form-radio" :value="1" v-model="user.sex"> 男
+                </div>
+                <div class="radio-style" :class="{'act': user.sex === 2}">
+                  <input type="radio" class="form-radio" :value="2" v-model="user.sex"> 女
+                </div>
+              </div>
+            </div>
+            <div class="form-group flex">
+              <div class="form-label-layout">
+                邮箱：
+              </div>
+              <div class="flex flex-1 align-items-center">
+                <input class="form-input" v-model="user.email"/>
+              </div>
+            </div>
+            <div class="form-group submit-layout">
+              <div class="btn">提交</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   export default {
+    data(){
+      return {
+        showUserEdit: false,
+        user: {
+          name: '',
+          email: '',
+          sex: 1
+        }
+      }
+    },
     computed:{
       ...mapState({
         userName: state => state.user.userInfo
@@ -93,17 +143,26 @@
     }
   }
   .user-layout{
-    display: none;
     position: fixed;
     width: 500px;
     height: 100%;
     right: 0;
     top: 0;
     background: #fff;
-    z-index: 2;
+    z-index: 10;
     box-shadow: 1px 1px 5px #7f828b;
     .avatar-layout{
-
+      text-align: center;
+      margin: 50px auto 30px auto;
+      img{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+      }
+    }
+    .submit-layout{
+      margin-top: 50px;
+      padding-left: 100px;
     }
   }
 </style>
