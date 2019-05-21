@@ -2,6 +2,7 @@ const util  = require('util')
 const Busboy  = require('busboy')
 const fs  = require('fs')
 const path  = require('path')
+// const qiniu = require('qiniu')
 const hello  = require('../utils/hello')
 const { STATIC_IMG_PATH }  = require('../utils/CONST')
 
@@ -231,6 +232,12 @@ class BaseCtl {
     })
 
   }
+/*  async upToQiniu(filePath, key) {
+    const accessKey = 'JJBGbpbd2XE-EZKfLsOGY5AbPpFeFMwUFRDp31BI'
+    const secretKey = 'I-3hmK0z23yADDgTbncCWaFUXSfqFAtauMVGET4D'
+    const config = new qiniu.conf.Config()
+    config.zone = qiniu.zone.Zone_z0
+  }*/
 }
 
 module.exports = BaseCtl
