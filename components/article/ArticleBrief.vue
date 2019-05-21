@@ -66,10 +66,10 @@
     },
     filters: {
       getBookName: function (id, bookList) {
-        return bookList[id] ? bookList[id].name : ''
+        return bookList[id] ? bookList[id].name : 'Black Hook'
       },
       getCatalogsName: function(id, schemaList) {
-        return schemaList[id] ? schemaList[id].name : ''
+        return schemaList[id] ? schemaList[id].name : 'Black Hook'
       }
     },
     methods: {
