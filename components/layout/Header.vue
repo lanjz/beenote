@@ -18,14 +18,20 @@
         </nuxt-link>
       </div>
       <router-link to="/login" class="user-avatar-layout">
-        <img :src="userName.avatar" v-if="userName.avatar">
+        <img :src="userInfo.avatar" v-if="userInfo.avatar">
       </router-link>
     </div>
     <div class="user-layout" v-if="showUserEdit">
       <div class="avatar-layout">
         <img src="http://s2.sinaimg.cn/mw690/006VYTdfzy7pano0kENd1&690" />
       </div>
-      <div class="flex flex-1 direction-column">
+      <div v-if="!edit" class="pre-info">
+        <div><span class="username">{{userInfo.username}}</span><span>（{{userInfo.email}}）</span></div>
+        <div class="todo-edit-layout">
+          <i class="iconfont icon-biji1"></i>
+        </div>
+      </div>
+      <div class="flex flex-1 direction-column" v-else>
         <div class="flex-1 form-bg bg-fff">
           <div class="form-layout">
             <div class="form-group flex">
@@ -71,17 +77,18 @@
   export default {
     data(){
       return {
-        showUserEdit: false,
+        showUserEdit: true,
         user: {
           name: '',
           email: '',
           sex: 1
-        }
+        },
+        edit: false
       }
     },
     computed:{
       ...mapState({
-        userName: state => state.user.userInfo
+        userInfo: state => state.user.userInfo
       }),
       ...mapGetters('user', ['isVisitor']),
     }
@@ -163,6 +170,31 @@
     .submit-layout{
       margin-top: 50px;
       padding-left: 100px;
+    }
+  }
+  .pre-info{
+    text-align: center;
+    .username{
+      color: @highlight-color;
+      font-size: 20px;
+    }
+  }
+  .todo-edit-layout{
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    i{
+      font-size: 35px;
+      border-radius: 50%;
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      line-height: 50px;
+      background: @bg-color;
+      color: #fff;
+      cursor: pointer;
     }
   }
 </style>
