@@ -67,6 +67,11 @@
     },
     props: {
       data: String,
+      showEdit: {
+        default() {
+          return false
+        }
+      },
       onlyView: {
         default() {
           return true
@@ -79,7 +84,7 @@
         split: 0.5,
         markDownValue: '',
         editMode: 1, // 编辑模式
-        isEdit: false,
+        isEdit: this.showEdit,
         isPreview: true,
         markdownHTML: markdownHTML || ''
       }
@@ -118,9 +123,9 @@
     },
     mounted() {
       this.markDownValue = this.data || ''
-      if (this.isEdit) {
+    /*  if (this.isEdit) {
         this.isEdit = false
-      }
+      }*/
     }
   }
 </script>

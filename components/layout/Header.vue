@@ -46,7 +46,8 @@
     methods: {
       ...mapMutations('user', [MUTATIONS.CUR_USER_LAYOUT_SAVE]),
       toDoShowUserLayout() {
-        this[MUTATIONS.CUR_USER_LAYOUT_SAVE]('info')
+        const tar = this.userInfo.username ? 'info' : 'login'
+        this[MUTATIONS.CUR_USER_LAYOUT_SAVE](tar)
       }
     }
   }

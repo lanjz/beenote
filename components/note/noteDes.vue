@@ -23,7 +23,7 @@
         <!--<div class="noSave" v-show="dataHasChange"></div>-->
         <div class="flex-1 relative">
           <div class="form-layout theme-1">
-            <markdown-edit v-model="content" :onlyView="isVisitor"></markdown-edit>
+            <markdown-edit v-model="content" :onlyView="isVisitor" :showEdit="curNote._id==='new'"></markdown-edit>
           </div>
         </div>
       </div>

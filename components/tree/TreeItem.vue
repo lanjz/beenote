@@ -5,7 +5,7 @@
       @click.left="chooseCatalog(null)"
       @click.right.stop.prevent="(e) => showOperateMenu(e)"
       :class="{
-        'act': actCatalog === curNode['_id'] || curNode['_id'].indexOf(actCatalog) > -1,
+        'act': actCatalog === curNode['_id'] || (curNode['_id']&&curNode['_id'].indexOf(actCatalog) > -1),
         'catalogs-item-hover': !(isNewDir || renameCatalog)
       }"
     >
@@ -253,7 +253,7 @@
       },
       async addCatalog(name, parentId) {
         const result = await this[ACTIONS.CATALOGS_POST]({
-          parentId,
+          parentId: parentId.indexOf('root') ? 'root' : parentId,
           name,
           bookId: this.curBook
         })

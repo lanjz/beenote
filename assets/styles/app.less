@@ -537,7 +537,8 @@ textarea.form-input{
 .markdown-style{
   background: #fff;
   min-height: 100%;
-  padding: 0 20px 20px 20px;
+  //padding: 0 20px 20px 20px;
+  padding: 0 0px 20px 0;
   p:first-child,
   h1:first-child,
   h2:first-child,
@@ -649,7 +650,9 @@ textarea.form-input{
     transform: translateX(2px);
   }
 }
-
+.markdown-style > * {
+  padding: 0 20px;
+}
 .black-theme{
   background: #202020;
   color: #919191;
