@@ -22,6 +22,7 @@
       </router-link>
     </div>
     <div class="user-layout" v-if="showUserEdit">
+      <!--<imgCrop></imgCrop>-->
       <div class="avatar-layout">
         <img src="http://s2.sinaimg.cn/mw690/006VYTdfzy7pano0kENd1&690" />
       </div>
@@ -76,10 +77,11 @@
 <script>
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   import * as ACTIONS from '../../store/const/actions'
+  import imgCrop from '../imgCrop'
   export default {
     data(){
       return {
-        showUserEdit: true,
+        showUserEdit: false,
         user: {
           username: '',
           email: '',
@@ -87,6 +89,9 @@
         },
         edit: false
       }
+    },
+    components: {
+      imgCrop
     },
     computed:{
       ...mapState({
