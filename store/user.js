@@ -36,6 +36,20 @@ const mutations = {
 }
 
 const actions = {
+  async [ACTIONS.USER_PUT]({ state, commit }, data) {
+    const result = await fetch({
+      url: '/api/user',
+      method: 'put',
+      data: {
+        _id: state.userInfo._id,
+        ...data
+      }
+    })
+    if(!result.err) {
+      commit(MUTATIONS.USER_SAVE, result.data)
+    }
+    return result
+  },
   async [ACTIONS.USER_POST]({ commit }, data) {
     const result = await fetch({
       url: '/api/user',

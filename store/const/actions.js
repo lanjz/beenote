@@ -32,6 +32,7 @@ export const ARTICLE_CONTENT_DELETE = 'ARTICLE_CONTENT_DELETE'
 
 
 export const LOGIN_POST = 'LOGIN_POST'
+export const USER_PUT = 'USER_PUT'
 export const USER_POST = 'USER_POST'
 export const USER_INFO_GET = 'USER_INFO_GET'
 

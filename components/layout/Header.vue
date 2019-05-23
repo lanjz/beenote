@@ -27,7 +27,7 @@
       </div>
       <div v-if="!edit" class="pre-info">
         <div><span class="username">{{userInfo.username}}</span><span>（{{userInfo.email}}）</span></div>
-        <div class="todo-edit-layout">
+        <div class="todo-edit-layout" @click="todoEdit">
           <i class="iconfont icon-biji1"></i>
         </div>
       </div>
@@ -64,7 +64,8 @@
               </div>
             </div>
             <div class="form-group submit-layout">
-              <div class="btn">提交</div>
+              <div class="btn" @click="doEdit">提交</div>
+              <div class="btn second-btn" @click="cancelEdit">取消</div>
             </div>
           </div>
         </div>
@@ -74,12 +75,13 @@
 </template>
 <script>
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+  import * as ACTIONS from '../../store/const/actions'
   export default {
     data(){
       return {
         showUserEdit: true,
         user: {
-          name: '',
+          username: '',
           email: '',
           sex: 1
         },
@@ -91,6 +93,40 @@
         userInfo: state => state.user.userInfo
       }),
       ...mapGetters('user', ['isVisitor']),
+    },
+    methods: {
+      ...mapActions('user', [ACTIONS.USER_PUT]),
+      todoEdit() {
+        this.user = {
+          username: this.userInfo.username,
+          email: this.userInfo.email,
+          sex: this.userInfo.sex
+        }
+        this.edit = true
+      },
+      cancelEdit() {
+        this.edit = false
+      },
+      async doEdit() {
+        this.$showLoading()
+        this[ACTIONS.USER_PUT](this.user)
+          .then(res => {
+            this.$toast({
+              title: '修改成功'
+            })
+            this.edit = false
+          })
+          .catch((err) => {
+            this.$toast({
+              title: err.message
+            })
+            this.edit = false
+          })
+          .finally(() => {
+            this.$hideLoading()
+
+          })
+      }
     }
   }
 </script>
@@ -196,5 +232,8 @@
       color: #fff;
       cursor: pointer;
     }
+  }
+  .form-group{
+    margin-top: 40px;
   }
 </style>
