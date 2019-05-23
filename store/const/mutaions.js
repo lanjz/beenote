@@ -21,6 +21,7 @@ export const ARTICLE_CUS_SAVE = 'ARTICLE_CUS_SAVE'
 export const USER_SAVE = 'USER_SAVE'
 export const ISVISITOR_SAVE = 'ISVISITOR_SAVE'
 export const CUR_USER_INFO_SAVE = 'CUR_USER_INFO_SAVE'
+export const CUR_USER_LAYOUT_SAVE = 'CUR_USER_LAYOUT_SAVE'
 
 // notes
 

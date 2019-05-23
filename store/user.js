@@ -5,7 +5,8 @@ import * as ACTIONS from './const/actions'
 const state = () => (
   {
     userInfo: {},
-    curUserInfo: {}
+    curUserInfo: {},
+    userInfoStatus: '' // info:个人信息，modify:修改，reg:注册，login：登录
   }
 )
 const getters = {
@@ -32,6 +33,9 @@ const mutations = {
     state.curUserInfo = {
       ...info
     }
+  },
+  [MUTATIONS.CUR_USER_LAYOUT_SAVE](state, info = '') {
+    state.userInfoStatus = info
   }
 }
 
@@ -43,7 +47,8 @@ const actions = {
       data: {
         _id: state.userInfo._id,
         ...data
-      }
+      },
+      notAlert: true
     })
     if(!result.err) {
       commit(MUTATIONS.USER_SAVE, result.data)
@@ -56,7 +61,8 @@ const actions = {
       method: 'post',
       data: {
         ...data
-      }
+      },
+      notAlert: true
     })
     if(!result.err) {
       commit(MUTATIONS.USER_SAVE, result.data)
@@ -67,7 +73,8 @@ const actions = {
     const result = await fetch({
       url: '/api/login',
       method: 'post',
-      data
+      data,
+      notAlert: true
     })
     if(!result.err) {
       commit(MUTATIONS.USER_SAVE, result.data)

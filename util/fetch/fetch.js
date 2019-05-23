@@ -3,7 +3,9 @@ import helloAlert from '../../components/messageBox/messageBox'
 import { HOST_CONFIG as hostConfig } from './fetchConifg'
 import LoadingLine from './loadingLine'
 const loadingLine = new LoadingLine()
-
+if(process.client) {
+  console.log('context', window)
+}
 
 const { MOCK } = process.env
 function dealRetCode(response = {}) {
@@ -12,7 +14,9 @@ function dealRetCode(response = {}) {
     res.notAlert = true
     res.err = new Error('未登录')
     if(process.client) {
-      window.location.href = '/login'
+      window.$nuxt.$store.commit('user/CUR_USER_LAYOUT_SAVE', 'login')
+      window.location.reload()
+      // window.location.href = '/login'
     }
     return res
   }
@@ -65,7 +69,7 @@ const doFetchData = function (options) {
         const result = dealRetCode(response.data)
         if(result.err) {
           res.err = result.err
-          if(!result.notAlert) {
+          if(!result.notAlert && !options.notAlert) {
             helloAlert({
               title: res.err.message,
               showCancel: false
