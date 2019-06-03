@@ -18,7 +18,10 @@
         <textarea class="markdown-edit-box box-shadow-inset" v-model="markDownValue"></textarea>
       </div>
       <div class="flex-1 md-body-layout edit-layout relative" v-if="isPreview">
-        <div class="markdown-style" :class="{'black-theme' :onlyView}" v-html="markdownHTML"></div>
+        <div class="absolute-full markdown-style" :class="{'black-theme' :onlyView}">
+          <div class="markdown-content-style" v-html="markdownHTML"></div>
+        </div>
+
         <!--<div :class="onlyView ? 'markdown-edit-box box-shadow-inset' : 'markdown-style'" v-html="markdownHTML"></div>-->
       </div>
     </div>
