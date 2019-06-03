@@ -86,3 +86,7 @@ typings/
 
 # Service worker
 sw.*
+
+# static
+
+/static/images

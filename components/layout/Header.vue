@@ -19,6 +19,7 @@
       </div>
       <div @click="toDoShowUserLayout" class="user-avatar-layout cursor">
         <img :src="userInfo.avatar" v-if="userInfo.avatar">
+        <img v-else src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559558616664&di=8ca666131b7cbcd871c5cb179562284d&imgtype=0&src=http%3A%2F%2Fs2.sinaimg.cn%2Fmw690%2F006VYTdfzy7pano0kENd1%26690">
       </div>
     </div>
     <userLayout v-if="userLayoutStatus"></userLayout>
