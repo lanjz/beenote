@@ -166,6 +166,20 @@
                 this.noData = true
               }
             }
+            if(this.noteId) {
+              this.$nextTick(() => {
+                const getBriefItem = document.getElementById(this.noteId)
+                const getBriefBox = document.getElementById('article-item-box')
+                if(getBriefItem && getBriefBox) {
+                  const totalH = getBriefItem.offsetTop + getBriefItem.clientHeight
+                  const dis = totalH - getBriefBox.clientHeight
+                  if(dis) {
+                    getBriefBox.scrollTop = dis * 2
+                  }
+                }
+              })
+
+            }
             // this[ACTIONS.NOTES_RECENTLY_GET]()
           })
           .catch(err => {

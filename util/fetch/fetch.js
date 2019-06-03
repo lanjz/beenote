@@ -15,7 +15,7 @@ function dealRetCode(response = {}) {
     res.err = new Error('未登录')
     if(process.client) {
       window.$nuxt.$store.commit('user/CUR_USER_LAYOUT_SAVE', 'login')
-      window.location.reload()
+      // window.location.reload()
       // window.location.href = '/login'
     }
     return res

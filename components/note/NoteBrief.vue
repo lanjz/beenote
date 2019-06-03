@@ -6,8 +6,9 @@
         <i class="iconfont icon-sousuo"></i>
       </div>
       <div class="flex-1 relative">
-        <div class="absolute-full article-item-box">
+        <div class="absolute-full article-item-box" id="article-item-box">
           <div
+            :id="item._id"
             class="article-item"
             v-for="(item, index) in filterList"
             :key="index"
