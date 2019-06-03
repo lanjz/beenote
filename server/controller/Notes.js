@@ -137,14 +137,16 @@ class NoteCtl extends BaseCtl {
       const findFn = queryCatalogId !== 'recently' ?
         this.Model.listWithPaging({ start: 0, limit: 0, dbQuery:findNotesParams }) :
         this.Model.listWithPaging({ start:0, limit:0, dbQuery: { bookId: queryBookId, userId }, sort: { updateTime: -1 } })
-      const result = await Promise.all([findFn, this.Model.listCount(findNotesParams)])
+      const findBook =  bookCtl.Model.listWithPaging({ start: 0, limit: 0, dbQuery })
+      const result = await Promise.all([findFn, this.Model.listCount(findNotesParams), findBook])
       ctx.send(1, {
         list: result[0],
         count: result[1],
         extend: {
           user: {
             _id: userId
-          }
+          },
+          books: result[2]
         }
       }, '')
     } catch (e) {

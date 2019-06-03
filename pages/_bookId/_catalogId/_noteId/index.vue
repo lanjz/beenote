@@ -55,6 +55,12 @@
       if(extend && extend.user) {
         store.commit('user/CUR_USER_INFO_SAVE', extend.user)
       }
+      if(extend && extend.books) {
+        store.commit('books/BOOK_LIST_SAVE', {
+          data: extend.books,
+          start: 0
+        })
+      }
     },
     components: {
       TreeItem,
