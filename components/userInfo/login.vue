@@ -67,6 +67,7 @@
         })
         this.$hideLoading()
         if(!result.err){
+          window.location.reload()
           this[MUTATIONS.CUR_USER_INFO_SAVE]({_id: ''})
           this.toDoCloseUserLayout()
         }
