@@ -27,6 +27,10 @@ function passValidAuth(ctx = {}) {
 
 async function checkAuth(ctx, next) {
   try{
+    if(ctx.method.toLowerCase() === 'options') {
+      ctx.send(1, '', '准了')
+      return
+    }
     const getHelloToken = ctx.cookies.get('helloToken')
 
     if(!getHelloToken) {
