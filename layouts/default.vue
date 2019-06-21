@@ -16,7 +16,7 @@
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   import Header from '../components/layout/Header'
   import bookShelveNav from '../components/layout/bookShelveNav'
-  import constKey from '@/util/const'
+  import constKey from '@/utils/const'
   export default {
     components: {
       Header,

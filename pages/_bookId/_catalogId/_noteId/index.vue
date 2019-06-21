@@ -23,15 +23,15 @@
   import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
   import * as MUTATIONS from '@/store/const/mutaions'
   import * as ACTIONS from '@/store/const/actions'
-  import bus from '@/util/global/eventBus'
+  import bus from '@/utils/global/eventBus'
   import TreeItem from '@/components/tree/index.vue'
   import NoteBrief from '@/components/note/NoteBrief.vue'
   import noteDes from '@/components/note/noteDes.vue'
   import noNotes from '@/components/note/noNotes.vue'
   import articleFixed from '@/components/article/articleFixed.vue'
-  import constKey from '@/util/const'
-  import { returnCatalog } from '@/util/blackHole'
-  import fetch from '@/util/fetch/fetch'
+  import constKey from '@/utils/const'
+  import { returnCatalog } from '@/utils/blackHole'
+  import fetch from '@/utils/fetch/fetch'
 
   export default {
    /* async asyncData ({ params }) {

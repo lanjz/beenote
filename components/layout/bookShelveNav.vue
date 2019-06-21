@@ -34,9 +34,9 @@
 </template>
 <script>
   import { mapState, mapGetters, mapMutations } from 'vuex'
-  import { uploadFile } from '@/util/fetch/fetch'
+  import { uploadFile } from '@/utils/fetch/fetch'
   import * as MUTATIONS from '../../store/const/mutaions'
-  import bus from '../../util/global/eventBus'
+  import bus from '../../utils/global/eventBus'
   export default {
     computed: {
       ...mapState({

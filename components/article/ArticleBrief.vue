@@ -32,8 +32,8 @@
   import * as MUTATIONS from '../../store/const/mutaions'
   import * as ACTIONS from '../../store/const/actions'
 
-  import bus from '../../util/global/eventBus'
-  import constKey from '../../util/const'
+  import bus from '../../utils/global/eventBus'
+  import constKey from '../../utils/const'
 
   export default {
     props: {

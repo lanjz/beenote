@@ -1,3 +1,3 @@
 import Vue from 'vue'
-import filters from '../util/global/filters'
+import filters from '../utils/global/filters'
 Vue.use(filters)

@@ -8,12 +8,12 @@
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   import * as MUTATIONS from '../store/const/mutaions'
   import * as ACTIONS from '../store/const/actions'
-  import bus from '../util/global/eventBus'
+  import bus from '../utils/global/eventBus'
   import TreeItem from '../components/tree/index.vue'
   import NoteBrief from '../components/note/NoteBrief.vue'
   import noteDes from '../components/note/noteDes.vue'
   import articleFixed from '../components/article/articleFixed.vue'
-  import constKey from '../util/const'
+  import constKey from '../utils/const'
 
   export default {
     components: {

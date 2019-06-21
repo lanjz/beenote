@@ -2,7 +2,8 @@ const jwt = require('jwt-simple')
 const mongoose = require('mongoose')
 const path = require('path')
 const fs = require('fs')
-
+const webInfo = require('../../utils/webSecret').info
+const SECRET  = webInfo.SECRET
 /**
  * @param { Error } e
  * @param { String } tart 出错的目标名称
@@ -90,8 +91,6 @@ function errorHandle(ctx, next){
     }
   })
 }
-
-const SECRET = 'hello~'
 
 function encodeLoginTypeJwt(data) {
   const payload = { ...data }

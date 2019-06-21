@@ -5,6 +5,7 @@ const sent  = require( '../utils/ret')
 const hello  = require( '../utils/hello.js')
 const checkAuth = require( '../utils/checkAuth.js')
 
+const host = process.env.NODE_ENV === 'development' ? '*' : 'localhost:3002'
 module.exports = function (app) {
 /*  app.use(cors({
     origin: function (ctx) {
@@ -22,7 +23,7 @@ module.exports = function (app) {
   }))*/
   app.use(async function(ctx, next) {
     ctx.set("Access-Control-Allow-Methods", "*");
-    ctx.set("Access-Control-Allow-Origin", 'http://localhost:3002')
+    ctx.set("Access-Control-Allow-Origin", host)
     ctx.set("Access-Control-Allow-Credentials", true);
     ctx.set("Access-Control-Max-Age", 86400000);
     ctx.set("Access-Control-Allow-Headers", "x-requested-with, accept, origin, content-type");

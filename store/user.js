@@ -1,4 +1,4 @@
-import fetch from '../util/fetch/fetch.js'
+import fetch from '../utils/fetch/fetch.js'
 import * as MUTATIONS from './const/mutaions'
 import * as ACTIONS from './const/actions'
 

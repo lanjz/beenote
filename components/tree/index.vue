@@ -10,7 +10,7 @@
 </template>
 <script>
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-  import constKey from '../../util/const'
+  import constKey from '../../utils/const'
   import TreeItem from './TreeItem'
   export default {
     name: 'Tree',

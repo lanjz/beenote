@@ -1,5 +1,5 @@
-import fetch from '../util/fetch/fetch.js'
-import constKey from '../util/const.js'
+import fetch from '../utils/fetch/fetch.js'
+import constKey from '../utils/const.js'
 import * as MUTATIONS from './const/mutaions'
 import * as ACTIONS from './const/actions'
 
