@@ -36,9 +36,9 @@
   import * as MUTATIONS from '../../store/const/mutaions'
   import * as ACTIONS from '../../store/const/actions'
 
-  import bus from '../../utils/global/eventBus'
-  import constKey from '../../utils/const'
-  import { returnCatalog } from '@/utils/blackHole'
+  import bus from '../../utils/client/global/eventBus'
+  import constKey from '../../utils/client/const'
+  import { returnCatalog } from '../../utils/client/blackHole'
 
   export default {
     props: {

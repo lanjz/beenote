@@ -76,8 +76,8 @@
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   import * as MUTATIONS from '../../store/const/mutaions'
   import * as ACTIONS from '../../store/const/actions'
-  import bus from '../../utils/global/eventBus'
-  import constKey from '../../utils/const'
+  import bus from '../../utils/client/global/eventBus'
+  import constKey from '../../utils/client/const'
 
   export default {
     name: 'TreeItem',

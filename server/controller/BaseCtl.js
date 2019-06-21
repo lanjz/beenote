@@ -3,6 +3,7 @@ const Busboy  = require('busboy')
 const fs  = require('fs')
 const path  = require('path')
 // const qiniu = require('qiniu')
+const SET = require('../../utils/hide/serverSecret')
 const hello  = require('../utils/hello')
 const { STATIC_IMG_PATH }  = require('../utils/CONST')
 
@@ -171,7 +172,8 @@ class BaseCtl {
       return
     }
     const imgResult = []
-    const curNet = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'http://67.209.187.22'
+    // todo
+    const curNet = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : `http://${SET.base.proHost}`
     result.data.imgUrl.forEach((item) => {
       const realUrl = item.replace(`${process.cwd()}${path.sep}static`, curNet)
       imgResult.push(realUrl)

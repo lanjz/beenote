@@ -90,3 +90,4 @@ sw.*
 # static
 
 /static/images
+/utils/hide

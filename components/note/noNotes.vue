@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-  import constKey from '@/utils/const'
+  import constKey from '../../utils/client/const'
   export default {
     data() {
       return {

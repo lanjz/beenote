@@ -38,7 +38,7 @@ module.exports = {
   */
   css: [
     '@/assets/styles/app.less',
-    '@/utils/hightlight/hightlight.css',
+    '@/utils/client/hightlight/hightlight.css',
   ],
 
   /*

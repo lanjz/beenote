@@ -12,12 +12,12 @@
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   import * as MUTATIONS from '../../store/const/mutaions'
   import * as ACTIONS from '../../store/const/actions'
-  import bus from '../../utils/global/eventBus'
+  import bus from '../../utils/client/global/eventBus'
   import TreeItem from '../../components/tree/index.vue'
   import ArticleBrief from '../../components/article/ArticleBrief.vue'
   import articles from '../../components/article/article.vue'
   import articleFixed from '../../components/article/articleFixed.vue'
-  import constKey from '../../utils/const'
+  import constKey from '../../utils/client/const'
 
   export default {
     components: {

@@ -2,7 +2,7 @@ const jwt = require('jwt-simple')
 const mongoose = require('mongoose')
 const path = require('path')
 const fs = require('fs')
-const webInfo = require('../../utils/webSecret').info
+const webInfo = require('../../utils/hide/serverSecret').base
 const SECRET  = webInfo.SECRET
 /**
  * @param { Error } e

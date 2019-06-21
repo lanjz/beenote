@@ -1,12 +1,9 @@
 const mongoose = require('mongoose')
+const SET = require('../../utils/hide/serverSecret')
 
-const dbName = {
-  dev: 'beenotetest',
-  pro: 'beenote'
-}
-const getDBName = process.env.DEV ? dbName.dev : dbName.pro
 
-const DBURL = `mongodb://127.0.0.1:27017/${getDBName}`
+
+const DBURL = SET.base.DBURL
 
 mongoose.connect(DBURL, { useNewUrlParser: true })
 mongoose.set('useFindAndModify', false)

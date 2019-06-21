@@ -1,8 +1,6 @@
 import axios from 'axios'
-import helloAlert from '../../components/messageBox/messageBox'
-import { HOST_CONFIG as hostConfig } from './fetchConifg'
-import LoadingLine from './loadingLine'
-const loadingLine = new LoadingLine()
+import SET from '../../hide/webSecret'
+import helloAlert from '../../../components/messageBox/messageBox'
 if(process.client) {
   console.log('context', window)
 }
@@ -25,9 +23,6 @@ function dealRetCode(response = {}) {
   }
   return res
 }
-function onUploadProgress(p) {
-  // loadingLine.setWid((p.loaded / p.total)*100)
-}
 function fetchData(options) {
   const res = { err: null, data: '' }
   let { url } = options
@@ -36,7 +31,7 @@ function fetchData(options) {
     return res
   }
   if (MOCK) {
-    url = `http://67.209.187.22:3000/mock/15${url}`
+    url = `${SET.base.mockHost}/mock/15${url}`
   } else {
     url = process.env.NODE_ENV === 'development' ?
       `http://localhost:3001${url}` :
@@ -44,8 +39,6 @@ function fetchData(options) {
   }
   options.url = url
   options.method = options.method || 'get'
-  options.onUploadProgress = onUploadProgress
-  options.onDownloadProgress = onUploadProgress
   if (options.method.toLowerCase() === 'get') {
     options.params = options.data
   }

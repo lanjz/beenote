@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Vue from '../../main'
+import SET from '../../../../utils/hide/webSecret'
 import helloAlert from '../../components/messageBox/index'
 import { HOST_CONFIG as hostConfig } from './fetchConifg'
 import LoadingLine from './loadingLine'
@@ -30,7 +31,7 @@ function fetchData(options) {
     return res
   }
   if (MOCK) {
-    url = `http://67.209.187.22:3000/mock/15${url}`
+    url = `${SET.base.mockHost}/mock/15${url}`
   } else {
     const env = process.DEV
     url = `${url}`
