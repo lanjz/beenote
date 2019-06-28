@@ -253,7 +253,7 @@
       },
       async addCatalog(name, parentId) {
         const result = await this[ACTIONS.CATALOGS_POST]({
-          parentId: parentId.indexOf('root') ? 'root' : parentId,
+          parentId: parentId.indexOf('root') > -1 ? 'root' : parentId,
           name,
           bookId: this.curBook
         })
