@@ -1,5 +1,6 @@
 const cors = require('koa2-cors')
 const bodyParser = require('koa-bodyparser')
+const koaBody = require('koa-body')
 const router  = require( '../router')
 const sent  = require( '../utils/ret')
 const hello  = require( '../utils/hello.js')
@@ -21,6 +22,7 @@ module.exports = function (app) {
     credentials: true,
     allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
   }))*/
+  app.use(koaBody({ multipart: true }))
   app.use(async function(ctx, next) {
     if(process.env.NODE_ENV === 'development') {
       ctx.set("Access-Control-Allow-Methods", "*");

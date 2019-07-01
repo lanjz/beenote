@@ -10,6 +10,7 @@ const baseCtl = new BaseCtl()
 const router = new Router({ prefix: '/api' })
 
 router.post('/uploadImg', baseCtl.uploadImg)
+router.post('/uploadImgCdn', baseCtl.uploadImgCdn)
 
 router.post('/login', userCtl.login)
 

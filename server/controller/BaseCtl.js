@@ -2,7 +2,7 @@ const util  = require('util')
 const Busboy  = require('busboy')
 const fs  = require('fs')
 const path  = require('path')
-// const qiniu = require('qiniu')
+const qiniu = require('qiniu')
 const SET = require('../../utils/hide/serverSecret')
 const hello  = require('../utils/hello')
 const { STATIC_IMG_PATH }  = require('../utils/CONST')
@@ -19,6 +19,7 @@ class BaseCtl {
     this.deleteByIds = this.deleteByIds.bind(this)
     this.findOneByQuery = this.findOneByQuery.bind(this)
     this.uploadImg = this.uploadImg.bind(this)
+    this.uploadImgCdn = this.uploadImgCdn.bind(this)
   }
   getAlias() {
     return '数据'
@@ -166,21 +167,96 @@ class BaseCtl {
     return this.Model.findOne(query)
   }
   async uploadImg(ctx, next){
-    const result = await this.uploadFile(ctx)
+    const result = await this.saveFileToLocal(ctx)
     if(result.err) {
       ctx.send(2, '', hello.dealError(result.err, id))
       return
     }
+    ctx.send(1, result.data.imgUrl, '')
+  }
+  getFullFilrUrl(result){
     const imgResult = []
-    // todo
     const curNet = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : `http://${SET.base.proHost}`
-    result.data.imgUrl.forEach((item) => {
+    result.forEach((item) => {
       const realUrl = item.replace(`${process.cwd()}${path.sep}static`, curNet)
       imgResult.push(realUrl)
     })
-    ctx.send(1, imgResult, '')
+    return imgResult
   }
-  async uploadFile(ctx, saveCatalog = 'common'){
+  // 保存到本地
+  async saveFileToLocal(ctx, saveCatalog = 'common') {
+    const res = {
+      err: null,
+      data: ''
+    }
+    try{
+      const file = ctx.request.files.file;
+      const reader = fs.createReadStream(file.path);
+      const filePath = path.join(STATIC_IMG_PATH, saveCatalog)
+      hello.mkdirsSync( filePath )
+      let fileName = Math.random().toString(16).substr(2) + '_'  + ctx.state.curUser._id + '_' + file.name
+      let saveTo = path.join(filePath, fileName)
+      const stream = fs.createWriteStream(saveTo);
+      reader.pipe(stream);
+      res.data = {
+        imgUrl: this.getFullFilrUrl([stream.path])
+      }
+    }catch(e) {
+      res.err = e
+    }
+    return res
+  }
+  async uploadImgCdn(ctx) {
+    const upToQiNiuResult = await this.upToQiniu(ctx)
+    if(upToQiNiuResult.err) {
+      ctx.send(2, '', upToQiNiuResult.err)
+    } else {
+      ctx.send(1, [upToQiNiuResult.data], '')
+    }
+  }
+  async upToQiniu(ctx) {
+    return new Promise((resolve, reject) => {
+      const qiniuSrc = 'http://ptycm9s11.bkt.clouddn.com/'
+      const accessKey = 'JJBGbpbd2XE-EZKfLsOGY5AbPpFeFMwUFRDp31BI'
+      const secretKey = 'I-3hmK0z23yADDgTbncCWaFUXSfqFAtauMVGET4D'
+      const options = {
+        scope: 'blackhookimages', // 存储空间的列表名，只能小写
+        expires: 720000,
+        returnBody: '{"key":"$(key)","hash":"$(etag)","fsize":$(fsize),"bucket":"$(bucket)"}'
+      }
+      const putPolicy = new qiniu.rs.PutPolicy(options)
+      const mac = new qiniu.auth.digest.Mac(accessKey, secretKey)
+      const uploadToken=putPolicy.uploadToken(mac)
+      const config = new qiniu.conf.Config()
+      config.zone = qiniu.zone.Zone_z0
+      const formUploader = new qiniu.form_up.FormUploader(config)
+      const putExtra = new qiniu.form_up.PutExtra()
+      // const readableStream = await this.getChunk(ctx); // 可读的流
+      const file = ctx.request.files.file;
+      const key= file.name
+      const reader = fs.createReadStream(file.path)
+      // 如果没用koaBody中间件，第三个参数可以直接使用ctx.req,但是为了获取文件名之类的其它信息，所以需要自己选解析，再转为流作为参数调用formUploader.putStream方法
+      formUploader.putStream(uploadToken, key, reader, putExtra, function (respErr, respBody, respInfo) {
+        if (respErr) {
+          throw respErr;
+        }
+        if (respInfo.statusCode == 200) {
+          resolve({
+            err: null,
+            data: `${qiniuSrc}${respBody.key}`
+          })
+        } else {
+          resolve({
+            err: respBody,
+            data: ''
+          })
+        }
+      })
+    })
+  }
+  
+  // 这个方法暂时失效，因为使用了koaBody中间件
+  async uploadFileByBusboy(ctx, saveCatalog = 'common'){
     const res = {
       err: null,
       data: {}
@@ -216,30 +292,39 @@ class BaseCtl {
         console.log('表单字段数据 [' + fieldname + ']: value: ' + util.inspect(val));
         result.formData[fieldname] = util.inspect(val);
       });
-
+      
       // 解析结束事件
       busboy.on('finish', function( ) {
         console.log('文件上结束')
         res.data = result
         resolve(res)
       })
-
+      
       // 解析错误事件
       busboy.on('error', function(err) {
         res.err = err
         resolve(res)
       })
-
+      
       ctx.req.pipe(busboy)
     })
-
+    
   }
-/*  async upToQiniu(filePath, key) {
-    const accessKey = 'JJBGbpbd2XE-EZKfLsOGY5AbPpFeFMwUFRDp31BI'
-    const secretKey = 'I-3hmK0z23yADDgTbncCWaFUXSfqFAtauMVGET4D'
-    const config = new qiniu.conf.Config()
-    config.zone = qiniu.zone.Zone_z0
-  }*/
+  async getChunk(ctx) {
+    return new Promise(function(resolve,reject){//需要返回一个promise对象
+      try{
+        let str='';
+        ctx.req.addListener('data',function(chunk){
+          str+=chunk;
+        })
+        ctx.req.addListener('end',function(chunk){
+          resolve(str);
+        })
+      }catch(err){
+        reject(err);
+      }
+    })
+  }
 }
 
 module.exports = BaseCtl

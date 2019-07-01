@@ -80,7 +80,8 @@
           })
         }
         uploadFile({
-          file: inputDOM.files[0]
+          file: inputDOM.files[0],
+          name:'test_.png'
         })
           .then((res) => {
             console.log('res', res)
