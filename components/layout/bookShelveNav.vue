@@ -25,7 +25,20 @@
             ref="inputer"
             type="file"
             class="file-input-hide"
-            @change="uploadFile"/>
+            @change="uploadFile('inputer')"/>
+        </div>
+        <div
+          class="book-layout">
+          <div>
+            <svg class="icon shelve-svg-icon" aria-hidden="true">
+              <use xlink:href="#icon-tubiaozhizuomoban"></use>
+            </svg>
+          </div>
+          <input
+            ref="inputerCdn"
+            type="file"
+            class="file-input-hide"
+            @change="uploadFile('inputerCdn')"/>
         </div>
       </div>
     </div>
@@ -68,11 +81,10 @@
       todoSetCurBook(item) {
         this.$router.push(`/${item._id}/recently`)
       },
-      uploadFile() {
-        const inputDOM = this.$refs.inputer;
+      uploadFile(tar = 'inputer') {
+        const inputDOM = this.$refs[tar];
         if(!inputDOM.files.length) return
         const getFile = inputDOM.files[0];
-        console.log('getFile', getFile)
         if(getFile.type.indexOf('image') > -1 && getFile.size > 1048576 * 5) {
           this.$alert({
             title: '上传图片失败',
@@ -81,8 +93,8 @@
         }
         uploadFile({
           file: inputDOM.files[0],
-          name:'test_.png'
-        })
+          name:'test_.png',
+        }, tar === 'inputerCdn')
           .then((res) => {
             console.log('res', res)
             const { err, data } = res

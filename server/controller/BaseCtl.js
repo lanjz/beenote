@@ -6,6 +6,7 @@ const qiniu = require('qiniu')
 const SET = require('../../utils/hide/serverSecret')
 const hello  = require('../utils/hello')
 const { STATIC_IMG_PATH }  = require('../utils/CONST')
+const FileMapModel  = require('../model/FileMap')
 
 class BaseCtl {
   constructor() {
@@ -20,6 +21,7 @@ class BaseCtl {
     this.findOneByQuery = this.findOneByQuery.bind(this)
     this.uploadImg = this.uploadImg.bind(this)
     this.uploadImgCdn = this.uploadImgCdn.bind(this)
+    this.fileMapModel = FileMapModel
   }
   getAlias() {
     return '数据'
@@ -174,7 +176,7 @@ class BaseCtl {
     }
     ctx.send(1, result.data.imgUrl, '')
   }
-  getFullFilrUrl(result){
+  getFullFileUrl(result){
     const imgResult = []
     const curNet = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : `http://${SET.base.proHost}`
     result.forEach((item) => {
@@ -199,8 +201,13 @@ class BaseCtl {
       const stream = fs.createWriteStream(saveTo);
       reader.pipe(stream);
       res.data = {
-        imgUrl: this.getFullFilrUrl([stream.path])
+        imgUrl: this.getFullFileUrl([stream.path])
       }
+      await this.fileMapModel.save({
+        filePath: res.data.imgUrl[0],
+        username: ctx.state.curUser.username,
+        userId: ctx.state.curUser._id,
+      })
     }catch(e) {
       res.err = e
     }
@@ -236,15 +243,25 @@ class BaseCtl {
       const key= file.name
       const reader = fs.createReadStream(file.path)
       // 如果没用koaBody中间件，第三个参数可以直接使用ctx.req,但是为了获取文件名之类的其它信息，所以需要自己选解析，再转为流作为参数调用formUploader.putStream方法
+      const that = this
       formUploader.putStream(uploadToken, key, reader, putExtra, function (respErr, respBody, respInfo) {
         if (respErr) {
           throw respErr;
         }
+        const realPath = `${qiniuSrc}${respBody.key}`
         if (respInfo.statusCode == 200) {
-          resolve({
-            err: null,
-            data: `${qiniuSrc}${respBody.key}`
+          that.fileMapModel.save({
+            filePath: realPath,
+            username: ctx.state.curUser.username,
+            userId: ctx.state.curUser._id,
           })
+            .then(res => {
+              resolve({
+                err: null,
+                data: realPath
+              })
+            })
+         
         } else {
           resolve({
             err: respBody,

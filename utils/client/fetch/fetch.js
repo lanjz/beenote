@@ -80,12 +80,12 @@ const doFetchData = function (options) {
   })
 }
 
-const uploadFile = function (params) {
+const uploadFile = function (params, cdn) {
   const options = {
     data: params,
     type: 'formData',
     method: 'post',
-    url: '/api/uploadImg'
+    url: cdn ? '/api/uploadImgCdn' : '/api/uploadImg'
   }
   return doFetchData(options)
 }
