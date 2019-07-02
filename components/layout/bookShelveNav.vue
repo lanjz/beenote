@@ -14,7 +14,7 @@
         <div class="book-layout-name">{{item.name}}</div>
       </div>
       <div class="tool-box">
-        <div
+<!--        <div
           class="book-layout">
           <div>
             <svg class="icon shelve-svg-icon" aria-hidden="true">
@@ -26,7 +26,7 @@
             type="file"
             class="file-input-hide"
             @change="uploadFile('inputer')"/>
-        </div>
+        </div>-->
         <div
           class="book-layout">
           <div>
@@ -43,6 +43,7 @@
       </div>
     </div>
     <div class="preview-img"></div>
+    <imgPreBox ref="imgPreBox"></imgPreBox>
   </div>
 </template>
 <script>
@@ -50,6 +51,7 @@
   import { uploadFile } from '../../utils/client/fetch/fetch'
   import * as MUTATIONS from '../../store/const/mutaions'
   import bus from '../../utils/client/global/eventBus'
+  import imgPreBox from '../imgPreBox'
   export default {
     computed: {
       ...mapState({
@@ -61,6 +63,9 @@
       ...mapGetters('books', [
         'curBookInfo'
       ])
+    },
+    components: {
+      imgPreBox
     },
     methods: {
       ...mapMutations('books',[
@@ -85,11 +90,18 @@
         const inputDOM = this.$refs[tar];
         if(!inputDOM.files.length) return
         const getFile = inputDOM.files[0];
+        if(getFile.type.indexOf('image') < 0 ) {
+          this.$alert({
+            title: '请上传图片',
+          })
+          return
+        }
         if(getFile.type.indexOf('image') > -1 && getFile.size > 1048576 * 5) {
           this.$alert({
             title: '上传图片失败',
             content: '图片不应大于5M'
           })
+          return
         }
         uploadFile({
           file: inputDOM.files[0],
@@ -99,12 +111,7 @@
             console.log('res', res)
             const { err, data } = res
             if(!err) {
-              this.$alert({
-                title: '图片上传成功',
-                // content: `<img src="${data[0]}"/>`,
-                content: data[0],
-                showCancel: false
-              })
+              this.$refs.imgPreBox.open(data[0])
             }
           })
       }

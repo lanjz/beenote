@@ -28,6 +28,7 @@
     min-width: 100px;
     font-size: 15px;
     text-align: center;
+    z-index: 9999;
   }
   .fade-enter-active, .fade-leave-active {
     transition: .3s ease-out;

@@ -1,2 +1,0 @@
-exports.ids=[3],exports.modules={178:function(t,e,r){"use strict";r.r(e);var o={mounted(){const{bookId:t}=$nuxt._route.params;this.$router.push(`/${t}/recently/`)}},n=r(5);var component=Object(n.a)(o,function(){var t=this.$createElement;return(this._self._c||t)("div")},[],!1,function(t){},"3e3e4d28","7246ed85");e.default=component.exports}};
-//# sourceMappingURL=33339565a95e2bc5fe84.js.map
