@@ -116,15 +116,24 @@
         if (!this.isEdit) {
           this.isPreview = true
         }
+        if(window) {
+          window._markdownEdit = this.isEdit
+        }
       },
       togglePreview() {
         this.isPreview = !this.isPreview
         if (!this.isPreview) {
           this.isEdit = true
         }
+        if(window) {
+          window._markdownEdit = this.isEdit
+        }
       }
     },
     mounted() {
+      if(window._markdownEdit) {
+        this.isEdit = true
+      }
       this.markDownValue = this.data || ''
     /*  if (this.isEdit) {
         this.isEdit = false

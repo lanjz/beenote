@@ -196,7 +196,8 @@
         this.cacheContent = this.content
         this.$emit('emitUpdateNote',
           {
-            force: true
+            force: true,
+            id: this.curNote._id
           })
       },
       async init() {
