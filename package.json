@@ -33,6 +33,7 @@
     "nodemon": "^1.18.10",
     "nuxt": "^2.4.0",
     "qiniu": "^7.2.1",
-    "sass-resources-loader": "^2.0.0"
+    "sass-resources-loader": "^2.0.0",
+    "vuedraggable": "^2.23.0"
   }
 }

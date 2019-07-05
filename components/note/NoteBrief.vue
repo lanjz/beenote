@@ -7,22 +7,37 @@
       </div>
       <div class="flex-1 relative">
         <div class="absolute-full article-item-box" id="article-item-box">
-          <div
-            :id="item._id"
-            class="article-item"
-            v-for="(item, index) in filterList"
-            :key="index"
-            :class="{'act': item._id === curNote}"
-            @click="chooseNote(item)">
-            <div class="article-item-title">{{item.title}}</div>
-            <div class="article-label">
-              <span class="article-label-item">{{item.bookId|getBookName(bookList)}}</span>
-            </div>
-            <div class="article-item-mark">{{item.createTime | timestampToBriefTime}}~{{item.updateTime | timestampToBriefTime}}</div>
-            <div class="operate-icon" @click.stop="todoDelete(item)">
-              <i class="iconfont icon-shanchu1"></i>
-            </div>
-          </div>
+          <draggable
+            v-model="filterList"
+            group="people"
+            handle=".operate-icon-sort"
+            @start="drag=true"
+            @end="dragEnd"
+            v-bind="dragOptions"
+          >
+            <transition-group type="transition" :name="!drag ? 'flip-list' : null">
+              <div
+                :id="item._id"
+                class="article-item"
+                v-for="(item, index) in filterList"
+                :key="item._id"
+                :class="{'act': item._id === curNote}"
+                @click="chooseNote(item)">
+                <div class="article-item-title">{{item.title}}</div>
+                <div class="article-label">
+                  <span class="article-label-item">{{item.bookId|getBookName(bookList)}}</span>
+                </div>
+                <div class="article-item-mark">{{item.createTime | timestampToBriefTime}}~{{item.updateTime | timestampToBriefTime}}</div>
+                <div class="operate-icon operate-icon-delete" @click.stop="todoDelete(item)">
+                  <i class="iconfont icon-shanchu1"></i>
+                </div>
+                <div class="operate-icon operate-icon-sort" v-show="!filterKeys" @click.stop="todoDelete(item)">
+                  <i class="iconfont icon-paixu"></i>
+                </div>
+              </div>
+            </transition-group>
+          </draggable>
+
         </div>
       </div>
       <div class="shortcut-add-layout" @click="shortcutAdd" v-if="notesMap[curNote] && !isVisitor">
@@ -33,6 +48,7 @@
 </template>
 <script>
   import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+  import draggable from 'vuedraggable'
   import * as MUTATIONS from '../../store/const/mutaions'
   import * as ACTIONS from '../../store/const/actions'
 
@@ -52,7 +68,12 @@
     data() {
       return {
         filterKeys: '',
+        filterList: [],
+        drag: false
       }
+    },
+    components: {
+      draggable
     },
     computed: {
       ...mapState({
@@ -62,21 +83,32 @@
         schemaList: state => state.schema.list,
         curNote: state => state.notes.curNote,
         notesMap: state => state.notes.notesMap,
-        filterList: function () {
+/*        filterList: function () {
           if(!this.filterKeys) {
             return this.list
           }
           return this.list.filter((item) => item.title.indexOf(this.filterKeys) > -1)
-        }
+        }*/
 
       }),
       ...mapGetters('user', ['isVisitor']),
+      dragOptions() {
+        return {
+          animation: 200,
+          group: "description",
+          disabled: false,
+          ghostClass: "ghost"
+        };
+      }
     },
     watch: {
       list: function (val) {
         if(val.length && (!this.curNode || this.curNode === 'new')) {
 //          this.chooseNote(val[0])
         }
+      },
+      filterKeys: function (val) {
+        this.getList()
       }
     },
     filters: {
@@ -143,7 +175,20 @@
           ...this.curNode,
           catalogId: this.curNode._id
         })*/
+      },
+      dragEnd() {
+        this.drag = false
+        console.log(this.filterList)
+      },
+      getList() {
+        if(!this.filterKeys) {
+          this.filterList = this.list
+        }
+        this.filterList = this.list.filter((item) => item.title.indexOf(this.filterKeys) > -1)
       }
+    },
+    mounted() {
+      this.getList()
     }
   }
 </script>
@@ -167,8 +212,6 @@
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      right: 7px;
-      top: 7px;
       position: absolute;
       z-index: 1;
       background: #5f5f5f;
@@ -182,8 +225,21 @@
         font-size: 18px;
       }
     }
-    .operate-icon:hover{
+    .operate-icon-delete{
+      right: 7px;
+      top: 7px;
+    }
+    .operate-icon-sort{
+      right: 7px;
+      bottom: 7px;
+      cursor: move;
+    }
+    .operate-icon-delete:hover{
       background: @warn-color;
+      color: #fff;
+    }
+    .operate-icon-sort:hover{
+      background: @highlight-color;
       color: #fff;
     }
   }
@@ -276,5 +332,15 @@
       font-size: 30px;
       color: #2D2D2D;
     }
+  }
+  .flip-list-move {
+    transition: transform 0.5s;
+  }
+  .no-move {
+    transition: transform 0s;
+  }
+  .ghost {
+    opacity: 0.5;
+    background: #c8ebfb;
   }
 </style>
