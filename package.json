@@ -13,7 +13,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "busboy": "^0.3.0",
     "cross-env": "^5.2.0",
     "crypto": "^1.0.1",
