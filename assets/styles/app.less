@@ -537,8 +537,43 @@ textarea.form-input{
 .markdown-style{
   overflow: auto;
   background: #fff;
+  *{
+    position: relative;
+  }
+  h1:before, h2:before, h3:before, h4:before, h5:before, h6:before{
+    color: #d6d5d5;
+    font-size: 15px;
+    font-weight: normal;
+    position: absolute;
+    left: -30px;
+    bottom: 0;
+  }
+  h1:before{
+    content: 'H1';
+    bottom: 3px;
+  }
+  h2:before{
+    content: 'H2';
+    bottom: 2px;
+  }
+  h3:before{
+    content: 'H3';
+    bottom: 1px;
+  }
+  h4:before{
+    content: 'H4';
+    font-size: 14px;
+  }
+  h5:before{
+    content: 'H5';
+    font-size: 13px;
+  }
+  h6:before{
+    content: 'H6';
+    font-size: 12px;
+  }
   .markdown-content-style{
-    padding: 0 20px 20px 20px;
+    padding: 0 20px 20px 50px;
     min-height: 100%;
   }
   code{
@@ -634,6 +669,7 @@ textarea.form-input{
     display: inline-block;
     position: relative;
     border-bottom: dotted #f5bebe 1px ;
+    line-height: 24px;
     .iconfont{
       margin-left: 4px;
       position: relative;
@@ -645,27 +681,40 @@ textarea.form-input{
     }
     .marked-issue-tip{
       position: absolute;
-      top: -150%;
-      right: 0;
+      top: -100%;
+      transform: translate(20px, -15px);
+      right: 50%;
       transition: .3s;
       display: none;
       opacity: 0;
       padding: 3px 5px;
       font-size: 12px;
-      border: solid 1px #a0a0a0;
       border-radius: 4px;
-      background: #fff;
+      background: #000;
       z-index: 99999;
-      color: #5f5f5f;
+      color: #e1e1e1;
       white-space:nowrap;
+      line-height: 15px;
+    }
+    .marked-issue-tip:after{
+      content: '';
+      right: 0;
+      bottom: 0;
+      transform: translate(-15px, 100%);
+      position: absolute;
+      border-top: solid 6px #000;
+      border-right: solid 5px transparent;
+      border-left: solid 5px transparent;
+      width: 0;
+      height: 0;
     }
   }
-  .marked-issue-tip:hover, .iconfont:hover + .marked-issue-tip{
+  .marked-issue-tip:hover, .iconfont:hover .marked-issue-tip{
     opacity: 1;
     display: block;
   }
   .marked-iconfont-link{
-    color: @highlight-color;
+    //color: @highlight-color;
     margin: 0 2px 0 5px;
   }
 }
