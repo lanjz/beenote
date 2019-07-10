@@ -60,6 +60,15 @@
     const result = text
       .replace(/C\(N\)/g, '<span class="marked-checkBox"></span>')
       .replace(/C\(Y\)/g, '<span class="marked-checkBox"><i class="iconfont icon-gou1"></i></span>')
+      .replace(/\((.*?)\)\?(\((.*?)\))?/g, function($1, $2, $3, $4){
+        if($4)  {
+          return `<div class="marked-issue">${$2}<i class="iconfont icon-wenhao color"></i> <span class="marked-issue-tip">${$4}</span></div>`
+        }
+        return `<div class="marked-issue">${$2}<i class="iconfont icon-wenhao"></i></div>`
+      })
+      .replace(/(<a .*?<\/a>)/g, function ($1, $2, $3, $4) {
+        return `<span class="marked-iconfont-link">[<i class="iconfont icon-lianjie2"></i>]</span>${$2}`
+      })
     return result
   }
 
