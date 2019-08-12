@@ -4,15 +4,20 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer')
 const schedule = require('node-schedule')
 
-let lastHash = '' // 记录文件是否修改，如果发生变化才发送备份数据
-
-const transporter = nodemailer.createTransport({
+interface emainConf {
+  readonly service: string;
+  readonly auth: object
+}
+const myEmainConf: emainConf = {
   service: 'qq',
   auth: {
     user: '156081289@qq.com',
     pass: 'llqeqqsaitjcbieh'
   }
-})
+}
+let lastHash:string = '' // 记录文件是否修改，如果发生变化才发送备份数据
+
+const transporter = nodemailer.createTransport(myEmainConf)
 
 function sendMsg(file) {
   const mailOptions = {
@@ -53,11 +58,11 @@ function createFileHash256(path) {
   return new Promise((resolve, reject) => {
     const stream = fs.createReadStream(path);
     const fsHash = crypto.createHash('sha256');
-    
+
     stream.on('data', function (d) {
       fsHash.update(d);
     });
-    
+
     stream.on('end', function () {
       const md5 = fsHash.digest('hex');
       resolve(md5);
@@ -68,8 +73,7 @@ function createFileHash256(path) {
 async function todoSend() {
   try{
     const sendFilePath = getSendFilePath()
-    const curHash = await createFileHash256(sendFilePath)
-    console.log('curHash', curHash)
+    const curHash:any = await createFileHash256(sendFilePath)
     if(curHash === lastHash) return
     lastHash = curHash
     sendMsg(sendFilePath)
@@ -79,7 +83,7 @@ async function todoSend() {
 }
 
 let j = ''
-function initSchedule() {
+export function initSchedule(): void {
   var rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = [new schedule.Range(0, 6)];
   rule.hour = 3;
@@ -89,10 +93,4 @@ function initSchedule() {
       todoSend()
     });
   }
-}
-
-// todoSend()
-
-module.exports = {
-  initSchedule
 }

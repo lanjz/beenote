@@ -23,6 +23,7 @@ const config:NuxtConfiguration = {
     ],
     script: [
       {
+        type: 'script',
         src: '//at.alicdn.com/t/font_992689_pswgkexoa3.js'
       }
     ]
@@ -52,14 +53,6 @@ const config:NuxtConfiguration = {
     '~/plugins/directive',
     '~/plugins/route'
   ],
-
-  /*
-  ** Nuxt.js modules
-  */
-  modules: [
-    '@nuxtjs/style-resourcess'
-  ],
-
   /*
   ** Build configuration
   */
