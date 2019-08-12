@@ -1,7 +1,7 @@
+import NuxtConfiguration from '@nuxt/config'
 const pkg = require('./package')
 
-
-module.exports = {
+const config:NuxtConfiguration = {
   mode: 'universal',
   router: {
     middleware: 'check-auth'
@@ -57,6 +57,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/style-resourcess'
   ],
 
   /*
@@ -66,7 +67,7 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
-    styleResources:{
+    styleResources: {
       less:'assets/styles/global.less'
     },
     extend(config, ctx) {
@@ -81,3 +82,6 @@ module.exports = {
     host: '0.0.0.0', // default: localhost
   },
 }
+
+
+export default config
