@@ -1,8 +1,19 @@
-const baseModel = require('./BaseModel')
+import { Document, Schema, Model } from 'mongoose'
+import baseModel, { BaseDocument } from './BaseModel'
 const definedValidate  = require('./DefinedValidate')
 const validator = require('./validator')
 
-class UserModel extends baseModel{
+interface UserDocement extends Document, BaseDocument {
+  username: string
+  nickname: string
+  password: string
+  email: string
+  avatar: string
+
+}
+
+class UserModel extends (baseModel as { new(): any; }){
+  assectPath: string;
   constructor() {
     super()
     this.assectPath = '_id username email sex createTime updateTime'
@@ -14,7 +25,7 @@ class UserModel extends baseModel{
   banUpdateFields() {
     return ['username']
   }
-  getSchema() {
+  getSchema(): Schema  {
     return {
       username: {
         type: String,
@@ -52,5 +63,6 @@ class UserModel extends baseModel{
     return this.Model.findOne({ email }).select(this.assectPath).exec()
   }
 }
-module.exports = UserModel
+
+export default UserModel
 

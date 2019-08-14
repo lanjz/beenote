@@ -1,5 +1,5 @@
-const hello  = require('../utils/hello')
-const BaseCtl  = require('./BaseCtl.js')
+import hello from '../utils/hello'
+const BaseCtl  = require('./BaseCtl.ts')
 const bookCtl  = require('./Book')
 const catalogCtl  = require('./Catalog')
 const noteModel  = require('../model/Notes')

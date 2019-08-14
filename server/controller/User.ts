@@ -1,8 +1,8 @@
-const hello  = require('../utils/hello')
-const BaseCtl  = require('./BaseCtl.js')
-const UserModel  = require('../model/User')
-
-class UserCtl extends BaseCtl {
+import { Context } from 'koa'
+import BaseCtl from './BaseCtl'
+import { dealError, encodeLoginTypeJwt } from '../utils/hello'
+import UserModel from '../model/User'
+class UserCtl extends (BaseCtl as { new(): any; }) {
   constructor(){
     super()
     this.userAuth = this.userAuth.bind(this)
@@ -25,13 +25,13 @@ class UserCtl extends BaseCtl {
     const userTokenInfo = { clientUser: result._id, }
     ctx.cookies.set(
       'helloToken',
-      hello.encodeLoginTypeJwt(userTokenInfo),
+      encodeLoginTypeJwt(userTokenInfo),
       {
         path: '/'
       }
     )
   }
-  clearUserCookie(ctx, result) {
+  clearUserCookie(ctx: Context) {
     ctx.cookies.set('helloToken','',{signed:false,maxAge:0})
   }
   async login(ctx, next) {
@@ -53,7 +53,7 @@ class UserCtl extends BaseCtl {
         ctx.send(1, result, '登录成功')
       }
     } catch (e) {
-      ctx.send(2, '', hello.dealError(e))
+      ctx.send(2, '', dealError(e))
     } finally {
       next()
     }
@@ -77,4 +77,4 @@ class UserCtl extends BaseCtl {
 
 const userCtl = new UserCtl()
 
-module.exports = userCtl
+export default userCtl

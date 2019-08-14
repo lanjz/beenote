@@ -3,8 +3,8 @@ import { Nuxt, Builder } from 'nuxt'
 import middleware from './middleware/index'
 import config from '../nuxt.config'
 import { initSchedule } from './utils/sendEmail'
+const consola = require ('consola')
 
-const consola = require('consola')
 const app = new Koa()
 
 if(initSchedule) {

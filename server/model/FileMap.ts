@@ -1,6 +1,7 @@
-const baseModel = require('./BaseModel')
+import baseModel from './BaseModel'
 
-class FileMapModel extends baseModel{
+class FileMapModel extends (baseModel as { new(): any; }){
+  assectPath: string
   constructor() {
     super()
     this.assectPath = '_id username userId filePath createTime updateTime'

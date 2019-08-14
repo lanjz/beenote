@@ -1,3 +1,4 @@
+import { iError, Res } from '../../utils/types/common'
 const jwt = require('jwt-simple')
 const mongoose = require('mongoose')
 const path = require('path')
@@ -9,13 +10,12 @@ const SECRET  = webInfo.SECRET
  * @param { String } tart 出错的目标名称
  * @return { String } errMsg 返回错误提示信息
  * */
-
-function dealError(e, tart) {
+export function dealError(e: iError, tart?: string): string{
   console.log('dealError', e)
   let errMsg = e.message
   if(e.code === 11000) {
     errMsg = `${tart}已经存在`
-  } else if(e.name === 'CastError'){
+  } else if(e.name === 'CastError'){ // 这是mongodb处理的错误
     errMsg = e.stringValue ? `${e.stringValue}不存在` : `${tart}不存在`
   }
   return errMsg
@@ -26,7 +26,7 @@ function dealError(e, tart) {
  * @param { Object } model 根据mongoose.model过滤参数
  * @return { Object } filterData 返回过滤后的参数
  * */
-function filterParams(params, model) {
+function filterParams(params, model): Promise<Res>{
   const deepCopyParams = JSON.parse(JSON.stringify(params))
   const errMsg = []
   const filterData = {}
@@ -80,7 +80,7 @@ function mkdirsSync( dirname ) {
     }, '') // 第二参数 设置初始值
 }
 
-function errorHandle(ctx, next){
+export function errorHandle(ctx, next){
   return next().catch((err) => {
     console.log('errorHandle', err)
     if (err.status === 401) {
@@ -92,12 +92,12 @@ function errorHandle(ctx, next){
   })
 }
 
-function encodeLoginTypeJwt(data) {
+export function encodeLoginTypeJwt(data) {
   const payload = { ...data }
   const token = jwt.encode(payload, SECRET)
   return token
 }
-function decodeLoginTypeJwt(token) {
+export function decodeLoginTypeJwt(token) {
   const decoded = jwt.decode(token, SECRET)
   return decoded
 }
@@ -127,8 +127,7 @@ function promiseToAwait(fn) {
   })
 }
 
-
-module.exports = {
+const combine = {
   dealError,
   filterParams,
   errorHandle,
@@ -139,3 +138,5 @@ module.exports = {
   promiseToAwait,
   mkdirsSync
 }
+
+export default combine

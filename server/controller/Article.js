@@ -4,7 +4,7 @@ const bookCtl  = require('./Book')
 const catalogCtl  = require('./Catalog')
 const schematasCtl  = require('./SchematasCtl')
 const validator  = require('../utils/validator')
-const hello  = require('../utils/hello')
+import hello from '../utils/hello'
 const noteCtl  = require('./Notes')
 
 class ArticleCtl extends BaseCtl {

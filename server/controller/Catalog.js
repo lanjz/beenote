@@ -1,6 +1,6 @@
  const BaseCtl  = require('./BaseCtl')
 const Catalog  = require('../model/Catalog')
-const hello  = require('../utils/hello')
+import hello from '../utils/hello'
 const bookCtl  = require('./Book')
 
 class CatalogCtl extends BaseCtl {

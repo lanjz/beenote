@@ -1,14 +1,26 @@
+import { Context } from "koa";
+import { Res } from '../../utils/types/common'
+import {ArrayTypeAnnotation} from "../../node_modules/@types/babel__traverse/node_modules/@babel/types/lib";
 const util  = require('util')
 const Busboy  = require('busboy')
 const fs  = require('fs')
 const path  = require('path')
 const qiniu = require('qiniu')
 const SET = require('../../utils/hide/serverSecret')
-const hello  = require('../utils/hello')
+import hello from '../utils/hello'
 const { STATIC_IMG_PATH }  = require('../utils/CONST')
 const FileMapModel  = require('../model/FileMap')
 
+interface ResFile extends Res {
+  data: {
+    imgUrl: Array<string>
+  }
+}
+
 class BaseCtl {
+  alias: string;
+  Model: any;
+  fileMapModel: any;
   constructor() {
     this.alias = this.getAlias()
     this.Model = this.getModel()
@@ -36,11 +48,11 @@ class BaseCtl {
     return {}
   }
 
-  todoPreAdd(params) {
+  todoPreAdd(params:object, ctx?: Context):Res {
     const res = { err: null, data: params }
     return res
   }
-  todoPreModify(params) {
+  todoPreModify(params:object, ctx?: Context):Res {
     const res = { err: null, data: params }
     return res
   }
@@ -171,7 +183,7 @@ class BaseCtl {
   async uploadImg(ctx, next){
     const result = await this.saveFileToLocal(ctx)
     if(result.err) {
-      ctx.send(2, '', hello.dealError(result.err, id))
+      ctx.send(2, '', hello.dealError(result.err))
       return
     }
     ctx.send(1, result.data.imgUrl, '')
@@ -186,10 +198,12 @@ class BaseCtl {
     return imgResult
   }
   // 保存到本地
-  async saveFileToLocal(ctx, saveCatalog = 'common') {
-    const res = {
+  async saveFileToLocal(ctx: Context, saveCatalog = 'common'): Promise<ResFile> {
+    let res: ResFile = {
       err: null,
-      data: ''
+      data: {
+        imgUrl: []
+      }
     }
     try{
       const file = ctx.request.files.file;
@@ -221,7 +235,7 @@ class BaseCtl {
       ctx.send(1, [upToQiNiuResult.data], '')
     }
   }
-  async upToQiniu(ctx) {
+  upToQiniu(ctx: Context): Promise<Res> {
     return new Promise((resolve, reject) => {
       const qiniuSrc = 'http://ptycm9s11.bkt.clouddn.com/'
       const accessKey = 'JJBGbpbd2XE-EZKfLsOGY5AbPpFeFMwUFRDp31BI'
@@ -261,7 +275,7 @@ class BaseCtl {
                 data: realPath
               })
             })
-         
+
         } else {
           resolve({
             err: respBody,
@@ -271,7 +285,7 @@ class BaseCtl {
       })
     })
   }
-  
+
   // 这个方法暂时失效，因为使用了koaBody中间件
   async uploadFileByBusboy(ctx, saveCatalog = 'common'){
     const res = {
@@ -309,23 +323,23 @@ class BaseCtl {
         console.log('表单字段数据 [' + fieldname + ']: value: ' + util.inspect(val));
         result.formData[fieldname] = util.inspect(val);
       });
-      
+
       // 解析结束事件
       busboy.on('finish', function( ) {
         console.log('文件上结束')
         res.data = result
         resolve(res)
       })
-      
+
       // 解析错误事件
       busboy.on('error', function(err) {
         res.err = err
         resolve(res)
       })
-      
+
       ctx.req.pipe(busboy)
     })
-    
+
   }
   async getChunk(ctx) {
     return new Promise(function(resolve,reject){//需要返回一个promise对象
@@ -344,4 +358,4 @@ class BaseCtl {
   }
 }
 
-module.exports = BaseCtl
+export default BaseCtl

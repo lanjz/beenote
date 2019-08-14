@@ -1,17 +1,38 @@
+import { Schema, Document, Model } from 'mongoose'
 const mongoose = require('mongoose')
-const dbModel = require('../db/index')
+import dbModel from '../db/index'
 const { VALIDA_ERR_MSG } = require('../utils/CONST')
 
+export interface BaseDocument extends Document {
+  createTime: Number
+  updateTime: Number
+}
+
+export interface SchemaPlug extends Schema {
+  createTime: Number
+  updateTime: Number
+}
+
 class baseModel {
-  constructor() {
+  name: void | string
+  filterFields: Array<string>
+  schema: Schema
+  Model: Model<any>
+  createTime: Number
+  updateTime: Number
+  baseSchema: any
+  assectPath: string;
+  constructor(doc) {
     this.name = this.getName()
     this.filterFields = [...this.banUpdateFields(), 'createTime', 'updateTime']
     this.schema = new mongoose.Schema(this.getSchema())
     this.schema.pre('save', function (next){
+      // @ts-ignore
       if(!this.createTime) this.createTime = this.updateTime = (new Date()).getTime()
       next()
     })
     const _this = this
+    // @ts-ignore
     this.schema.pre(/updateOne|findOneAndUpdate/, function (next){
       const getUpdate = this.getUpdate()
       const getFields = _this.getValidateFields(getUpdate)
@@ -107,8 +128,8 @@ class baseModel {
     return this.Model.find(...args).lean().select(this.assectPath).exec()
   }
   listWithPaging({ start = 0, limit = 0, dbQuery = {}, addLean = false, sort }) {
-    start = parseInt(start);
-    limit = parseInt(limit);
+    start = parseInt(start + '');
+    limit = parseInt(limit + '');
     sort = sort ? sort : { _id: -1 }
     let fn = this.Model.find(dbQuery)
     if(addLean){
@@ -133,5 +154,4 @@ class baseModel {
 }
 
 
-
-module.exports = baseModel
+export default baseModel

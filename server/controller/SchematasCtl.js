@@ -1,4 +1,4 @@
-const hello  = require('../utils/hello')
+import hello from '../utils/hello'
 const BaseCtl  = require('./BaseCtl')
 const schematasModel  = require('../model/Schematas')
 const validator  = require('../utils/validator')

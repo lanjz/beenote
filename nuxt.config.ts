@@ -1,7 +1,17 @@
 import NuxtConfiguration from '@nuxt/config'
+import { NuxtConfigurationBuild } from '@nuxt/config/types/build'
+
+interface NuxtConfigurationBuildPlus extends NuxtConfigurationBuild {
+  styleResources?: any
+}
+
+interface NuxtConfigurationPlugs extends NuxtConfiguration {
+  build?: NuxtConfigurationBuildPlus
+}
+
 const pkg = require('./package')
 
-const config:NuxtConfiguration = {
+const config:NuxtConfigurationPlugs = {
   mode: 'universal',
   router: {
     middleware: 'check-auth'

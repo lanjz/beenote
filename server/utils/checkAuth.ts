@@ -1,8 +1,9 @@
-const userCtrl = require('../controller/User')
-const hello = require('./hello')
+import { Context } from 'koa'
+import { decodeLoginTypeJwt, dealError } from './hello'
+import userCtrl from '../controller/User'
 
 
-function passValidAuth(ctx = {}) {
+function passValidAuth(ctx: Context) {
   if(ctx.url.indexOf('/api') < 0) {
     return true
   }
@@ -25,7 +26,7 @@ function passValidAuth(ctx = {}) {
 }
 
 
-async function checkAuth(ctx, next) {
+async function checkAuth(ctx: Context, next) {
   try{
     if(ctx.method.toLowerCase() === 'options') {
       ctx.send(1, '', '准了')
@@ -44,9 +45,9 @@ async function checkAuth(ctx, next) {
     } else {
       // 有token则验证token
       // todo 是否对不需要验证登录的跳过
-      const { clientUser } = hello.decodeLoginTypeJwt(getHelloToken)
+      const { clientUser } = decodeLoginTypeJwt(getHelloToken)
       if(!clientUser) {
-        userCtrl.clearUserCookie()
+        userCtrl.clearUserCookie(ctx)
         ctx.send(4, '', 'token无效请重新登录')
         return
       }
@@ -54,7 +55,7 @@ async function checkAuth(ctx, next) {
       const result = await userCtrl.userAuth(clientUser)
       // const result = {}
       if(!result) {
-        userCtrl.clearUserCookie()
+        userCtrl.clearUserCookie(ctx)
         ctx.send(4, result, `请重新登录`)
         return
       }
@@ -62,8 +63,8 @@ async function checkAuth(ctx, next) {
       await next()
     }
   } catch(e) {
-    ctx.send(2, '', hello.dealError(e))
+    ctx.send(2, '', dealError(e))
   }
 }
 
-module.exports = checkAuth
+export default checkAuth
