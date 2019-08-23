@@ -3,7 +3,8 @@ import * as MUTATIONS from './const/mutaions'
 const state = () => {
   return {
     showDir: true,
-    showBrief: true
+    showBrief: true,
+    extend: {}
   }
 }
 const mutations = {
@@ -14,6 +15,9 @@ const mutations = {
     if(process.client) {
       window.localStorage.setItem(tar, temVar)
     }
+  },
+  [MUTATIONS.CONFIG_EXTEND_SAVE] (state, { tar, val} ) {
+    state.extend[tar] = val
   }
 }
 

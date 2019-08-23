@@ -152,7 +152,6 @@
         ACTIONS.ARTICLE_RECENTLY_LIST_GET,
       ]),
       toggleOpenDir(force = false, catalogId) {
-        console.log('data', force)
         this[MUTATIONS.CATALOGS_OPEN_TOGGLE]({
           id: catalogId || this.curNode._id,
           force

@@ -2,6 +2,7 @@ import hello from '../utils/hello'
 import BaseCtl from './BaseCtl'
 import bookCtl  from './Book'
 import catalogCtl from './Catalog'
+import UseeCtl from './User'
 import noteModel from '../model/Notes'
 
 class NoteCtl extends (BaseCtl as { new(): any}) {
@@ -139,16 +140,29 @@ class NoteCtl extends (BaseCtl as { new(): any}) {
       const findFn = queryCatalogId !== 'recently' ?
         this.Model.listWithPaging({ start: 0, limit: 0, dbQuery:findNotesParams }) :
         this.Model.listWithPaging({ start:0, limit:0, dbQuery: { bookId: queryBookId, userId }, sort: { updateTime: -1 } })
-      const findBook =  bookCtl.Model.listWithPaging({ start: 0, limit: 0, dbQuery })
-      const result = await Promise.all([findFn, this.Model.listCount(findNotesParams), findBook])
+      const findBook = bookCtl.Model.listWithPaging({ start: 0, limit: 0, dbQuery })
+      const findUser = UseeCtl.Model.findById({id: userId})
+
+
+      let catalogMap = []
+      let curCatalogId = catalogId
+      while (curCatalogId && curCatalogId !== 'root') {
+        let findCatalog = await catalogCtl.Model.findById({id: curCatalogId})
+        catalogMap.unshift(findCatalog.name)
+        curCatalogId = findCatalog.parentId
+      }
+
+      const result = await Promise.all([findFn, this.Model.listCount(findNotesParams), findBook, findUser])
       ctx.send(1, {
         list: result[0],
         count: result[1],
         extend: {
           user: {
-            _id: userId
+            _id: userId,
+            username: result[3].username
           },
-          books: result[2]
+          books: result[2],
+          catalogMap
         }
       }, '')
     } catch (e) {

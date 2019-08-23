@@ -30,18 +30,18 @@
   import noNotes from '@/components/note/noNotes.vue'
   import articleFixed from '@/components/article/articleFixed.vue'
   import constKey from '../../../../utils/client/const'
-  import { returnCatalog } from '../../../../utils/client/blackHole'
+  import { returnCatalog, setTitle } from '../../../../utils/client/blackHole'
   import fetch from '../../../../utils/client/fetch/fetch'
 
   export default {
-   /* async asyncData ({ params }) {
-      const { noteId } = params
-      const result = await fetch({
-        url: `/api/note/${noteId}`,
-      })
-//      console.log('result', result)
-      return { curNoteContent: result.data, noData: false }
-    },*/
+    /* async asyncData ({ params }) {
+       const { noteId } = params
+       const result = await fetch({
+         url: `/api/note/${noteId}`,
+       })
+ //      console.log('result', result)
+       return { curNoteContent: result.data, noData: false }
+     },*/
     async fetch ({ store, params }) {
       const { noteId, bookId, catalogId } = params
       store.commit('books/BOOK_CUR_UPDATE', bookId)
@@ -59,6 +59,12 @@
         store.commit('books/BOOK_LIST_SAVE', {
           data: extend.books,
           start: 0
+        })
+      }
+      if(extend && extend.catalogMap){
+        store.commit('config/CONFIG_EXTEND_SAVE', {
+          tar: 'catalogMap',
+          val: extend.catalogMap
         })
       }
     },
@@ -80,6 +86,25 @@
 //        curEditNote: {}
       }
     },
+    head() {
+      let baseKey = [this.curEditNote.title]
+      if(this.pageExtend.catalogMap) {
+        baseKey = [...baseKey, this.pageExtend.catalogMap]
+      }
+      const documentTitle = [ ...baseKey, this.curUserInfo.username ]
+      let des = ''
+      if(this.curEditNote.content) {
+        des = this.curEditNote.content.slice(0, 150)
+      }
+      return {
+        title: setTitle(documentTitle.join('-')),
+        meta: [
+          { hid: 'keywords', name: 'keywords', content: baseKey.join(',') },
+          { hid: 'description', name: 'description', content: des }
+        ]
+      }
+
+    },
     computed: {
       ...mapState({
         schemaList: state => state.schema.list,
@@ -87,7 +112,9 @@
         curBook: state => state.books.curBook,
         curNote: state => state.notes.curNote,
         showDir: state => state.config.showDir,
-        curCatalog: state => state.catalogs.curCatalog
+        curCatalog: state => state.catalogs.curCatalog,
+        curUserInfo: state => state.user.curUserInfo,
+        pageExtend: state => state.config.extend,
       }),
       ...mapGetters('catalogs', ['treeChainList']),
       ...mapGetters('user', ['isVisitor']),
