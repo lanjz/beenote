@@ -1,7 +1,6 @@
 import { Schema, Document, Model } from 'mongoose'
-const mongoose = require('mongoose')
+import * as mongoose from 'mongoose'
 import dbModel from '../db/index'
-const { VALIDA_ERR_MSG } = require('../utils/CONST')
 
 export interface BaseDocument extends Document {
   createTime: Number
@@ -22,9 +21,10 @@ class baseModel {
   updateTime: Number
   baseSchema: any
   assectPath: string;
-  constructor(doc) {
+  constructor() {
     this.name = this.getName()
     this.filterFields = [...this.banUpdateFields(), 'createTime', 'updateTime']
+    // @ts-ignore
     this.schema = new mongoose.Schema(this.getSchema())
     this.schema.pre('save', function (next){
       // @ts-ignore

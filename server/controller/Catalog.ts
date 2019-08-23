@@ -1,9 +1,10 @@
- const BaseCtl  = require('./BaseCtl')
-const Catalog  = require('../model/Catalog')
+import BaseCtl from './BaseCtl'
+import Catalog from '../model/Catalog'
 import hello from '../utils/hello'
-const bookCtl  = require('./Book')
+import bookCtl from './Book'
 
-class CatalogCtl extends BaseCtl {
+class CatalogCtl extends (BaseCtl as { new(): any}) {
+  findAllCatalog: Array<string>
   constructor() {
     super()
     this.findAllCatalog = []
@@ -39,6 +40,7 @@ class CatalogCtl extends BaseCtl {
             this.findOneByQuery({ _id: parentId, userId })
           promiseArr[1] = (findParentCatalog)
         }
+        // @ts-ignore
         const result = await Promise.all(promiseArr)
         if(bookId && !result[0]){
           resolve({ err: new Error(`不存在id为${bookId}的本子`) })
@@ -101,7 +103,7 @@ class CatalogCtl extends BaseCtl {
     })
   }
   async isHasChild(parentId, bookId, dbQuery, index) {
-    const res = { }
+    const res: any = {}
     const result = await this.Model.list({ parentId, bookId, ...dbQuery })
     res.index = index
     res.result = result
@@ -173,7 +175,7 @@ class CatalogCtl extends BaseCtl {
         ctx.send(2, '', `没有要删除的${this.alias}`)
       }
     } catch (e) {
-      ctx.send(2, '', hello.dealError(e, id))
+      ctx.send(2, '', hello.dealError(e))
     }finally {
       this.findAllCatalog = []
       await next()
@@ -181,5 +183,4 @@ class CatalogCtl extends BaseCtl {
   }
 }
 
-const catalogCtl = new CatalogCtl()
-module.exports = catalogCtl
+export default new CatalogCtl()

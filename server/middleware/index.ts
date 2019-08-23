@@ -4,7 +4,7 @@ import router from '../router'
 import { errorHandle } from '../utils/hello'
 import checkAuth from  '../utils/checkAuth'
 
-const sent  = require( '../utils/ret')
+import  sent from '../utils/ret'
 
 const host = process.env.NODE_ENV === 'development' ? '*' : 'localhost:3002'
 export default function (app) {

@@ -1,10 +1,10 @@
 import hello from '../utils/hello'
-const BaseCtl  = require('./BaseCtl.ts')
-const bookCtl  = require('./Book')
-const catalogCtl  = require('./Catalog')
-const noteModel  = require('../model/Notes')
+import BaseCtl from './BaseCtl'
+import bookCtl  from './Book'
+import catalogCtl from './Catalog'
+import noteModel from '../model/Notes'
 
-class NoteCtl extends BaseCtl {
+class NoteCtl extends (BaseCtl as { new(): any}) {
   constructor(){
     super()
     this.findRecentNotes = this.findRecentNotes.bind(this)
@@ -49,6 +49,8 @@ class NoteCtl extends BaseCtl {
     if (!response[0]) {
       res.err = new Error('未找到对应的Book')
     } else if (!response[1]) {
+      // todo
+      // @ts-ignore
       res.err = new Error(`${response[0].name}下未找到对应的目录`)
     }
     if (res.err) {
@@ -157,4 +159,4 @@ class NoteCtl extends BaseCtl {
   }
 }
 
-module.exports = new NoteCtl()
+export default new NoteCtl()

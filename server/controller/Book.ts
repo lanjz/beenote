@@ -1,8 +1,15 @@
 import BaseCtl  from './BaseCtl'
-const bookModel  = require('../model/Book')
+import bookModel from '../model/Book'
 import hello from '../utils/hello'
 
-class BookCtl extends BaseCtl {
+interface bookItem {
+  _id: String;
+  name: String,
+  isPrivate: 0|1
+}
+
+class BookCtl extends (BaseCtl as { new(): any; }) {
+  defaultBook: bookItem
   constructor() {
     super()
     this.defaultBook = {

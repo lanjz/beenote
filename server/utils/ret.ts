@@ -16,10 +16,9 @@ function render(retCode = 0, json = '', retMsg = '成功') {
   })
 }
 
-module.exports = () => {
+export default function () {
   return async (ctx, next) => {
     ctx.send = render.bind(ctx)
     await next()
   }
 }
-

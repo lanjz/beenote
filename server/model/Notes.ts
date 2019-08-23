@@ -1,6 +1,7 @@
-const baseModel = require('./BaseModel')
+import baseModel from './BaseModel'
 
-class NoteModel extends baseModel {
+class NoteModel extends (baseModel as { new(): any}) {
+  assectPath: String;
   constructor() {
     super()
     this.assectPath = '_id bookId catalogId title list content createTime updateTime'
@@ -40,6 +41,6 @@ class NoteModel extends baseModel {
   }
 }
 
-module.exports = new NoteModel()
+export default new NoteModel()
 
 

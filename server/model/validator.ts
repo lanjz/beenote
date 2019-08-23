@@ -1,4 +1,4 @@
-const valid = require('../utils/validator')
+import valid from '../utils/validator'
 
 function numBoolean(val) {
   const result = valid.numBoolean(val)
@@ -27,7 +27,7 @@ function username(val) {
   return val
 }
 
-module.exports = {
+export default {
   numBoolean,
   password,
   username,

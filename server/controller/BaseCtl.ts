@@ -8,7 +8,7 @@ const path  = require('path')
 const qiniu = require('qiniu')
 const SET = require('../../utils/hide/serverSecret')
 import hello from '../utils/hello'
-const { STATIC_IMG_PATH }  = require('../utils/CONST')
+import { STATIC_IMG_PATH } from '../utils/CONST'
 const FileMapModel  = require('../model/FileMap')
 
 interface ResFile extends Res {

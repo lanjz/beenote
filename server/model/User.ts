@@ -1,7 +1,7 @@
 import { Document, Schema, Model } from 'mongoose'
 import baseModel, { BaseDocument } from './BaseModel'
-const definedValidate  = require('./DefinedValidate')
-const validator = require('./validator')
+import { definedValidate }  from './DefinedValidate'
+import validator from './validator'
 
 interface UserDocement extends Document, BaseDocument {
   username: string

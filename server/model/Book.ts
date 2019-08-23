@@ -1,9 +1,9 @@
-const baseModel = require('./BaseModel')
-const definedValidate  = require('./DefinedValidate')
-const validator = require('./validator')
-
+import baseModel from './BaseModel'
+import { definedValidate }  from './DefinedValidate'
+import validator from './validator'
 
 class BookModel extends baseModel{
+  assectPath: string;
   constructor() {
     super()
     this.assectPath = ''
@@ -35,5 +35,5 @@ class BookModel extends baseModel{
   }
 }
 
-module.exports = new BookModel()
+export default new BookModel()
 

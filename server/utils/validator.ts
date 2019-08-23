@@ -101,7 +101,8 @@ function isObjectType(data) {
   }
   return { err: new TypeError(`${data} is not Array`), data }
 }
-module.exports = {
+
+export default {
   isUniqueInArr,
   email,
   numBoolean,

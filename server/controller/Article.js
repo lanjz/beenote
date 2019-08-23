@@ -3,7 +3,7 @@ const contentModel  = require('../model/Article')
 const bookCtl  = require('./Book')
 const catalogCtl  = require('./Catalog')
 const schematasCtl  = require('./SchematasCtl')
-const validator  = require('../utils/validator')
+import validator from '../utils/validator'
 import hello from '../utils/hello'
 const noteCtl  = require('./Notes')
 
