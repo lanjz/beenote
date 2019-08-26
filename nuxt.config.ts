@@ -1,35 +1,27 @@
-import NuxtConfiguration from '@nuxt/config'
-import { NuxtConfigurationBuild } from '@nuxt/config/types/build'
-
-interface NuxtConfigurationBuildPlus extends NuxtConfigurationBuild {
-  styleResources?: any
-}
-
-interface NuxtConfigurationPlugs extends NuxtConfiguration {
-  build?: NuxtConfigurationBuildPlus
-}
-
 const pkg = require('./package')
 
-const config:NuxtConfigurationPlugs = {
+// #ts-ignore
+const config = {
   mode: 'universal',
   router: {
     middleware: 'check-auth'
   },
-
+  modules: [
+    '@nuxtjs/style-resources',
+  ],
   /*
   ** Headers of the page
   */
   head: {
     title: pkg.name,
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      {charset: 'utf-8'},
+      {name: 'viewport', content: 'width=device-width, initial-scale=1'},
+      {hid: 'description', name: 'description', content: pkg.description}
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: '//at.alicdn.com/t/font_992689_xpg7lvpyl88.css' },
+      {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
+      {rel: 'stylesheet', href: '//at.alicdn.com/t/font_992689_xpg7lvpyl88.css'},
     ],
     script: [
       {
@@ -38,12 +30,12 @@ const config:NuxtConfigurationPlugs = {
       }
     ]
   },
-
+  
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: 'blue' },
-
+  loading: {color: 'blue'},
+  
   /*
   ** Global CSS
   */
@@ -51,7 +43,7 @@ const config:NuxtConfigurationPlugs = {
     '@/assets/styles/app.less',
     '@/utils/client/hightlight/hightlight.css',
   ],
-
+  
   /*
   ** Plugins to load before mounting the App
   */
@@ -70,12 +62,12 @@ const config:NuxtConfigurationPlugs = {
     /*
     ** You can extend webpack config here
     */
-    styleResources: {
-      less:'assets/styles/global.less'
-    },
-    extend(config, ctx) {
-    },
-
+    
+  },
+  styleResources: {
+    less: 'assets/styles/global.less'
+  },
+  extend(config, ctx) {
   },
   env: {
     MOCK: process.env.MOCK
@@ -83,7 +75,7 @@ const config:NuxtConfigurationPlugs = {
   server: {
     port: 3001, // default: 3000
     host: '0.0.0.0', // default: localhost
-  },
+  }
 }
 
 

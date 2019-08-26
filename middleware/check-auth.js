@@ -1,5 +1,5 @@
 // import fetch from '@/util/fetch/fetch.js'
-const decodeLoginTypeJwt = process.server && require('@/server/utils/hello').decodeLoginTypeJwt
+// const decodeLoginTypeJwt = process.server && require('@/server/utils/hello').decodeLoginTypeJwt
 
 function cookeyToJson(req) {
   const Cookies = {};
@@ -14,6 +14,7 @@ export default function ({ store, redirect, req, app, params }) {
   if(store.state.user.userInfo['_id']) {
     return
   }
+  return
   if(process.server) {
     const { helloToken } = cookeyToJson(req)
     if(!helloToken) return

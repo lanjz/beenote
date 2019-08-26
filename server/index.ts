@@ -10,9 +10,9 @@ const app = new Koa()
 if(initSchedule) {
   initSchedule()
 }
-
+console.log('ctx')
 // Import and Set Nuxt.js options
-
+// @ts-ignore
 config.dev = !(app.env === 'production')
 async function start(){
   // Instantiate nuxt.js
@@ -24,6 +24,7 @@ async function start(){
   } = nuxt.options.server
 
   // Build in development
+  // @ts-ignore
   if (config.dev) {
     const builder = new Builder(nuxt)
     await builder.build()

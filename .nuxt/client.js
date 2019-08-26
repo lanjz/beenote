@@ -20,6 +20,9 @@ import { createApp, NuxtError } from './index.js'
 import NuxtLink from './components/nuxt-link.client.js' // should be included after ./index.js
 import consola from 'consola'
 
+consola.wrapConsole()
+console.log = console.__log
+
 // Component: <NuxtLink>
 Vue.component(NuxtLink.name, NuxtLink)
 Vue.component('NLink', NuxtLink)
@@ -37,10 +40,13 @@ const NUXT = window.__NUXT__ || {}
 
 Object.assign(Vue.config, {"silent":false,"performance":true})
 
-const logger = consola.withScope('nuxt:ssr')
 const logs = NUXT.logs || []
-logs.forEach(logObj => logger[logObj.type](logObj))
-delete NUXT.logs
+if (logs.length > 0) {
+  console.group("%c🚀 Nuxt SSR Logs", 'font-size: 110%')
+  logs.forEach(logObj => consola[logObj.type](logObj))
+  delete NUXT.logs
+  console.groupEnd()
+}
 
 // Setup global Vue error handler
 if (!Vue.config.$nuxt) {
@@ -83,13 +89,7 @@ Vue.config.$nuxt.$nuxt = true
 const errorHandler = Vue.config.errorHandler || console.error
 
 // Create and mount App
-createApp()
-  .then(mountApp)
-  .catch((err) => {
-    const wrapperError = new Error(err)
-    wrapperError.message = '[nuxt] Error while mounting app: ' + wrapperError.message
-    errorHandler(wrapperError)
-  })
+createApp().then(mountApp).catch(errorHandler)
 
 function componentOption(component, key, ...args) {
   if (!component || !component.options || !component.options[key]) {
@@ -126,7 +126,7 @@ function mapTransitions(Components, to, from) {
 
 async function loadAsyncComponents(to, from, next) {
   // Check if route path changed (this._pathChanged), only if the page is not an error (for validate())
-  this._pathChanged = !!app.nuxt.err || from.path !== to.path
+  this._pathChanged = Boolean(app.nuxt.err) || from.path !== to.path
   this._queryChanged = JSON.stringify(to.query) !== JSON.stringify(from.query)
   this._diffQuery = (this._queryChanged ? getQueryDiff(to.query, from.query) : [])
 
@@ -135,15 +135,21 @@ async function loadAsyncComponents(to, from, next) {
   }
 
   try {
-    const Components = await resolveRouteComponents(to)
+    const Components = await resolveRouteComponents(
+      to,
+      (Component, instance) => ({ Component, instance })
+    )
 
     if (!this._pathChanged && this._queryChanged) {
       // Add a marker on each component that it needs to refresh or not
-      const startLoader = Components.some((Component) => {
+      const startLoader = Components.some(({Component, instance}) => {
         const watchQuery = Component.options.watchQuery
-        if (watchQuery === true) return true
-        if (Array.isArray(watchQuery)) {
+        if (watchQuery === true) {
+          return true
+        } else if (Array.isArray(watchQuery)) {
           return watchQuery.some(key => this._diffQuery[key])
+        } else if (typeof watchQuery === 'function') {
+          return watchQuery.apply(instance, [to.query, from.query])
         }
         return false
       })
@@ -261,7 +267,7 @@ async function render(to, from, next) {
     next: _next.bind(this)
   })
   this._dateLastError = app.nuxt.dateErr
-  this._hadError = !!app.nuxt.err
+  this._hadError = Boolean(app.nuxt.err)
 
   // Get route's matched components
   const matches = []
@@ -370,7 +376,7 @@ async function render(to, from, next) {
         Component.options.asyncData &&
         typeof Component.options.asyncData === 'function'
       )
-      const hasFetch = !!Component.options.fetch
+      const hasFetch = Boolean(Component.options.fetch)
 
       const loadingIncrease = (hasAsyncData && hasFetch) ? 30 : 45
 
@@ -472,13 +478,13 @@ function showNextPage(to) {
 function fixPrepatch(to, ___) {
   if (this._pathChanged === false && this._queryChanged === false) return
 
-  Vue.nextTick(() => {
-    const matches = []
-    const instances = getMatchedComponentsInstances(to, matches)
-    const Components = getMatchedComponents(to, matches)
+  const matches = []
+  const instances = getMatchedComponentsInstances(to, matches)
+  const Components = getMatchedComponents(to, matches)
 
+  Vue.nextTick(() => {
     instances.forEach((instance, i) => {
-      if (!instance) return
+      if (!instance || instance._isDestroyed) return
       // if (
       //   !this._queryChanged &&
       //   to.matched[matches[i]].path.indexOf(':') === -1 &&
@@ -494,6 +500,11 @@ function fixPrepatch(to, ___) {
         for (const key in newData) {
           Vue.set(instance.$data, key, newData[key])
         }
+
+        // Ensure to trigger scroll event after calling scrollBehavior
+        window.$nuxt.$nextTick(() => {
+          window.$nuxt.$emit('triggerScroll')
+        })
       }
     })
     showNextPage.call(this, to)

@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const log = console // on server-side, consola will catch all console.log
 const VUEX_PROPERTIES = ['state', 'getters', 'actions', 'mutations']
 let store = {}
 
@@ -11,7 +10,7 @@ void (function updateModules() {
   // If store is an exported method = classic mode (deprecated)
 
   if (typeof store === 'function') {
-    return log.warn('Classic mode for store/ is deprecated and will be removed in Nuxt 3.')
+    return console.warn('Classic mode for store/ is deprecated and will be removed in Nuxt 3.')
   }
 
   // Enforce store modules
@@ -62,7 +61,7 @@ export const createStore = store instanceof Function ? store : () => {
 function resolveStoreModules(moduleData, filename) {
   moduleData = moduleData.default || moduleData
   // Remove store src + extension (./foo/index.js -> foo/index)
-  const namespace = filename.replace(/\.(js|mjs|ts)$/, '')
+  const namespace = filename.replace(/\.(js|mjs)$/, '')
   const namespaces = namespace.split('/')
   let moduleName = namespaces[namespaces.length - 1]
   const filePath = `store/${filename}`
@@ -115,7 +114,7 @@ function normalizeRoot(moduleData, filePath) {
 
 function normalizeState(moduleData, filePath) {
   if (typeof moduleData !== 'function') {
-    log.warn(`${filePath} should export a method that returns an object`)
+    console.warn(`${filePath} should export a method that returns an object`)
     const state = Object.assign({}, moduleData)
     return () => state
   }
@@ -124,7 +123,7 @@ function normalizeState(moduleData, filePath) {
 
 function normalizeModule(moduleData, filePath) {
   if (moduleData.state && typeof moduleData.state !== 'function') {
-    log.warn(`'state' should be a method that returns an object in ${filePath}`)
+    console.warn(`'state' should be a method that returns an object in ${filePath}`)
     const state = Object.assign({}, moduleData.state)
     // Avoid TypeError: setting a property that has only a getter when overwriting top level keys
     moduleData = Object.assign({}, moduleData, { state: () => state })

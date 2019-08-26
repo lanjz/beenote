@@ -5,5 +5,12 @@
   "types": [
     "@types/node",
     "@nuxt/vue-app-edge"
+  ],
+  "allowJs": true,
+  "exclude": [
+    "node_modules",
+    "pages",
+    "layouts",
+    "components"
   ]
 }
