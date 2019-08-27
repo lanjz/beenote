@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[8],{495:function(t,e,n){"use strict";n.r(e);var o={mounted:function(){var t=$nuxt._route.params.bookId;this.$router.push("/".concat(t,"/recently/"))}},r=n(7),component=Object(r.a)(o,function(){var t=this.$createElement;return(this._self._c||t)("div")},[],!1,null,"3e3e4d28",null);e.default=component.exports}}]);
