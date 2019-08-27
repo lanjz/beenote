@@ -4,3 +4,8 @@ export function returnCatalog(str, bookId) {
   }
   return str.indexOf('root') > -1 ? 'root' : str
 }
+
+
+export function setTitle(str = '') {
+  return `${str}-黑洞笔记-BlackHook`
+}
