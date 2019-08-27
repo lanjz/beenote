@@ -1,8 +1,9 @@
 import * as Koa from 'koa'
 import { Nuxt, Builder } from 'nuxt'
 import middleware from './middleware/index'
-import config from '../nuxt.config'
+
 import { initSchedule } from './utils/sendEmail'
+const config = require( '../nuxt.config')
 const consola = require ('consola')
 
 const app = new Koa()
@@ -10,7 +11,6 @@ const app = new Koa()
 if(initSchedule) {
   initSchedule()
 }
-console.log('ctx')
 // Import and Set Nuxt.js options
 // @ts-ignore
 config.dev = !(app.env === 'production')

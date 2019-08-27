@@ -8,7 +8,6 @@
 
 
 function render(retCode = 0, json = '', retMsg = '成功') {
-  console.log('abc')
   this.set('Content-Type', 'application/json')
   this.body = JSON.stringify({
     retCode: retCode,

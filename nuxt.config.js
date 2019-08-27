@@ -1,7 +1,7 @@
 const pkg = require('./package')
 
 // #ts-ignore
-const config = {
+module.exports = {
   mode: 'universal',
   router: {
     middleware: 'check-auth'
@@ -77,6 +77,3 @@ const config = {
     host: '0.0.0.0', // default: localhost
   }
 }
-
-
-export default config

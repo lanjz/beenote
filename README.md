@@ -27,3 +27,7 @@ $ yarn run generate
 For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
 
 服务器的配置太低，所以执行的build的时候直接出错了，所以只能先build这后再提交到服务器，服务器直接 ` pm2 start npm -- run start`
+
+## typescript
+
+
