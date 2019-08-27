@@ -12,6 +12,7 @@
     "dev:mock": "cross-env MOCK=1 NODE_ENV=development nodemon server/index.ts  --watch server",
     "dev": "cross-env NODE_ENV=development nodemon server/index.ts --watch server --exec",
     "start": "cross-env NODE_ENV=production ts-node server/index.ts server",
+    "start2": "cross-env NODE_ENV=production node .nuxt/dist/server/server.js",
     "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {

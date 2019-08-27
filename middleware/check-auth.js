@@ -1,5 +1,5 @@
 // import fetch from '@/util/fetch/fetch.js'
-// const decodeLoginTypeJwt = process.server && require('@/server/utils/hello').decodeLoginTypeJwt
+const decodeLoginTypeJwt = process.server && require('jwt-simple')
 
 function cookeyToJson(req) {
   const Cookies = {};
@@ -14,11 +14,11 @@ export default function ({ store, redirect, req, app, params }) {
   if(store.state.user.userInfo['_id']) {
     return
   }
-  return
   if(process.server) {
     const { helloToken } = cookeyToJson(req)
     if(!helloToken) return
-    const { clientUser } = decodeLoginTypeJwt(helloToken)
+    const SECRET = 'hello~'
+    const { clientUser } = decodeLoginTypeJwt.decode(helloToken, SECRET)
     if(!clientUser) return
     store.commit('user/USER_SAVE', {
       _id: clientUser
