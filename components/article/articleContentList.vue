@@ -75,7 +75,9 @@
 
 <script>
   import marked from 'marked'
-  import hljs from 'highlight.js'
+  // import hljs from 'highlight.js'
+  // import javascript from 'highlight.js/lib/languages/javascript'
+  // hljs.registerLanguage('javascript', javascript)
   marked.setOptions({
     renderer: new marked.Renderer(),
     gfm: true,
@@ -86,7 +88,7 @@
     smartLists: true,
     smartypants: false,
     highlight: function (code) {
-      return hljs.highlightAuto(code).value;
+      // return hljs.highlightAuto(code).value;
     }
   });
   export default {

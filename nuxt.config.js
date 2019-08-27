@@ -1,4 +1,5 @@
 const pkg = require('./package')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // #ts-ignore
 module.exports = {
@@ -59,6 +60,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    analyze: false
     /*
     ** You can extend webpack config here
     */
