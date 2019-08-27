@@ -12,7 +12,7 @@ import _6f6c098b from '..\\layouts\\default.vue'
 const layouts = { "_blog": _2d21d098,"_default": _6f6c098b }
 
 export default {
-  head: {"title":"BlackHook","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"BlackHook"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","href":"\u002F\u002Fat.alicdn.com\u002Ft\u002Ffont_992689_xpg7lvpyl88.css"}],"script":[{"type":"script","src":"\u002F\u002Fat.alicdn.com\u002Ft\u002Ffont_992689_pswgkexoa3.js"}],"style":[]},
+  head: {"title":"BlackHook","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"BlackHook"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","href":"\u002F\u002Fat.alicdn.com\u002Ft\u002Ffont_992689_xpg7lvpyl88.css"}],"script":[{"src":"\u002F\u002Fat.alicdn.com\u002Ft\u002Ffont_992689_pswgkexoa3.js"}],"style":[]},
 
   render(h, props) {
     const loadingEl = h('NuxtLoading', { ref: 'loading' })
@@ -138,8 +138,6 @@ export default {
     },
 
     setLayout(layout) {
-      if(layout && typeof layout !== 'string') throw new Error('[nuxt] Avoid using non-string value as layout property.')
-
       if (!layout || !layouts['_' + layout]) {
         layout = 'default'
       }
