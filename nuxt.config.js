@@ -25,10 +25,10 @@ module.exports = {
       {rel: 'stylesheet', href: '//at.alicdn.com/t/font_992689_xpg7lvpyl88.css'},
     ],
     script: [
-  /*    {
+      {
         type: 'script',
         src: '//at.alicdn.com/t/font_992689_pswgkexoa3.js'
-      }*/
+      }
     ]
   },
   
