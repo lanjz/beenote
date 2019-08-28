@@ -98,6 +98,7 @@ class BaseCtl {
     }
   }
   async findById(ctx, next) {
+    console.log('ctx.params', ctx.params)
     const { id } = ctx.params
     if(!id) {
       ctx.send(2, '', 'id不能为空')
@@ -114,6 +115,8 @@ class BaseCtl {
     }
   }
   async deleteById(ctx, next) {
+    console.log('ctx.request', ctx.request.body)
+    console.log('ctx.params', ctx.params)
     const { _id } = ctx.request.body
     const dbQuery = this.dbQuery(ctx)
     if(!_id) {

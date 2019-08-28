@@ -118,7 +118,9 @@ const actions = {
     const result = await fetch({
       url: '/api/note',
       method: 'delete',
-      data
+      data: {
+        data
+      }
     })
     return result
   },

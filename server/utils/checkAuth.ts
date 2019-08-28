@@ -28,6 +28,8 @@ function passValidAuth(ctx: Context) {
 
 async function checkAuth(ctx: Context, next) {
   try{
+    console.log('Context', ctx.request.body)
+    console.log('Context', ctx.params)
     if(ctx.method.toLowerCase() === 'options') {
       ctx.send(1, '', '准了')
       return

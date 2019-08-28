@@ -26,7 +26,6 @@ module.exports = {
     ],
     script: [
       {
-        type: 'script',
         src: '//at.alicdn.com/t/font_992689_pswgkexoa3.js'
       }
     ]
