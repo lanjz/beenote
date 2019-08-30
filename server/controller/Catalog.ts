@@ -2,6 +2,7 @@ import BaseCtl from './BaseCtl'
 import Catalog from '../model/Catalog'
 import hello from '../utils/hello'
 import bookCtl from './Book'
+import notesCtl from './Notes'
 
 class CatalogCtl extends (BaseCtl as { new(): any}) {
   findAllCatalog: Array<string>
@@ -14,6 +15,22 @@ class CatalogCtl extends (BaseCtl as { new(): any}) {
   }
   getModel() {
     return new Catalog()
+  }
+  async todoPreDelete(arg, ctx){
+    const { id } = arg
+    const res = { err: null, data: {}}
+    if(id.indexOf('root') > -1) {
+      res.err = new Error('根目录不可删除')
+      return res
+    }
+    const findCatalog = this.Model.list({parentId: id})
+    const findBook = notesCtl.Model.list({catalogId: id})
+    const result = await Promise.all([findCatalog, findBook])
+    if(result[0].length || result[1].length) {
+      res.err = new Error('目录存在子目录或者笔记，无法删除')
+    }
+    return res
+
   }
   async todoPreModify(arg, ctx) {
     return new Promise(async (resolve) => {
@@ -82,7 +99,7 @@ class CatalogCtl extends (BaseCtl as { new(): any}) {
           Promise.resolve('root') :
           this.findOneByQuery({ _id: parentId, userId })
         // 查询当前目录下是否已经存要添加的目录
-        const findCatalog = this.findOneByQuery({ name, userId, parentId })
+        const findCatalog = this.findOneByQuery({ name, userId, parentId, bookId })
         const result = await Promise.all([findBook, findParentCatalog, findCatalog])
         if(!result[0]){
           resolve({ err: new Error(`不存在id为${bookId}的本子`) })
@@ -158,13 +175,21 @@ class CatalogCtl extends (BaseCtl as { new(): any}) {
     })
   }
   async deleteById(ctx, next) {
-    const { _id } = ctx.request.body
+    const { id } = ctx.params
+    const _id = id
     const dbQuery = this.dbQuery(ctx)
     if(!_id) {
       ctx.send(2, '', '_id不能为空')
       return
     }
     try{
+      const merge = { ...ctx.params, ...this.dbQuery(ctx) }
+      const { err, data } = await this.todoPreDelete(merge, ctx)
+      if(err) {
+        ctx.send(2, '', err.message)
+        return
+      }
+
       this.findAllCatalog = []
       this.findAllCatalog.push(_id)
       await this.findAllCatalogs(ctx, next, _id)

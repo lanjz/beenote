@@ -1,6 +1,7 @@
 import BaseCtl  from './BaseCtl'
 import bookModel from '../model/Book'
 import hello from '../utils/hello'
+import catalogCtl from './Catalog';
 
 interface bookItem {
   _id: String;
@@ -23,6 +24,20 @@ class BookCtl extends (BaseCtl as { new(): any; }) {
   }
   getModel() {
     return bookModel
+  }
+  async todoPreDelete(arg, ctx){
+    const { id } = arg
+    const res = { err: null, data: {}}
+    if(id.indexOf('default') > -1) {
+      res.err = new Error('默认本子不可删除')
+      return res
+    }
+    const findBook = await catalogCtl.Model.list({bookId: id})
+    if(findBook.length) {
+      res.err = new Error('当前本中存在目录，无法删除')
+    }
+    return res
+
   }
   async todoPreAdd(arg){
     const res = { err: null, data: arg }

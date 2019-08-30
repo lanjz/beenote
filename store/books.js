@@ -68,9 +68,8 @@ const actions = {
   },
   async [ACTIONS.BOOK_LIST_DELETE]({ commit }, book) {
     const result = await fetch({
-      url: '/api/book',
+      url: `/api/book/${book._id}`,
       method: 'delete',
-      data: book
     })
     return result
   },

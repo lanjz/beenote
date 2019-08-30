@@ -133,9 +133,8 @@ const actions = {
   },
   async [ACTIONS.CATALOGS_DELETE]({ commit }, data) {
     const result = await fetch({
-      url: '/api/catalog',
+      url: `/api/catalog/${data._id}`,
       method: 'delete',
-      data
     })
     return result
   },

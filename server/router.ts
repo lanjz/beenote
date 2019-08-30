@@ -29,13 +29,17 @@ router.get('/getUserInfo', userCtl.findByCookie)
 
 router.get('/books', bookCtl.find)
 router.get('/book/:id', bookCtl.findById)
-router.delete('/book', bookCtl.deleteById)
+router.delete('/book/:id', bookCtl.deleteById)
 router.put('/book', bookCtl.modify)
 router.post('/book', bookCtl.add)
 router.get('/notes', noteCtl.find)
 router.get('/note/:id', noteCtl.findById)
 router.get('/notes/:id', noteCtl.findNotesById)
-router.delete('/note/:id', noteCtl.deleteById)
+/**
+ * 使用del不能使用delete
+ * 不能使用像post那样使用body参数，要不然取不到参数，也不懂为啥
+ * */
+router.del('/note/:id', noteCtl.deleteById)
 router.delete('/notes', noteCtl.deleteByIds)
 router.put('/note', noteCtl.modify)
 router.post('/note', noteCtl.add)
@@ -43,7 +47,7 @@ router.get('/recently_notes', noteCtl.findRecentNotes)
 
 router.get('/catalogs', catalogCtl.find)
 router.get('/catalog/:id', catalogCtl.findById)
-router.delete('/catalog', catalogCtl.deleteById)
+router.delete('/catalog/:id', catalogCtl.deleteById)
 router.put('/catalog', catalogCtl.modify)
 router.post('/catalog', catalogCtl.add)
 

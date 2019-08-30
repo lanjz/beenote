@@ -56,6 +56,10 @@ class BaseCtl {
     const res = { err: null, data: params }
     return res
   }
+  todoPreDelete(params:object, ctx?: Context):Res {
+    const res = { err: null, data: params }
+    return res
+  }
   doAfterAdd(ctx, next, result) {
     ctx.send(1, { id: result._id }, '')
   }
@@ -115,15 +119,20 @@ class BaseCtl {
     }
   }
   async deleteById(ctx, next) {
-    console.log('ctx.request', ctx.request.body)
-    console.log('ctx.params', ctx.params)
-    const { _id } = ctx.request.body
+    const { id } = ctx.params
+    const _id = id
     const dbQuery = this.dbQuery(ctx)
     if(!_id) {
       ctx.send(2, '', 'id不能为空')
       return
     }
     try{
+      const merge = { ...ctx.params, ...this.dbQuery(ctx) }
+      const { err, data } = await this.todoPreDelete(merge, ctx)
+      if(err) {
+        ctx.send(2, '', err.message)
+        return
+      }
       const result = await this.Model.del(_id, dbQuery)
       if(result.n){
         ctx.send(1, '', '删除成功')

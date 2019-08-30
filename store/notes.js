@@ -116,11 +116,8 @@ const actions = {
   },
   async [ACTIONS.NOTE_DELETE]({ commit }, data) {
     const result = await fetch({
-      url: '/api/note',
-      method: 'delete',
-      data: {
-        data
-      }
+      url: `/api/note/${data._id}`,
+      method: 'DELETE',
     })
     return result
   },
