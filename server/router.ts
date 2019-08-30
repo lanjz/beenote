@@ -32,6 +32,7 @@ router.get('/book/:id', bookCtl.findById)
 router.delete('/book/:id', bookCtl.deleteById)
 router.put('/book', bookCtl.modify)
 router.post('/book', bookCtl.add)
+
 router.get('/notes', noteCtl.find)
 router.get('/note/:id', noteCtl.findById)
 router.get('/notes/:id', noteCtl.findNotesById)

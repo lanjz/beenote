@@ -17,6 +17,15 @@ class NoteCtl extends (BaseCtl as { new(): any}) {
   getAlias() {
     return '笔记'
   }
+  async todoPreFind(arg, ctx) {
+    const res = { err: null, data: arg }
+    const { bookId } = arg
+    console.log('arg', arg)
+    console.log('ctx', ctx.state.curUser)
+    const result = await bookCtl.Model.findById({ id: bookId })
+    console.log('resilt', result)
+    return  res
+  }
   async todoPreAdd(arg, ctx) {
     const isPost = ctx.method.toUpperCase() === 'POST'
     const res = { err: null, data: ''}
@@ -82,9 +91,15 @@ class NoteCtl extends (BaseCtl as { new(): any}) {
       catalogId,
       bookId
     }
-    // 如果没有提供start和limit则查找全部
-    const findFn = this.Model.listWithPaging({ start, limit, dbQuery })
+
     try{
+      const preResult = await this.todoPreFind(dbQuery, ctx)
+      if(preResult.err) {
+        ctx.send(2, '', hello.dealError(preResult.err))
+        return
+      }
+      // 如果没有提供start和limit则查找全部
+      const findFn = this.Model.listWithPaging({ start, limit, dbQuery })
       const result = await Promise.all([findFn, this.Model.listCount(dbQuery)])
       ctx.send(1, {
         list: result[0],
@@ -118,6 +133,7 @@ class NoteCtl extends (BaseCtl as { new(): any}) {
   }
   async findNotesById(ctx, next) {
     const { id } = ctx.params
+    console.log('ctx2', ctx.state)
     const { catalogId: queryCatalogId, bookId: queryBookId } = ctx.request.query
     if(!id) {
       ctx.send(2, '', 'id不能为空')
@@ -125,6 +141,12 @@ class NoteCtl extends (BaseCtl as { new(): any}) {
     }
     try{
       const dbQuery = this.dbQuery(ctx)
+      const merge = { ...ctx.request.query, ...this.dbQuery(ctx) }
+      const preResult = await this.todoPreFind(merge, ctx)
+      if(preResult.err) {
+        ctx.send(2, '', hello.dealError(preResult.err))
+        return
+      }
       const note = await this.Model.findById({ id, query: dbQuery, assectPath: false })
       // 获取这个笔记应对所有分类的所有笔记
       const {
