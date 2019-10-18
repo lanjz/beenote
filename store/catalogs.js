@@ -33,17 +33,20 @@ const getters = {
   }
 }
 const mutations = {
-  [MUTATIONS.CATALOGS_SAVE](state, { curNode, data, bookId }) {
-    const key = curNode.parentId === 'root' ? bookId+'_root' : curNode.parentId
+  [MUTATIONS.CATALOGS_SAVE](state, { curNode, data, bookName }) {
+    console.log('data', data)
+    const key = (curNode.parentName === 'root' || !curNode.parentName) ? bookName+'_root' : curNode.parentName
     const list = {
       ...{ [key]: {
-          ...state.list[curNode.parentId],
+          ...state.list[curNode.parentName],
           updateTime: (new Date()).getTime(),
-          childNodes: data
+          childNodes: {
+            ...data,
+          }
       } }
     }
     data.forEach((item) => {
-      list[item._id] = {
+      list[item.name] = {
         ...item
       }
     })
@@ -90,34 +93,31 @@ const mutations = {
 const actions = {
   async [ACTIONS.CATALOGS_GET]({ state, commit, rootState, dispatch }, params = {
     force: false,
-    parentId: rootState.books.curBook+'_root',
-    bookId: rootState.books.curBook
+    bookName: rootState.books.curBook
   }) {
-    let { force, parentId, bookId } = params
-    if(!force && state.list[params.parentId] && state.list[params.parentId].childNodes) {
+    let { force, parentName, bookName } = params
+    if(!force && parentName && state.list[params.parentName] && state.list[params.parentName].childNodes) {
       return {
         err: null,
-        data: state.list[params.parentId]
+        data: state.list[params.parentName]
       }
     }
+    const githubName = rootState.user.userInfo.githubName
     const result = await fetch({
-      url: '/api/catalogs',
-      data: {
-        parentId: parentId.indexOf('root') > 0 ?  'root' : parentId,
-        bookId
-      }
+      url: parentName ? `/repos/${githubName}/${bookName}/contents/${parentName}` : `/repos/${githubName}/${bookName}/contents`
     })
     const { err, data } = result
     if(!err) {
-      commit(MUTATIONS.CATALOGS_SAVE, { curNode: params, data: data, bookId: rootState.books.curBook })
+      const findDirs = data.filter(item => item.type === 'dir')
+      const findFiles = data.filter(item => item.type === 'file')
+      console.log('data', findDirs)
+      commit(MUTATIONS.CATALOGS_SAVE, { curNode: params, data: findDirs, bookName: rootState.books.curBook })
       data.forEach(item => {
-        if(item.hasChild) {
-          dispatch(ACTIONS.CATALOGS_GET, {
-            parentId: item._id,
-            bookId: item.bookId,
-            force
-          })
-        }
+        dispatch(ACTIONS.CATALOGS_GET, {
+          parentName: item.name,
+          bookName,
+          force
+        })
       })
     }
     return result

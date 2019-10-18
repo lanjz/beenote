@@ -84,7 +84,7 @@
         this.$router.push('/Bar')
       },
       todoSetCurBook(item) {
-        this.$router.push(`/${item._id}/recently`)
+        this.$router.push(`/${item.name}`)
       },
       uploadFile(tar = 'inputer') {
         const inputDOM = this.$refs[tar];

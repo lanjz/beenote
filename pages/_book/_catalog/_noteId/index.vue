@@ -43,14 +43,16 @@
        return { curNoteContent: result.data, noData: false }
      },*/
     async fetch ({ store, params }) {
-      const { noteId, bookId, catalogId } = params
-      store.commit('books/BOOK_CUR_UPDATE', bookId)
-      store.commit('catalogs/CATALOGS_CUR_SAVE', catalogId)
+      console.log('fetch', fetch)
+      const { noteId, book, catalog } = params
+      store.commit('books/BOOK_CUR_UPDATE', book)
+      store.commit('catalogs/CATALOGS_CUR_SAVE', catalog)
       store.commit('notes/NOTE_CUR_UPDATE', noteId)
-      if(store.state.notes.list[`${bookId}_${catalogId}`]){
+      if(store.state.notes.list[`${book}_${catalog}`]){
         return
       }
-      const result = await store.dispatch('notes/NOTE_GET_BY_ID', {id: noteId, bookId, catalogId})
+      const result = await store.dispatch('catalogs/CATALOGS_GET')
+      console.log('result', result)
       const { extend } = result.data
       if(extend && extend.user) {
         store.commit('user/CUR_USER_INFO_SAVE', extend.user)
@@ -87,7 +89,7 @@
       }
     },
     head() {
-      let baseKey = [this.curEditNote.title]
+/*      let baseKey = [this.curEditNote.title]
       if(this.pageExtend.catalogMap) {
         baseKey = [...baseKey, this.pageExtend.catalogMap]
       }
@@ -102,7 +104,7 @@
           { hid: 'keywords', name: 'keywords', content: baseKey.join(',') },
           { hid: 'description', name: 'description', content: des }
         ]
-      }
+      }*/
 
     },
     computed: {
@@ -274,17 +276,17 @@
       async init() {
         // await this[ACTIONS.USER_INFO_GET]()
         if(this.isVisitor && this.noteId) return
-        this[MUTATIONS.BOOK_CUR_UPDATE](this.bookId)
-        this[MUTATIONS.CATALOGS_CUR_SAVE](this.catalogId)
-        this.getNoteData()
-        this.initEmitOn()
+        this[MUTATIONS.BOOK_CUR_UPDATE](this.book)
+        this[MUTATIONS.CATALOGS_CUR_SAVE](this.catalog)
+        // this.getNoteData()
+        // this.initEmitOn()
       },
       async dealParams() {
-        const {bookId, catalogId, noteId} = $nuxt._route.params
-        this.bookId = bookId
-        this.catalogId = catalogId
+        const {book, catalog, noteId} = $nuxt._route.params
+        this.book = book
+        this.catalog = catalog
         this.noteId = noteId
-        this.createToCatalogId = catalogId
+        this.createToCatalog = catalog
         this.init()
       }
     },

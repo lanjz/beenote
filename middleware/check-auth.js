@@ -11,7 +11,7 @@ function cookeyToJson(req) {
 }
 
 export default function ({ store, redirect, req, app, params }) {
-  if(store.state.user.userInfo['_id']) {
+/*  if(store.state.user.userInfo['_id']) {
     return
   }
   if(process.server) {
@@ -24,7 +24,7 @@ export default function ({ store, redirect, req, app, params }) {
       _id: clientUser
     })
     // store.dispatch('books/BOOK_LIST_GET')
-  }
+  }*/
   /*
 	if(process.client){
 	  if(store.state.user.userInfo['_id']) {

@@ -1,6 +1,9 @@
 import axios from 'axios'
 import SET from '../../hide/webSecret'
 import helloAlert from '../../../components/messageBox/messageBox'
+
+const ApiBase = 'https://api.github.com'
+
 if(process.client) {
   console.log('context', window)
 }
@@ -33,9 +36,7 @@ function fetchData(options) {
   if (MOCK) {
     url = `${SET.base.mockHost}/mock/15${url}`
   } else {
-    url = process.env.NODE_ENV === 'development' ?
-      `http://localhost:3001${url}` :
-      process.client ? `${url}`: `http://127.0.0.1:3001${url}`
+    url = `${ApiBase}${url}?access_token=4c451394d3f13cc4aa4c5e1dceeb323d966b852d`
   }
   options.url = url
   options.method = options.method || 'get'
@@ -59,7 +60,8 @@ const doFetchData = function (options) {
   return new Promise((resolve) => {
     fetchData(options)
       .then((response) => {
-        const result = dealRetCode(response.data)
+        console.log('response', response)
+      /*  const result = dealRetCode(response.data)
         if(result.err) {
           res.err = result.err
           if(!result.notAlert && !options.notAlert) {
@@ -71,7 +73,8 @@ const doFetchData = function (options) {
           resolve(res)
           return
         }
-        res.data = result.data
+        res.data = result.data*/
+        res.data = response.data
         resolve(res)
       })
       .catch((err) => {

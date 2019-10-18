@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { getMatchedComponentsInstances, promisify, globalHandleError } from './utils'
 import NuxtLoading from './components/nuxt-loading.vue'
+import NuxtBuildIndicator from './components/nuxt-build-indicator'
 
 import '..\\assets\\styles\\app.less'
 
@@ -43,7 +44,7 @@ export default {
       domProps: {
         id: '__nuxt'
       }
-    }, [loadingEl, transitionEl])
+    }, [loadingEl, h(NuxtBuildIndicator), transitionEl])
   },
   data: () => ({
     isOnline: true,

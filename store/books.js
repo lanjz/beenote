@@ -39,21 +39,25 @@ const actions = {
   /**
    * @params <Object> force 是否强制重新获取数据
    * */
-  async [ACTIONS.BOOK_LIST_GET]({ state, commit }, arg = {}) {
+  async [ACTIONS.BOOK_LIST_GET]({ state, commit, rootState }, arg = {}) {
     const { limit = 0, start = 0, force = false } = arg
     if(!force && Object.keys(state.list).length > 1){
       return { err: null, data: { list: state.list } }
     }
     const result = await fetch({
-      url: '/api/books',
+      url: `/users/${rootState.user.userInfo.githubName}/repos`,
       data: {
         limit,
         start
       }
     })
     const { err, data } = result
+    const list = data.map((item) => {
+      return {name: item.name, _id: item.id}
+    })
+    console.log('list', list)
     if(!err) {
-      commit(MUTATIONS.BOOK_LIST_SAVE, { data: data.list, start })
+      commit(MUTATIONS.BOOK_LIST_SAVE, { data: list, start })
     }
     return result
   },

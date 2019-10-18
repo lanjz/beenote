@@ -2,9 +2,9 @@
   <div>
     <TreeItem
       v-for="(item, index) in catalogList"
-      :key="item._id"
+      :key="item.name"
       :curNode="item"
-      :treeChain="[item['_id']]"
+      :treeChain="[item['name']]"
     ></TreeItem>
   </div>
 </template>
@@ -23,13 +23,15 @@
     },
     computed: {
       ...mapState({
+        catalogs: state => state.catalogs.list,
         curBook: state => state.books.curBook
       }),
       catalogList() {
-        return [
+        return this.catalogs[this.curBook+'_root']
+    /*    return [
           {  _id: constKey.recentlyArticlesKey, name: '最近文档', hasChild: false, icon: 'icon-wendang' },
           { _id: this.curBook+'_root', name: '我的文件夹', hasChild: true },
-        ]
+        ]*/
       }
     },
   }

@@ -30,7 +30,7 @@
         ACTIONS.USER_INFO_GET
       ]),
       async init(){
-        this[ACTIONS.USER_INFO_GET]()
+        // this[ACTIONS.USER_INFO_GET]()
       }
     },
     mounted() {

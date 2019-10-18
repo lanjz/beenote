@@ -8,9 +8,9 @@ const _68550d42 = () => interopDefault(import('..\\pages\\bookList.vue' /* webpa
 const _29762a61 = () => interopDefault(import('..\\pages\\login.vue' /* webpackChunkName: "pages_login" */))
 const _555d66d9 = () => interopDefault(import('..\\pages\\schema.vue' /* webpackChunkName: "pages_schema" */))
 const _5fce874a = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages_index" */))
-const _71f50327 = () => interopDefault(import('..\\pages\\_bookId\\index.vue' /* webpackChunkName: "pages__bookId_index" */))
-const _4d7f9372 = () => interopDefault(import('..\\pages\\_bookId\\_catalogId\\index.vue' /* webpackChunkName: "pages__bookId__catalogId_index" */))
-const _3637e596 = () => interopDefault(import('..\\pages\\_bookId\\_catalogId\\_noteId\\index.vue' /* webpackChunkName: "pages__bookId__catalogId__noteId_index" */))
+const _4029c542 = () => interopDefault(import('..\\pages\\_book\\index.vue' /* webpackChunkName: "pages__book_index" */))
+const _19eb08a8 = () => interopDefault(import('..\\pages\\_book\\_catalog\\index.vue' /* webpackChunkName: "pages__book__catalog_index" */))
+const _4a5ded20 = () => interopDefault(import('..\\pages\\_book\\_catalog\\_noteId\\index.vue' /* webpackChunkName: "pages__book__catalog__noteId_index" */))
 
 Vue.use(Router)
 
@@ -42,17 +42,17 @@ export const routerOptions = {
       component: _5fce874a,
       name: "index"
     }, {
-      path: "/:bookId",
-      component: _71f50327,
-      name: "bookId"
+      path: "/:book",
+      component: _4029c542,
+      name: "book"
     }, {
-      path: "/:bookId/:catalogId",
-      component: _4d7f9372,
-      name: "bookId-catalogId"
+      path: "/:book/:catalog",
+      component: _19eb08a8,
+      name: "book-catalog"
     }, {
-      path: "/:bookId/:catalogId/:noteId",
-      component: _3637e596,
-      name: "bookId-catalogId-noteId"
+      path: "/:book/:catalog/:noteId",
+      component: _4a5ded20,
+      name: "book-catalog-noteId"
     }],
 
   fallback: false

@@ -4,13 +4,16 @@ import * as ACTIONS from './const/actions'
 
 const state = () => (
   {
-    userInfo: {},
+    userInfo: {
+      githubName: 'lanjz'
+    },
     curUserInfo: {},
     userInfoStatus: '' // info:个人信息，modify:修改，reg:注册，login：登录
   }
 )
 const getters = {
   isVisitor: state => {
+    return false
     // 有登录状且没有当前页面所属用户则非游客
     if(state.userInfo['_id'] && !state.curUserInfo['_id']){
       return false
@@ -21,7 +24,8 @@ const getters = {
     }
     // 有登录状且有当前页面所属用户则判断他们是否相等
     return state.userInfo['_id'] !== state.curUserInfo['_id']
-  }
+  },
+  githubName: state => state.userInfo.githubName
 }
 const mutations = {
   [MUTATIONS.USER_SAVE](state, data) {
