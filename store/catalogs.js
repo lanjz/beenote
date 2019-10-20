@@ -13,7 +13,8 @@ const state = () => (
       }
     },
     curCatalog: constKey.recentlyArticlesKey,
-    isOpen: []
+    isOpen: [],
+    catalogMapNotes: {}
   }
 )
 const getters = {
@@ -33,6 +34,11 @@ const getters = {
   }
 }
 const mutations = {
+  [MUTATIONS.CATALOGS_NOTE_MAP_SAVE](state, { data, start, key }) {
+    console.log('data', data)
+    state.catalogMapNotes[key] = data
+    state.catalogMapNotes = { ...state.catalogMapNotes }
+  },
   [MUTATIONS.CATALOGS_SAVE](state, { key, data, bookName }) {
     const list = {
       ...{ [key]: {
@@ -114,9 +120,8 @@ const actions = {
         })
       const findFiles = data.filter(item => item.type === 'file')
       const key = (params.parentId === 'root' || !params.parentId) ? bookName+'_root' : params.parentId
-      console.log('rootState', rootState)
       commit(MUTATIONS.CATALOGS_SAVE, { key, data: findDirs, bookName: rootState.books.curBook })
-      commit('notes/NOTE_LIST_SAVE', { key, data: findFiles, bookName: rootState.books.curBook })
+      commit(MUTATIONS.CATALOGS_NOTE_MAP_SAVE, { key, data: findFiles })
       findDirs.forEach(item => {
         dispatch(ACTIONS.CATALOGS_GET, {
           path: item.path,
@@ -154,7 +159,6 @@ const actions = {
   }
 }
 export default {
-  namespace: true,
   state,
   getters,
   mutations,

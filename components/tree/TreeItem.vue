@@ -117,8 +117,6 @@
       }),
       ...mapGetters('catalogs', ['treeChainList']),
       hasChild() {
-        console.log('this.catalogs[this.curNode[\'_id\']]', this.catalogs[this.curNode['_id']].childNodes)
-        console.log('this.catalogs[this.curNode[\'_id\']]', this.catalogs[this.curNode['_id']].childNodes.length)
         return this.catalogs[this.curNode['_id']]
           && this.catalogs[this.curNode['_id']]['childNodes']
           && this.catalogs[this.curNode['_id']]['childNodes'].length

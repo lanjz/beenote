@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import notedCom from './_noteId/index.vue'
+  import notedCom from '../../pages/_user/_book/_/index.vue'
 
   export default {
     components: {

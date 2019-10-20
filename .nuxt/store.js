@@ -7,8 +7,6 @@ const VUEX_PROPERTIES = ['state', 'getters', 'actions', 'mutations']
 let store = {}
 
 void (function updateModules() {
-  store = normalizeRoot(require('../store/index.js'), 'store/index.js')
-
   // If store is an exported method = classic mode (deprecated)
 
   if (typeof store === 'function') {
@@ -26,15 +24,8 @@ void (function updateModules() {
   resolveStoreModules(require('../store/schema.js'), 'schema.js')
   resolveStoreModules(require('../store/todos.js'), 'todos.js')
   resolveStoreModules(require('../store/user.js'), 'user.js')
-  resolveStoreModules(require('../store/modules/index.js'), 'modules/index.js')
   resolveStoreModules(require('../store/const/actions.js'), 'const/actions.js')
   resolveStoreModules(require('../store/const/mutaions.js'), 'const/mutaions.js')
-  resolveStoreModules(require('../store/modules/books.js'), 'modules/books.js')
-  resolveStoreModules(require('../store/modules/catalogs.js'), 'modules/catalogs.js')
-  resolveStoreModules(require('../store/modules/config.js'), 'modules/config.js')
-  resolveStoreModules(require('../store/modules/notes.js'), 'modules/notes.js')
-  resolveStoreModules(require('../store/modules/schema.js'), 'modules/schema.js')
-  resolveStoreModules(require('../store/modules/user.js'), 'modules/user.js')
 
   // If the environment supports hot reloading...
 
@@ -45,20 +36,12 @@ void (function updateModules() {
       '../store/books.js',
       '../store/catalogs.js',
       '../store/config.js',
-      '../store/index.js',
       '../store/notes.js',
       '../store/schema.js',
       '../store/todos.js',
       '../store/user.js',
-      '../store/modules/index.js',
       '../store/const/actions.js',
       '../store/const/mutaions.js',
-      '../store/modules/books.js',
-      '../store/modules/catalogs.js',
-      '../store/modules/config.js',
-      '../store/modules/notes.js',
-      '../store/modules/schema.js',
-      '../store/modules/user.js',
     ], () => {
       // Update `root.modules` with the latest definitions.
       updateModules()

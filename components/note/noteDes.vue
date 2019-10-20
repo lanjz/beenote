@@ -112,16 +112,13 @@
         ACTIONS.NOTE_PUT,
         ACTIONS.NOTE_DELETE,
       ]),
+      getTitle(val){
+        if(!val) return val
+        return val.substring(0, val.length - 3)
+      },
       setContent(val = {}) {
-        if (!val._id) {
-          this.$alert({
-            title: 'setContent',
-            content: 'val值不正确'
-          })
-          return
-        }
-        this.cacheContent = this.content = val.content || ''
-        this.cacheName = this.articleName = val.title || '未命名'
+        this.cacheContent = this.content = val.contentMD || ''
+        this.cacheName = this.articleName = this.getTitle(val.name) || '未命名'
       },
       async todoEdit(force = false) {
         if (!force) {

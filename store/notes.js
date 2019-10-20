@@ -17,20 +17,21 @@ const getters = {
   }
 }
 const mutations = {
-  [MUTATIONS.NOTE_LIST_SAVE](state, { data, start, key }) {
+  [MUTATIONS.NOTE_LIST_SAVE](state, {data, start, key}) {
     console.log('data', data)
     state.list[key] = data
-    state.list = { ...state.list }
-/*    state.list = JSON.parse(JSON.stringify(state.list))
-    data.forEach(item => {
-      state.notesMap[item._id] = item
-    })*/
+    state.list = {...state.list}
+    /*    state.list = JSON.parse(JSON.stringify(state.list))
+        data.forEach(item => {
+          state.notesMap[item._id] = item
+        })*/
   },
   [MUTATIONS.NOTE_CUR_UPDATE](state, data) {
     state.curNote = data
   },
-  [MUTATIONS.NOTE_MAP_SAVE](state, { data, id }) {
-    state.notesMap[id] = data
+  [MUTATIONS.NOTE_MAP_SAVE](state, {data, key}) {
+    state.notesMap[key] = data
+    state.notesMap = {...state.notesMap}
   },
   [MUTATIONS.NOTE_CUR_CONTENT_UPDATE](state, data) {
     state.curNoteContent = data
@@ -41,14 +42,15 @@ const actions = {
   /**
    * @params <Object> force 是否强制重新获取数据
    * */
-  async [ACTIONS.NOTES_GET]({ state, commit, rootState }, arg = {}) {
-    const { limit = 0, start = 0, force = false } = arg
+  async [ACTIONS.NOTES_GET]({state, commit, rootState}, arg = {}) {
+    const {limit = 0, start = 0, force = false} = arg
     const bookId = rootState.books.curBook
     const catalogId = rootState.catalogs.curCatalog
     const key = `${bookId}_${catalogId}`
-    if(!force && state.list[key]){
-      return { err: null, data: { list: state.list[key] } }
+    if (!force && state.list[key]) {
+      return {err: null, data: {list: state.list[key]}}
     }
+
     const result = await fetch({
       url: '/api/notes',
       data: {
@@ -58,37 +60,54 @@ const actions = {
         catalogId: catalogId.indexOf('root') > -1 ? 'root' : catalogId
       }
     })
-    const { err, data } = result
-    if(!err) {
-      commit(MUTATIONS.NOTE_LIST_SAVE, { data: data.list, start, key })
+    const {err, data} = result
+    if (!err) {
+      commit(MUTATIONS.NOTE_LIST_SAVE, {data: data.list, start, key})
     }
     return result
   },
   /**
    * @params <Object> force 是否强制重新获取数据
    * */
-  async [ACTIONS.NOTE_DES_GET]({ state, commit, rootState }, arg = {}) {
-    const { id, force = false } = arg
-    if(!force && state.notesMap[id]){
-      return { err: null, data: state.notesMap[id] }
+  async [ACTIONS.NOTE_DES_GET]({state, commit, rootState}, arg = {}) {
+    const {
+      fullPath,
+      user,
+      repo,
+      path,
+      force = false
+    } = arg
+    if (!force && state.notesMap[path]) {
+      return {err: null, data: state.notesMap[path]}
     }
-    const result = await fetch({
-      url: `/api/note/${id}`,
+    const findInfo = fetch({
+      url: `/repos/${user}/${repo}/contents/${path}.md`
     })
-    const { err, data } = result
-    if(!err) {
-      commit(MUTATIONS.NOTE_MAP_SAVE, { data, id })
-  }
+    const getContent = fetch({
+      url: `/${fullPath}`,
+      baseUrl: 'raw'
+    })
+    const result = await Promise.all([findInfo, getContent])
+    if (!result[0].err && !result[1].err) {
+      commit(MUTATIONS.NOTE_MAP_SAVE,
+        {
+          data: {
+            ...result[0].data,
+            contentMD: result[1].data
+          },
+          key: fullPath
+        })
+    }
     return result
   },
   /**
    * @params <Object> force 是否强制重新获取数据
    * */
-  async [ACTIONS.NOTE_GET_BY_ID]({ state, commit, rootState }, arg = {}) {
-    const { id, bookId, catalogId } = arg
+  async [ACTIONS.NOTE_GET_BY_ID]({state, commit, rootState}, arg = {}) {
+    const {id, bookId, catalogId} = arg
     const key = `${bookId}_${catalogId}`
-    if(state.list[key]){
-      return { err: null, data: { list: state.list[key] } }
+    if (state.list[key]) {
+      return {err: null, data: {list: state.list[key]}}
     }
     const result = await fetch({
       url: `/api/notes/${id}`,
@@ -97,14 +116,14 @@ const actions = {
         catalogId
       }
     })
-    const { err, data } = result
-    if(!err) {
-      commit('NOTE_LIST_SAVE', { data: data.list, start: 0, key })
+    const {err, data} = result
+    if (!err) {
+      commit('NOTE_LIST_SAVE', {data: data.list, start: 0, key})
     }
     return result
   },
   /* eslint-disable no-unused-vars */
-  async [ACTIONS.NOTE_POST]({ commit, rootState }, data) {
+  async [ACTIONS.NOTE_POST]({commit, rootState}, data) {
     const result = await fetch({
       url: '/api/note',
       method: 'post',
@@ -116,14 +135,14 @@ const actions = {
     })
     return result
   },
-  async [ACTIONS.NOTE_DELETE]({ commit }, data) {
+  async [ACTIONS.NOTE_DELETE]({commit}, data) {
     const result = await fetch({
       url: `/api/note/${data._id}`,
       method: 'DELETE',
     })
     return result
   },
-  async [ACTIONS.NOTE_PUT]({ commit }, data) {
+  async [ACTIONS.NOTE_PUT]({commit}, data) {
     const result = await fetch({
       url: '/api/note',
       method: 'put',
@@ -131,11 +150,11 @@ const actions = {
     })
     return result
   },
-  async [ACTIONS.NOTES_RECENTLY_GET]({ state, commit, rootState }, arg = {}) {
-    const { force = false } = arg
-    const key = rootState.books.curBook+'_'+constKey.recentlyNoteKey
-    if(!force && state.list[key]){
-      return { err: null, data: { list: state.list[key] } }
+  async [ACTIONS.NOTES_RECENTLY_GET]({state, commit, rootState}, arg = {}) {
+    const {force = false} = arg
+    const key = rootState.books.curBook + '_' + constKey.recentlyNoteKey
+    if (!force && state.list[key]) {
+      return {err: null, data: {list: state.list[key]}}
     }
     const result = await fetch({
       url: '/api/recently_notes',
@@ -144,18 +163,18 @@ const actions = {
         bookId: rootState.books.curBook
       }
     })
-    const { err, data } = result
-    if(!err) {
-      commit(MUTATIONS.NOTE_LIST_SAVE, { data, key })
+    const {err, data} = result
+    if (!err) {
+      commit(MUTATIONS.NOTE_LIST_SAVE, {data, key})
     }
-    return { err: null, data: { list: data } }
+    return {err: null, data: {list: data}}
   },
 
 }
 export default {
-  namespace: true,
   state,
   mutations,
   actions,
-  getters
+  getters,
+  strict: false
 }

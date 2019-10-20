@@ -20,14 +20,14 @@
                 :id="item._id"
                 class="article-item"
                 v-for="(item, index) in filterList"
-                :key="item._id"
-                :class="{'act': item._id === curNote}"
+                :key="item.sha"
+                :class="{'act': item.sha === curNote}"
                 @click="chooseNote(item)">
-                <div class="article-item-title">{{item.title}}</div>
+                <div class="article-item-title">{{item.name}}</div>
                 <div class="article-label">
-                  <span class="article-label-item">{{item.bookId|getBookName(bookList)}}</span>
+                  <span class="article-label-item">{{item.path}}</span>
                 </div>
-                <div class="article-item-mark">{{item.createTime | timestampToBriefTime}}~{{item.updateTime | timestampToBriefTime}}</div>
+<!--                <div class="article-item-mark">{{item.createTime | timestampToBriefTime}}~{{item.updateTime | timestampToBriefTime}}</div>-->
                 <div class="operate-icon operate-icon-delete" @click.stop="todoDelete(item)">
                   <i class="iconfont icon-shanchu1"></i>
                 </div>
@@ -83,6 +83,7 @@
         schemaList: state => state.schema.list,
         curNote: state => state.notes.curNote,
         notesMap: state => state.notes.notesMap,
+        curBook: state => state.books.curBook,
 /*        filterList: function () {
           if(!this.filterKeys) {
             return this.list
@@ -125,7 +126,7 @@
       ]),
       ...mapMutations('notes',[MUTATIONS.NOTE_CUR_UPDATE]),
       chooseNote: function (item) {
-         this.$router.push(`/${item.bookId}/${returnCatalog(this.curCatalog)}/${item._id}`)
+         this.$router.push(`/${this.curBook}/${this.curCatalog}/${item.path}`)
       },
       todoDelete(item) {
         this.$alert({
@@ -184,7 +185,7 @@
         if(!this.filterKeys) {
           this.filterList = this.list
         }
-        this.filterList = this.list.filter((item) => item.title.indexOf(this.filterKeys) > -1)
+        this.filterList = this.list.filter((item) => item.name.indexOf(this.filterKeys) > -1)
       }
     },
     mounted() {

@@ -2,7 +2,10 @@ import axios from 'axios'
 import SET from '../../hide/webSecret'
 import helloAlert from '../../../components/messageBox/messageBox'
 
-const ApiBase = 'https://api.github.com'
+const ApiBase = {
+  base: 'https://api.github.com',
+  raw: 'https://raw.githubusercontent.com'
+}
 
 if(process.client) {
   console.log('context', window)
@@ -28,7 +31,7 @@ function dealRetCode(response = {}) {
 }
 function fetchData(options) {
   const res = { err: null, data: '' }
-  let { url } = options
+  let { url, baseUrl = 'base' } = options
   if (!url) {
     res.err = new Error('没有请求地址')
     return res
@@ -37,7 +40,7 @@ function fetchData(options) {
     url = `${SET.base.mockHost}/mock/15${url}`
   } else {
     // url = `${ApiBase}${url}`
-    url = `${ApiBase}${url}?access_token=4e70d32182ec1c2115b9927ad155f4cd753a1783`
+    url = `${ApiBase[baseUrl]}${url}?access_token=4e70d32182ec1c2115b9927ad155f4cd753a1783`
   }
   options.url = url
   options.method = options.method || 'get'

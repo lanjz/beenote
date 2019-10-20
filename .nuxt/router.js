@@ -8,9 +8,8 @@ const _6fdf3330 = () => interopDefault(import('../pages/bookList.vue' /* webpack
 const _8566fc10 = () => interopDefault(import('../pages/login.vue' /* webpackChunkName: "pages/login" */))
 const _3c520222 = () => interopDefault(import('../pages/schema.vue' /* webpackChunkName: "pages/schema" */))
 const _18b6423e = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
-const _73abefcc = () => interopDefault(import('../pages/_book/index.vue' /* webpackChunkName: "pages/_book/index" */))
-const _f609b476 = () => interopDefault(import('../pages/_book/_catalog/index.vue' /* webpackChunkName: "pages/_book/_catalog/index" */))
-const _71201242 = () => interopDefault(import('../pages/_book/_catalog/_noteId/index.vue' /* webpackChunkName: "pages/_book/_catalog/_noteId/index" */))
+const _764e4f75 = () => interopDefault(import('../pages/_user/_book/index.vue' /* webpackChunkName: "pages/_user/_book/index" */))
+const _15dd59f6 = () => interopDefault(import('../pages/_user/_book/_/index.vue' /* webpackChunkName: "pages/_user/_book/_/index" */))
 
 Vue.use(Router)
 
@@ -42,17 +41,13 @@ export const routerOptions = {
       component: _18b6423e,
       name: "index"
     }, {
-      path: "/:book",
-      component: _73abefcc,
-      name: "book"
+      path: "/:user/:book?",
+      component: _764e4f75,
+      name: "user-book"
     }, {
-      path: "/:book/:catalog",
-      component: _f609b476,
-      name: "book-catalog"
-    }, {
-      path: "/:book/:catalog/:noteId",
-      component: _71201242,
-      name: "book-catalog-noteId"
+      path: "/:user/:book?/*",
+      component: _15dd59f6,
+      name: "user-book-all"
     }],
 
   fallback: false
