@@ -8,7 +8,13 @@
   export default {
     components: {
       notedCom
-    }
+    },
+      fetch () {
+        console.log('fetch1')
+      },
+      mounted() {
+        console.log(1)
+      }
   }
 </script>
 

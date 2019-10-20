@@ -36,7 +36,8 @@ function fetchData(options) {
   if (MOCK) {
     url = `${SET.base.mockHost}/mock/15${url}`
   } else {
-    url = `${ApiBase}${url}?access_token=4c451394d3f13cc4aa4c5e1dceeb323d966b852d`
+    // url = `${ApiBase}${url}`
+    url = `${ApiBase}${url}?access_token=4e70d32182ec1c2115b9927ad155f4cd753a1783`
   }
   options.url = url
   options.method = options.method || 'get'
@@ -60,7 +61,6 @@ const doFetchData = function (options) {
   return new Promise((resolve) => {
     fetchData(options)
       .then((response) => {
-        console.log('response', response)
       /*  const result = dealRetCode(response.data)
         if(result.err) {
           res.err = result.err

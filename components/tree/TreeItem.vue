@@ -73,7 +73,7 @@
   </div>
 </template>
 <script>
-  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+  import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
   import * as MUTATIONS from '../../store/const/mutaions'
   import * as ACTIONS from '../../store/const/actions'
   import bus from '../../utils/client/global/eventBus'
@@ -96,7 +96,7 @@
     data() {
       return {
         renameCatalog: false,
-        operateMenuStyle: { left: -1, top: '50%' },
+        operateMenuStyle: {left: -1, top: '50%'},
         renameValue: '',
         newDir: {
           parentId: '',
@@ -117,6 +117,8 @@
       }),
       ...mapGetters('catalogs', ['treeChainList']),
       hasChild() {
+        console.log('this.catalogs[this.curNode[\'_id\']]', this.catalogs[this.curNode['_id']].childNodes)
+        console.log('this.catalogs[this.curNode[\'_id\']]', this.catalogs[this.curNode['_id']].childNodes.length)
         return this.catalogs[this.curNode['_id']]
           && this.catalogs[this.curNode['_id']]['childNodes']
           && this.catalogs[this.curNode['_id']]['childNodes'].length
@@ -174,8 +176,8 @@
         this[MUTATIONS.CATALOGS_CUR_SAVE]('recently')
       },
       showOperateMenu(e) {
-        if(this.curNode.icon) return
-        const { clientX, clientY } = e
+        if (this.curNode.icon) return
+        const {clientX, clientY} = e
         this.operateMenuStyle = {
           top: `${clientY}px`,
           left: `${clientX}px`
@@ -211,7 +213,7 @@
           _id: this.curNode._id
         })
         this.$hideLoading()
-        if(!result.err) {
+        if (!result.err) {
           this.$toast({
             title: '删除成功'
           })
@@ -223,30 +225,30 @@
        * */
       doRename() {
         this.renameCatalog = false
-        if(this.isNewDir) {
+        if (this.isNewDir) {
           this.addCatalog(this.renameValue, this.curNode.parentId)
           return
         }
-        if(this.renameValue && this.renameValue !== this.curNode.name) {
+        if (this.renameValue && this.renameValue !== this.curNode.name) {
           this.modifyCatalogName(this.renameValue, this.curNode)
         }
       },
       submitCatalogName(name, item) {
-        const { isNew } = item
-        if(!isNew) {
+        const {isNew} = item
+        if (!isNew) {
           this.modifyCatalogName(name, item)
           return
         }
         this.addCatalog(name, item)
       },
       async modifyCatalogName(name, item) {
-        const { _id, parentId } = item
+        const {_id, parentId} = item
         const result = await this[ACTIONS.CATALOGS_PUT]({
           _id: _id,
           name,
           parentId
         })
-        if(!result.err) {
+        if (!result.err) {
           this.getDate(item, true, true)
         }
       },
@@ -281,13 +283,13 @@
         this.toggleOpenDir(true, this.curNode.parentId)
       },
       init() {
-        const { catalogId } = $nuxt._route.params
-        if(catalogId === this.curNode._id) {
+        const {catalogId} = $nuxt._route.params
+        if (catalogId === this.curNode._id) {
           this.initOpenCatalog()
           this.$emit('toInitOpenCatalog')
         }
         // 如果就新建文件夹则直接执行todoRename函数
-        if(this.isNewDir) {
+        if (this.isNewDir) {
           this.todoRename()
         }
         document.addEventListener('click', (e) => {
@@ -317,9 +319,11 @@
     padding: 7px 25px;
     position: relative;
     transition: .3s;
+
     .icon-open {
       display: none;
     }
+
     .icon-close {
       display: block;
     }
@@ -346,9 +350,11 @@
     height: 16px;
     right: 12px;
     top: 50%;
+
     .iconfont {
       font-size: 15px;
     }
+
     transform: translateY(-50%);
   }
 
@@ -401,9 +407,11 @@
   .catalogs-item-layout.act {
     background: @tree-light-bg-color;
     color: @tree-light-color;
+
     .icon-open {
       display: block;
     }
+
     .icon-close {
       display: none;
     }
@@ -449,14 +457,17 @@
     color: #fff;
     z-index: 999;
     border-radius: 5px;
+
     .catalog-operate-item {
       width: 150px;
       padding: 10px 20px;
       position: relative;
     }
+
     .catalog-operate-item:not(:last-child) {
       border-bottom: solid 1px rgba(255, 255, 255, .2);
     }
+
     .catalog-operate-item.hadChild:after {
       content: '';
       position: absolute;
@@ -467,9 +478,11 @@
       top: 50%;
       transform: translateY(-50%);
     }
+
     .catalog-operate-item:hover .operate-item-child {
       display: block;
     }
+
     .operate-item-child {
       position: absolute;
       left: 100%;
@@ -480,6 +493,7 @@
       border-left: solid 1px rgba(255, 255, 255, .2);
       display: none
     }
+
     .catalog-operate-item.builtIn {
       border-bottom: solid 1px rgba(255, 255, 255, .6);
     }

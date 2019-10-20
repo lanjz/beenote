@@ -9,14 +9,14 @@
   </div>
 </template>
 <script>
-  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+  import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
   import constKey from '../../utils/client/const'
   import TreeItem from './TreeItem'
+
   export default {
     name: 'Tree',
     data() {
-      return {
-      }
+      return {}
     },
     components: {
       TreeItem
@@ -27,11 +27,11 @@
         curBook: state => state.books.curBook
       }),
       catalogList() {
-        return this.catalogs[this.curBook+'_root']
-    /*    return [
-          {  _id: constKey.recentlyArticlesKey, name: '最近文档', hasChild: false, icon: 'icon-wendang' },
-          { _id: this.curBook+'_root', name: '我的文件夹', hasChild: true },
-        ]*/
+        return this.catalogs[this.curBook + '_root'] ? this.catalogs[this.curBook + '_root'].childNodes : []
+        /*    return [
+              {  _id: constKey.recentlyArticlesKey, name: '最近文档', hasChild: false, icon: 'icon-wendang' },
+              { _id: this.curBook+'_root', name: '我的文件夹', hasChild: true },
+            ]*/
       }
     },
   }

@@ -1,7 +1,7 @@
-import fetch from '../utils/client/fetch/fetch.js'
-import constKey from '../utils/client/const.js'
-import * as MUTATIONS from './const/mutaions'
-import * as ACTIONS from './const/actions'
+import fetch from '../../utils/client/fetch/fetch.js'
+import constKey from '../../utils/client/const.js'
+import * as MUTATIONS from '../const/mutaions'
+import * as ACTIONS from '../const/actions'
 
 const state = () => (
   {

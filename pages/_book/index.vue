@@ -23,7 +23,7 @@
       this[MUTATIONS.BOOK_CUR_UPDATE](book)
       await this[ACTIONS.CATALOGS_GET]()
       const fistName = this.catalogList[`${book}_root`].childNodes[0].name
-      // this.$router.push(`/${book}/recently/${fistName}`)
+      this.$router.push(`/${book}/recently/${fistName}`)
     }
   }
 </script>
