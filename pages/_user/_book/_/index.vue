@@ -30,7 +30,7 @@
   import noNotes from '@/components/note/noNotes.vue'
   import articleFixed from '@/components/article/articleFixed.vue'
   import constKey from '../../../../utils/client/const'
-  import {returnCatalog, setTitle} from '../../../../utils/client/blackHole'
+  import {returnCatalog, setTitle, findDirPath, slitSuffix} from '../../../../utils/client/blackHole'
   import fetch from '../../../../utils/client/fetch/fetch'
 
   export default {
@@ -42,33 +42,36 @@
  //      console.log('result', result)
        return { curNoteContent: result.data, noData: false }
      },*/
-    async fetch({store, params}) {
-      console.log('fetch2')
-      const {noteId, book, catalog} = params
+    async fetch(context) {
+      const {store, params} = context
+      const {user, book, pathMatch} = params
+      // 不确定当前访问的是目录还是
+      const getDirPath = findDirPath(pathMatch)
+      const fullPath = `${user}/${book}/${pathMatch}.md`
       store.commit('books/BOOK_CUR_UPDATE', book)
-      store.commit('catalogs/CATALOGS_CUR_SAVE', catalog)
-      store.commit('notes/NOTE_CUR_UPDATE', noteId)
-      if (store.state.notes.list[`${book}_${catalog}`]) {
+
+      if(context.route.query.type === 'dir') {
+        store.commit('catalogs/CATALOGS_CUR_SAVE', `${book}/${pathMatch}`)
         return
       }
-      // const result = await store.dispatch('catalogs/CATALOGS_GET')
-      /*
-    const { extend } = result.data
-    if(extend && extend.user) {
-      store.commit('user/CUR_USER_INFO_SAVE', extend.user)
-    }
-    if(extend && extend.books) {
-      store.commit('books/BOOK_LIST_SAVE', {
-        data: extend.books,
-        start: 0
-      })
-    }
-    if(extend && extend.catalogMap){
-      store.commit('config/CONFIG_EXTEND_SAVE', {
-        tar: 'catalogMap',
-        val: extend.catalogMap
-      })
-    }*/
+      store.commit('catalogs/CATALOGS_CUR_SAVE', `${book}/${getDirPath}`)
+      store.commit('notes/NOTE_CUR_UPDATE', fullPath)
+      if (store.state.notesMap && store.state.notesMap[fullPath]) {
+        return
+      }
+      const result = await Promise.all([
+        store.dispatch('catalogs/CATALOGS_GET',{
+          path: getDirPath,
+          getChild: false,
+          bookName: book
+        }),
+        store.dispatch('notes/NOTE_DES_GET',{
+          fullPath,
+          path: pathMatch,
+          user,
+          repo: book
+        })
+      ])
     },
     components: {
       TreeItem,
@@ -121,7 +124,7 @@
         pageExtend: state => state.config.extend,
       }),
       ...mapGetters('catalogs', ['treeChainList']),
-      ...mapGetters('user', ['isVisitor']),
+      ...mapGetters('user', ['isVisitor', 'githubName']),
       curNoteList: function () {
         if (this.curCatalog && this.catalogMapNotes) {
           return this.catalogMapNotes[this.curCatalog] || []
@@ -187,15 +190,18 @@
        * 初始化的时候，获取note列表 最近文章
        * */
       async getNoteData() {
-        const getCatalogsData = this.catalogId === constKey.recentlyArticlesKey ?
-          this[ACTIONS.NOTES_RECENTLY_GET]() : this[ACTIONS.NOTES_GET]()
         Promise.all([
-          getCatalogsData,
           this[ACTIONS.BOOK_LIST_GET](),
-          this[ACTIONS.CATALOGS_GET]()
+          this[ACTIONS.CATALOGS_GET]({ force: true})
         ])
           .then((res) => {
-            const data = res[0].data.list
+            console.log('this.catalogMapNotes[this.curCatalog]', this.catalogMapNotes[this.curCatalog])
+            if (!this.catalogMapNotes[this.curCatalog] || !this.catalogMapNotes[this.curCatalog].length) {
+              this.noData = true
+            } else {
+              this.$router.push(`/${this.githubName}/${this.catalogMapNotes[this.curCatalog][0].fullPath}`)
+            }
+      /*      const data = res[0].data.list
             if (data.length && !this.noteId) {
               this.$router.push(`/${this.bookId}/${this.catalogId}/${data[0]._id}`)
             } else {
@@ -216,7 +222,7 @@
                 }
               })
 
-            }
+            }*/
             // this[ACTIONS.NOTES_RECENTLY_GET]()
           })
           .catch(err => {
@@ -233,6 +239,12 @@
        * @param <String> id 如果有则指定为当前id
        * */
       async doUpdateNote(arg = {}) {
+        if(this.catalogMapNotes[arg.fullPath] && this.catalogMapNotes[arg.fullPath].length) {
+          this.$router.push(`/${this.githubName}/${slitSuffix(this.catalogMapNotes[arg.fullPath][0].fullPath)}`)
+        } else {
+          this.$router.push(`/${this.githubName}/${arg.fullPath}?type=dir`)
+        }
+        return
         const {id, force, catalogId} = arg
         let getData = ''
         if (this.curCatalog === constKey.recentlyArticlesKey) {
@@ -277,33 +289,20 @@
       },
       async init() {
         // await this[ACTIONS.USER_INFO_GET]()
-        if (this.isVisitor && this.noteId) return
-        this[MUTATIONS.BOOK_CUR_UPDATE](this.book)
-        this[MUTATIONS.CATALOGS_CUR_SAVE](this.catalog)
-        // this.getNoteData()
-        // this.initEmitOn()
+        // if (this.isVisitor && this.noteId) return
+        this.getNoteData()
+        this.initEmitOn()
       },
       async dealParams() {
         const {user, book, pathMatch} = $nuxt._route.params
-        this.book = book
         // this.catalog = catalog
         this.noteId = pathMatch
         this.pathMatch = pathMatch
         // this.createToCatalog = catalog
-        this[ACTIONS.CATALOGS_GET]()
-        const fullPath = `${user}/${book}/master/${pathMatch}.md`
-        this[ACTIONS.NOTE_DES_GET]({
-          fullPath,
-          path: pathMatch,
-          user,
-          repo: book
-        })
-        this[MUTATIONS.NOTE_CUR_UPDATE](fullPath)
         this.init()
       }
     },
     mounted() {
-      console.log('this', this)
       this.dealParams()
     }
   }

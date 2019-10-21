@@ -9,3 +9,13 @@ export function returnCatalog(str, bookId) {
 export function setTitle(str = '') {
   return `${str}-黑洞笔记-BlackHook`
 }
+
+export function findDirPath(path) {
+  const findTag = path.lastIndexOf('/')
+  return path.substring(0, findTag)
+}
+
+
+export function slitSuffix(path) {
+  return path.substring(0, path.lastIndexOf('.'))
+}

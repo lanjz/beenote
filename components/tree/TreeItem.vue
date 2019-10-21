@@ -5,7 +5,7 @@
       @click.left="chooseCatalog(null)"
       @click.right.stop.prevent="(e) => showOperateMenu(e)"
       :class="{
-        'act': actCatalog === curNode['_id'] || (curNode['_id']&&curNode['_id'].indexOf(actCatalog) > -1),
+        'act': isInChin,
         'catalogs-item-hover': !(isNewDir || renameCatalog)
       }"
     >
@@ -13,10 +13,10 @@
       <div
         class="has-child"
         :class="{
-        'in-chain': isOpen||(isOpen&&hasChild&&treeChainList&&treeChainList.indexOf(curNode['_id']) > -1),
+        'in-chain': isOpen,
       }"
         @click.stop="toggleOpenDir(false)"
-        v-if="catalogs[curNode['_id']]&&hasChild"></div>
+        v-if="hasChild"></div>
       <i class="iconfont" :class="curNode.icon" :id="curNode._id" v-if="curNode.icon"></i>
       <i class="iconfont icon-wenjianjia" :class="curNode.icon" :id="curNode._id"
          v-else-if="treeChainList&&treeChainList.indexOf(curNode['_id']) > -1"></i>
@@ -55,10 +55,10 @@
       </div>
     </div>
     <div
-      v-if="catalogs[curNode['_id']]&&catalogs[curNode['_id']].childNodes&&catalogs[curNode['_id']].childNodes.length">
+      v-if="catalogs[curNode['fullPath']]&&catalogs[curNode['fullPath']].childNodes&&catalogs[curNode['fullPath']].childNodes.length">
       <TreeItem
         v-show="isOpen"
-        v-for="(item, index) in catalogs[curNode['_id']].childNodes"
+        v-for="(item, index) in catalogs[curNode['fullPath']].childNodes"
         :key="index"
         :curNode="item"
         @toInitOpenCatalog="initOpenCatalog"
@@ -104,7 +104,7 @@
           show: false,
           isNew: true
         },
-//        isOpen: false
+        clickOpen: ''
       }
     },
     computed: {
@@ -113,18 +113,24 @@
         catalogsIsOpen: state => state.catalogs.isOpen,
         actCatalog: state => state.catalogs.curCatalog,
         schemaList: state => Object.values(state.schema.list).filter(item => item.fields.length),
-        curBook: state => state.books.curBook
+        curBook: state => state.books.curBook,
+        curNote: state => state.notes.curNote,
       }),
       ...mapGetters('catalogs', ['treeChainList']),
       hasChild() {
-        return this.catalogs[this.curNode['_id']]
-          && this.catalogs[this.curNode['_id']]['childNodes']
-          && this.catalogs[this.curNode['_id']]['childNodes'].length
+        const path = `${this.curNode['repo']}/${this.curNode['path']}`
+        return this.catalogs[path]
+          && this.catalogs[path]['childNodes']
+          && this.catalogs[path]['childNodes'].length
       },
       isOpen() {
-//        const curNodeId = this.curNode._id.indexOf('root') > -1 ? 'root' : this.curNode._id
-        const curNodeId = this.curNode._id
-        return this.catalogsIsOpen.indexOf(curNodeId) > -1 ? true : false
+        if(!this.clickOpen) {
+          return this.isInChin
+        }
+        return this.clickOpen === 1 ? false : true
+      },
+      isInChin() {
+        return this.curNote && this.curNote.indexOf(this.curNode.fullPath) > 0
       }
     },
     watch: {
@@ -152,19 +158,14 @@
         ACTIONS.ARTICLE_RECENTLY_LIST_GET,
       ]),
       toggleOpenDir(force = false, catalogId) {
-        this[MUTATIONS.CATALOGS_OPEN_TOGGLE]({
-          id: catalogId || this.curNode._id,
-          force
-        })
-//        this.isOpen = !this.isOpen
+        this.clickOpen = this.clickOpen === 2 ? 1 : 2
       },
       async chooseCatalog(item) {
         this.toggleOpenDir(true)
 //        this.isOpen = true
-        this[MUTATIONS.CATALOGS_CUR_SAVE](this.curNode._id)
+//         this[MUTATIONS.CATALOGS_CUR_SAVE](this.curNode._id)
         bus.$emit('emitFromCatalog', item || {
           ...this.curNode,
-          catalogId: this.curNode._id
         })
       },
       async getRecentlyArticles() {
@@ -278,7 +279,7 @@
         })
       },
       initOpenCatalog() {
-        this.toggleOpenDir(true, this.curNode.parentId)
+        // this.toggleOpenDir(true, this.curNode.parentId)
       },
       init() {
         const {catalogId} = $nuxt._route.params

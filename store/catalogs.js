@@ -34,12 +34,11 @@ const getters = {
   }
 }
 const mutations = {
-  [MUTATIONS.CATALOGS_NOTE_MAP_SAVE](state, { data, start, key }) {
-    console.log('data', data)
+  [MUTATIONS.CATALOGS_NOTE_MAP_SAVE](state, { data, key }) {
     state.catalogMapNotes[key] = data
     state.catalogMapNotes = { ...state.catalogMapNotes }
   },
-  [MUTATIONS.CATALOGS_SAVE](state, { key, data, bookName }) {
+  [MUTATIONS.CATALOGS_SAVE](state, { key, data }) {
     const list = {
       ...{ [key]: {
           ...state.list[key],
@@ -47,8 +46,9 @@ const mutations = {
           childNodes: data
       } }
     }
+    const findRepoName = key.substring(0, key.indexOf('/'))
     data.forEach((item) => {
-      list[item.name] = {
+      list[`${findRepoName}/${item.path}`] = {
         ...item
       }
     })
@@ -95,13 +95,14 @@ const mutations = {
 const actions = {
   async [ACTIONS.CATALOGS_GET]({ state, commit, rootState, dispatch }, params = {
     force: false,
-    bookName: rootState.books.curBook
   }) {
-    let { force, path, bookName, parentId } = params
-    if(!force && parentId && state.list[params.parentId] && state.list[params.parentId].childNodes) {
+    let { force, path, bookName = rootState.books.curBook, getChild = true } = params
+    // bookName: 仓库名
+    const fullPath = path ? `${bookName}/${path}` : `${bookName}` // 保存目录做为key使用
+    if(!force && fullPath && state.list[fullPath] && state.list[fullPath].childNodes) {
       return {
         err: null,
-        data: state.list[params.parentId]
+        data: state.list[fullPath]
       }
     }
     const githubName = rootState.user.userInfo.githubName
@@ -112,24 +113,22 @@ const actions = {
     if(!err) {
       const findDirs = data
         .filter(item => item.type === 'dir')
-        .map(item => {
-          return {
-            ...item,
-            _id: item.name+'_'+item.sha
-          }
+        .map(item => ({ ...item, repo: bookName, fullPath: `${bookName}/${item.path}`}))
+      const findFiles = data
+        .filter(item => item.type === 'file' && item.name.indexOf('.md') > -1)
+        .map(item => ({ ...item, repo: bookName, fullPath: `${bookName}/${item.path}`}))
+      commit(MUTATIONS.CATALOGS_SAVE, { key: fullPath, data: findDirs })
+      commit(MUTATIONS.CATALOGS_NOTE_MAP_SAVE, { key: fullPath, data: findFiles })
+      if(getChild) {
+        findDirs.forEach(item => {
+          dispatch(ACTIONS.CATALOGS_GET, {
+            path: item.path,
+            bookName,
+            force,
+            parentId: item._id
+          })
         })
-      const findFiles = data.filter(item => item.type === 'file')
-      const key = (params.parentId === 'root' || !params.parentId) ? bookName+'_root' : params.parentId
-      commit(MUTATIONS.CATALOGS_SAVE, { key, data: findDirs, bookName: rootState.books.curBook })
-      commit(MUTATIONS.CATALOGS_NOTE_MAP_SAVE, { key, data: findFiles })
-      findDirs.forEach(item => {
-        dispatch(ACTIONS.CATALOGS_GET, {
-          path: item.path,
-          bookName,
-          force,
-          parentId: item._id
-        })
-      })
+      }
     }
     return result
   },

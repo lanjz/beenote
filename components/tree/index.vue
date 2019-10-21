@@ -27,7 +27,7 @@
         curBook: state => state.books.curBook
       }),
       catalogList() {
-        return this.catalogs[this.curBook + '_root'] ? this.catalogs[this.curBook + '_root'].childNodes : []
+        return this.catalogs[this.curBook] ? this.catalogs[this.curBook].childNodes : []
         /*    return [
               {  _id: constKey.recentlyArticlesKey, name: '最近文档', hasChild: false, icon: 'icon-wendang' },
               { _id: this.curBook+'_root', name: '我的文件夹', hasChild: true },

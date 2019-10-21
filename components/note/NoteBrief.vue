@@ -21,7 +21,7 @@
                 class="article-item"
                 v-for="(item, index) in filterList"
                 :key="item.sha"
-                :class="{'act': item.sha === curNote}"
+                :class="{'act': isAct(item.path)}"
                 @click="chooseNote(item)">
                 <div class="article-item-title">{{item.name}}</div>
                 <div class="article-label">
@@ -54,7 +54,7 @@
 
   import bus from '../../utils/client/global/eventBus'
   import constKey from '../../utils/client/const'
-  import { returnCatalog } from '../../utils/client/blackHole'
+  import { returnCatalog, slitSuffix } from '../../utils/client/blackHole'
 
   export default {
     props: {
@@ -92,7 +92,7 @@
         }*/
 
       }),
-      ...mapGetters('user', ['isVisitor']),
+      ...mapGetters('user', ['isVisitor', 'githubName']),
       dragOptions() {
         return {
           animation: 200,
@@ -100,13 +100,14 @@
           disabled: false,
           ghostClass: "ghost"
         };
-      }
+      },
     },
     watch: {
       list: function (val) {
         if(val.length && (!this.curNode || this.curNode === 'new')) {
 //          this.chooseNote(val[0])
         }
+        this.getList()
       },
       filterKeys: function (val) {
         this.getList()
@@ -126,7 +127,8 @@
       ]),
       ...mapMutations('notes',[MUTATIONS.NOTE_CUR_UPDATE]),
       chooseNote: function (item) {
-         this.$router.push(`/${this.curBook}/${this.curCatalog}/${item.path}`)
+        if(this.curNote === `${this.githubName}/${item.fullPath}`) return
+        this.$router.push(`/${this.githubName}/${item.repo}/${slitSuffix(item.path)}`)
       },
       todoDelete(item) {
         this.$alert({
@@ -185,7 +187,16 @@
         if(!this.filterKeys) {
           this.filterList = this.list
         }
-        this.filterList = this.list.filter((item) => item.name.indexOf(this.filterKeys) > -1)
+        this.filterList = this.list
+          .filter((item) => item.name.indexOf(this.filterKeys) > -1)
+          .map(item => {
+            return {
+              ...item,
+            }
+          })
+      },
+      isAct(path) {
+        return this.curNote.indexOf(path) > -1
       }
     },
     mounted() {

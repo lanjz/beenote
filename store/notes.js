@@ -14,11 +14,10 @@ const state = () => (
 const getters = {
   curNoteInfo: state => {
     return state.list[state.curNote] || {}
-  }
+  },
 }
 const mutations = {
   [MUTATIONS.NOTE_LIST_SAVE](state, {data, start, key}) {
-    console.log('data', data)
     state.list[key] = data
     state.list = {...state.list}
     /*    state.list = JSON.parse(JSON.stringify(state.list))
@@ -84,7 +83,7 @@ const actions = {
       url: `/repos/${user}/${repo}/contents/${path}.md`
     })
     const getContent = fetch({
-      url: `/${fullPath}`,
+      url: `/${user}/${repo}/master/${path}.md`,
       baseUrl: 'raw'
     })
     const result = await Promise.all([findInfo, getContent])
