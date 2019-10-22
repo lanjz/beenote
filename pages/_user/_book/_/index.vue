@@ -196,7 +196,7 @@
         ]
         if($nuxt._route.query.type !== 'dir' && !this.notesMap[this.curNote]) {
           const {user, book, pathMatch} = $nuxt._route.params
-          const fullPath = `${user}/${book}/${pathMatch}.md`
+          const fullPath = `${user}/${book}/${pathMatch}`
           fetchArr.push(this[ACTIONS.NOTE_DES_GET]({
             fullPath,
             path: pathMatch,
@@ -210,7 +210,7 @@
               if (!this.catalogMapNotes[this.curCatalog] || !this.catalogMapNotes[this.curCatalog].length) {
                 this.noData = true
               } else {
-                this.$router.push(`/${this.githubName}/${this.catalogMapNotes[this.curCatalog][0].fullPath}`)
+                this.$router.push(`/${this.githubName}/${slitSuffix(this.catalogMapNotes[this.curCatalog][0].fullPath)}`)
               }
             }
 

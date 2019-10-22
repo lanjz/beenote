@@ -130,7 +130,7 @@
         return this.clickOpen === 1 ? false : true
       },
       isInChin() {
-        return this.curNote && this.curNote.indexOf(this.curNode.fullPath) > 0
+        return this.actCatalog && this.actCatalog.indexOf(this.curNode.fullPath) > -1
       }
     },
     watch: {
@@ -163,7 +163,7 @@
       async chooseCatalog(item) {
         this.toggleOpenDir(true)
 //        this.isOpen = true
-//         this[MUTATIONS.CATALOGS_CUR_SAVE](this.curNode._id)
+        this[MUTATIONS.CATALOGS_CUR_SAVE](`${this.curNode.fullPath}`)
         bus.$emit('emitFromCatalog', item || {
           ...this.curNode,
         })
@@ -305,6 +305,7 @@
   .catalogs-layout {
     .catalogs-layout {
       padding-left: 20px;
+      margin-top: 1px;
     }
   }
 

@@ -120,7 +120,12 @@
       ]),
       async init() {
         this.$showLoading()
-        await this[ACTIONS.CATALOGS_GET]({ getChild: false})
+        const result = await this[ACTIONS.CATALOGS_GET]({ getChild: false})
+        if(result.err){
+          this.$toast({
+            title: result.err.message
+          })
+        }
         this.$hideLoading()
       },
       dealParams() {

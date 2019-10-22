@@ -2,6 +2,7 @@ import fetch from '../utils/client/fetch/fetch.js'
 import * as MUTATIONS from './const/mutaions'
 import * as ACTIONS from './const/actions'
 import constKey from '../utils/client/const'
+import { getPath } from '../utils/client/blackHole'
 
 const state = () => (
   {
@@ -58,7 +59,7 @@ const mutations = {
     }
   },
   [MUTATIONS.CATALOGS_CUR_SAVE](state, id) {
-    state.curCatalog = id
+    state.curCatalog = getPath(id)
   },
   /**
    * 创建临时的目录
