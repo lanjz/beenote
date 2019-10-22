@@ -65,7 +65,7 @@
         }),
         store.dispatch('notes/NOTE_DES_GET',{
           fullPath,
-          path: pathMatch,
+          path: pathMatch+'.md',
           user,
           repo: book
         })
@@ -195,7 +195,7 @@
           const fullPath = `${user}/${book}/${pathMatch}`
           fetchArr.push(this[ACTIONS.NOTE_DES_GET]({
             fullPath,
-            path: pathMatch,
+            path: pathMatch+'.md',
             user,
             repo: book
           }))
@@ -244,31 +244,26 @@
       toCreateNote(arg) {
         this.$router.push(`/${this.curBook}/${returnCatalog(arg.catalogId)}/new`)
       },
-      /**
-       * @param <String> id 如果有则指定为当前id
-       * */
-      async doUpdateNote(arg = {}) {
+      doChooseCatalog(arg){
         if(this.catalogMapNotes[arg.fullPath] && this.catalogMapNotes[arg.fullPath].length) {
           this.$router.push(`/${this.githubName}/${slitSuffix(this.catalogMapNotes[arg.fullPath][0].fullPath)}`)
         } else {
           this.$router.push(`/${this.githubName}/${arg.fullPath}?type=dir`)
         }
         return
-        const {id, force, catalogId} = arg
+      },
+      /**
+       * @param <String> id 如果有则指定为当前id
+       * */
+      async doUpdateNote(arg = {}) {
+        const { force } = arg
         let getData = ''
-        if (this.curCatalog === constKey.recentlyArticlesKey) {
-          getData = await this[ACTIONS.NOTES_RECENTLY_GET]({force})
-        } else {
-          getData = await this[ACTIONS.NOTES_GET]({
-            force
-          })
-        }
-        let cusNodeId = id
-        if (getData.data.list.length && !cusNodeId) {
-          cusNodeId = getData.data.list[0]._id
-        }
-
-        this.$router.push(`/${this.curBook}/${returnCatalog(catalogId || this.curCatalog)}/${cusNodeId || ''}`)
+        getData = await this[ACTIONS.NOTE_DES_GET]({
+          force,
+          user: this.githubName,
+          repo: this.curBook,
+          path: arg.path,
+        })
       },
       initEmitOn() {
         /**
@@ -288,7 +283,7 @@
               catalogId: arg.catalogId
             })
           } else {
-            this.doUpdateNote(arg)
+            this.doChooseCatalog(arg)
           }
         })
         bus.$on('updateCurBooks', () => {

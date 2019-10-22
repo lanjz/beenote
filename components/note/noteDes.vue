@@ -93,6 +93,9 @@
       ...mapMutations('books', [
         MUTATIONS.BOOK_CUR_UPDATE
       ]),
+      ...mapMutations('notes',[
+        MUTATIONS.NOTE_MAP_SAVE
+      ]),
       ...mapActions('articles', [
         ACTIONS.ARTICLE_DES_GET,
         ACTIONS.ARTICLE_POST,
@@ -177,19 +180,25 @@
           }
         )
         this.$hideLoading()
-        if (!result.err) {
+        if(result.err){
           this.$toast({
-            title: '修改成功'
+            title: result.err.message
           })
+          return
+        } else {
+          if (!result.err) {
+            this.$toast({
+              title: '修改成功'
+            })
+          }
         }
-        console.log('result', result)
         this.cacheName = this.articleName
         this.cacheContent = this.content
-     /*   this.$emit('emitUpdateNote',
+        this.$emit('emitUpdateNote',
           {
             force: true,
-            id: this.curNote._id
-          })*/
+            path: this.curNote.path
+          })
       },
       async init() {
         const {id} = this.$route.params

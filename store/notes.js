@@ -1,3 +1,4 @@
+import { Base64 } from 'js-base64'
 import fetch from '../utils/client/fetch/fetch.js'
 import constKey from '../utils/client/const.js'
 import * as MUTATIONS from './const/mutaions'
@@ -70,23 +71,24 @@ const actions = {
    * */
   async [ACTIONS.NOTE_DES_GET]({state, commit, rootState}, arg = {}) {
     const {
-      fullPath,
       user,
       repo,
       path,
       force = false
     } = arg
-    if (!force && state.notesMap[path]) {
-      return {err: null, data: state.notesMap[path]}
+    const fullPath = `${user}/${repo}/${path}`
+    if (!force && state.notesMap[fullPath]) {
+      return {err: null, data: state.notesMap[fullPath]}
     }
     const findInfo = fetch({
-      url: `/repos/${user}/${repo}/contents/${path}.md`
+      url: `/repos/${user}/${repo}/contents/${path}`
     })
     const getContent = fetch({
-      url: `/${user}/${repo}/master/${path}.md`,
+      url: `/${user}/${repo}/master/${path}`,
       baseUrl: 'raw'
     })
     const result = await Promise.all([findInfo, getContent])
+
     if (!result[0].err && !result[1].err) {
       commit(MUTATIONS.NOTE_MAP_SAVE,
         {
@@ -149,7 +151,7 @@ const actions = {
       data: {
         message: 'update contents',
         sha: data.sha,
-        content: encodeURIComponent(btoa(data.content))
+        content: Base64.encode(data.content)
       }
     })
     return result

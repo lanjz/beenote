@@ -40,7 +40,7 @@ function fetchData(options) {
     url = `${SET.base.mockHost}/mock/15${url}`
   } else {
     // url = `${ApiBase}${url}`
-    url = `${ApiBase[baseUrl]}${url}?access_token=d25de6353a852203d81a5ab6c612a465b2c2e746`
+    url = `${ApiBase[baseUrl]}${url}?access_token=6d7e7417c20c09e60fddfcd816622e626d36bde3`
   }
   options.url = url
   options.method = options.method || 'get'
@@ -81,6 +81,9 @@ const doFetchData = function (options) {
         resolve(res)
       })
       .catch((err) => {
+        if(err.message === 'Request failed with status code 409') {
+          resolve({ err: new Error('sha无效,刷新页面重试'), data: '' })
+        }
         if(err.message === 'Request failed with status code 401') {
           resolve({ err: new Error('github Token无效'), data: '' })
         }
