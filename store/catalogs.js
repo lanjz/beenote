@@ -99,16 +99,22 @@ const actions = {
     let { force, path, bookName = rootState.books.curBook, getChild = true } = params
     // bookName: 仓库名
     const fullPath = path ? `${bookName}/${path}` : `${bookName}` // 保存目录做为key使用
+    let result = {}
     if(!force && fullPath && state.list[fullPath] && state.list[fullPath].childNodes) {
-      return {
+      result = {
         err: null,
-        data: state.list[fullPath]
+        data: [
+          ...state.list[fullPath].childNodes,
+          ...state.catalogMapNotes[fullPath]
+        ]
       }
+    } else {
+      const githubName = rootState.user.userInfo.githubName
+      result = await fetch({
+        url: path ? `/repos/${githubName}/${bookName}/contents/${path}` : `/repos/${githubName}/${bookName}/contents`
+      })
     }
-    const githubName = rootState.user.userInfo.githubName
-    const result = await fetch({
-      url: path ? `/repos/${githubName}/${bookName}/contents/${path}` : `/repos/${githubName}/${bookName}/contents`
-    })
+   
     const { err, data } = result
     if(!err) {
       const findDirs = data

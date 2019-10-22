@@ -190,17 +190,30 @@
        * 初始化的时候，获取note列表 最近文章
        * */
       async getNoteData() {
-        Promise.all([
+        const fetchArr = [
           this[ACTIONS.BOOK_LIST_GET](),
-          this[ACTIONS.CATALOGS_GET]({ force: true})
-        ])
+          this[ACTIONS.CATALOGS_GET]()
+        ]
+        if($nuxt._route.query.type !== 'dir' && !this.notesMap[this.curNote]) {
+          const {user, book, pathMatch} = $nuxt._route.params
+          const fullPath = `${user}/${book}/${pathMatch}.md`
+          fetchArr.push(this[ACTIONS.NOTE_DES_GET]({
+            fullPath,
+            path: pathMatch,
+            user,
+            repo: book
+          }))
+        }
+        Promise.all(fetchArr)
           .then((res) => {
-            console.log('this.catalogMapNotes[this.curCatalog]', this.catalogMapNotes[this.curCatalog])
-            if (!this.catalogMapNotes[this.curCatalog] || !this.catalogMapNotes[this.curCatalog].length) {
-              this.noData = true
-            } else {
-              this.$router.push(`/${this.githubName}/${this.catalogMapNotes[this.curCatalog][0].fullPath}`)
+            if($nuxt._route.query.type === 'dir' ) {
+              if (!this.catalogMapNotes[this.curCatalog] || !this.catalogMapNotes[this.curCatalog].length) {
+                this.noData = true
+              } else {
+                this.$router.push(`/${this.githubName}/${this.catalogMapNotes[this.curCatalog][0].fullPath}`)
+              }
             }
+
       /*      const data = res[0].data.list
             if (data.length && !this.noteId) {
               this.$router.push(`/${this.bookId}/${this.catalogId}/${data[0]._id}`)
@@ -295,6 +308,15 @@
       },
       async dealParams() {
         const {user, book, pathMatch} = $nuxt._route.params
+        this[MUTATIONS.BOOK_CUR_UPDATE](book)
+        if($nuxt._route.query.type === 'dir') {
+          // 如果当前是文件夹，而直接保存当前路径
+          this[MUTATIONS.CATALOGS_CUR_SAVE](`${book}/${pathMatch}`)
+        } else {
+          // 如果是文件，则需要获取上一层目录做为当前目录
+          this[MUTATIONS.CATALOGS_CUR_SAVE](`${book}/${findDirPath(pathMatch)}`)
+          this[MUTATIONS.NOTE_CUR_UPDATE](`${user}/${book}/${pathMatch}.md`)
+        }
         // this.catalog = catalog
         this.noteId = pathMatch
         this.pathMatch = pathMatch
