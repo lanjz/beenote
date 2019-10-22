@@ -40,7 +40,7 @@ function fetchData(options) {
     url = `${SET.base.mockHost}/mock/15${url}`
   } else {
     // url = `${ApiBase}${url}`
-    url = `${ApiBase[baseUrl]}${url}?access_token=45c7ab2b9ba9ad384da94bb8a19dd6b9390336f3`
+    url = `${ApiBase[baseUrl]}${url}?access_token=eff7946064a6c0430339d51ef935132bed7eaa92`
   }
   options.url = url
   options.method = options.method || 'get'
