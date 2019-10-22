@@ -41,16 +41,10 @@
     props: {
       curNote: {
         type: Object,
-      },
-      createToCatalogId: {
-        type: String
-      },
-      curNoteContent: {
-        type: Object
       }
     },
     data: function () {
-      const { title = '未命名', content = '' } = this.curNoteContent || {}
+      const { title = '未命名', content = '' } =  {}
       return {
         articleName: title,
         cacheName: title,
@@ -138,7 +132,6 @@
         const result = await this[ACTIONS.NOTE_POST]({
           content: this.content,
           title: this.articleName,
-          catalogId: this.createToCatalogId
         })
         if (!result.err) {
           this.$toast({
@@ -178,9 +171,9 @@
         this.$showLoading()
         const result = await this[ACTIONS.NOTE_PUT](
           {
-            _id: this.curNote._id,
-            title: this.articleName,
+            sha: this.curNote.sha,
             content: this.content,
+            path: this.curNote.path
           }
         )
         this.$hideLoading()
@@ -189,13 +182,14 @@
             title: '修改成功'
           })
         }
+        console.log('result', result)
         this.cacheName = this.articleName
         this.cacheContent = this.content
-        this.$emit('emitUpdateNote',
+     /*   this.$emit('emitUpdateNote',
           {
             force: true,
             id: this.curNote._id
-          })
+          })*/
       },
       async init() {
         const {id} = this.$route.params

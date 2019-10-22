@@ -10,9 +10,7 @@
     ></NoteBrief>
     <note-des
       :curNote="curEditNote"
-      :createToCatalogId="createToCatalogId"
       @emitUpdateNote="doUpdateNote"
-      :curNoteContent="curNoteContent"
       v-if="!noData"
     ></note-des>
     <noNotes v-else></noNotes>
@@ -85,9 +83,7 @@
     },
     data: function () {
       return {
-        createToCatalogId: '',
         noData: false,
-        curNoteContent: {}
 //        curEditNote: {}
       }
     },

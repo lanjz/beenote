@@ -141,11 +141,16 @@ const actions = {
     })
     return result
   },
-  async [ACTIONS.NOTE_PUT]({commit}, data) {
+  async [ACTIONS.NOTE_PUT]({commit, rootState}, data) {
+    const { user, books } = rootState
     const result = await fetch({
-      url: '/api/note',
+      url: `/repos/${user.userInfo.githubName}/${books.curBook}/contents/${data.path}`,
       method: 'put',
-      data
+      data: {
+        message: 'update contents',
+        sha: data.sha,
+        content: encodeURIComponent(btoa(data.content))
+      }
     })
     return result
   },
