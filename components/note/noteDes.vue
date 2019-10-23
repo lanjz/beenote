@@ -44,7 +44,7 @@
       }
     },
     data: function () {
-      const { title = '未命名', content = '' } =  {}
+      const {title = '未命名', content = ''} = {}
       return {
         articleName: title,
         cacheName: title,
@@ -67,6 +67,8 @@
     computed: {
       ...mapState({
         catalogs: state => state.catalogs.list,
+        curCatalog: state => state.catalogs.curCatalog,
+        catalogMapNote: state => state.catalogs.catalogMapNotes,
         bookList: state => state.books.list,
         articles: state => state.articles.list,
       }),
@@ -93,7 +95,7 @@
       ...mapMutations('books', [
         MUTATIONS.BOOK_CUR_UPDATE
       ]),
-      ...mapMutations('notes',[
+      ...mapMutations('notes', [
         MUTATIONS.NOTE_MAP_SAVE
       ]),
       ...mapActions('articles', [
@@ -109,8 +111,8 @@
         ACTIONS.NOTE_PUT,
         ACTIONS.NOTE_DELETE,
       ]),
-      getTitle(val){
-        if(!val) return val
+      getTitle(val) {
+        if (!val) return val
         return val.substring(0, val.length - 3)
       },
       setContent(val = {}) {
@@ -131,9 +133,19 @@
         this.doPutNote()
       },
       async todoSave() {
+        console.log(this.articleName)
         if (!this.articleName) return
-        this.$showLoading()
         const curPath = `${this.curNote.path}/${this.articleName}.md`
+        if (this.catalogMapNote[this.curCatalog]) {
+          const findPath = this.catalogMapNote[this.curCatalog].find(item => item.path === curPath)
+          if (findPath) {
+            this.$toast({
+              title: `该目录下已经存在"${this.articleName}"`
+            })
+            return
+          }
+        }
+        this.$showLoading()
         const result = await this[ACTIONS.NOTE_PUT](
           {
             content: this.content,
@@ -142,7 +154,7 @@
           }
         )
         this.$hideLoading()
-        if(result.err){
+        if (result.err) {
           this.$toast({
             title: result.err.message
           })
@@ -180,8 +192,7 @@
           }
         )
         this.$hideLoading()
-        console.log('result', result)
-        if(result.err){
+        if (result.err) {
           this.$toast({
             title: result.err.message
           })
@@ -219,25 +230,31 @@
       color: #adabab;
       padding-left: 0;
     }
+
     .form-content-layout {
       background: #fff;
       padding: 7px 20px;
     }
+
     .add-options-item {
       margin: 5px;
     }
+
     .from-select, .form-input {
       border: none;
       outline: none;
       padding: 0;
     }
+
     .form-group:not(:first-child) {
       margin: 0;
     }
+
     .form-content-layout-select {
       padding-top: 18px;
       padding-bottom: 18px;
     }
+
     .markdown-layout {
       min-height: 500px;
       /*position: relative;*/
@@ -249,9 +266,11 @@
     .article-content {
       padding: 40px;
     }
+
     .form-label-layout {
       display: none;
     }
+
     .from-select, .form-input {
       border: none;
       outline: none;
@@ -265,11 +284,13 @@
     height: 45px;
     line-height: 45px;
     padding: 0 15px;
+
     .operate-list-operate {
       .iconfont {
         font-size: 20px;
         cursor: pointer;
       }
+
       .icon-box {
         border: solid 1px @tree-color;
         border-radius: 50%;
@@ -279,6 +300,7 @@
         text-align: center;
         display: inline-block;
       }
+
       .icon-box.act {
         background: @highlight-color;
         color: #fff;
@@ -300,15 +322,19 @@
     .form-label-layout {
       display: none;
     }
+
     .markdown-layout {
       padding: 0;
     }
+
     .article-content {
       padding: 0;
     }
+
     .scroll-box {
       overflow: hidden;
     }
+
     .form-group, .form-layout {
       height: 100%;
     }

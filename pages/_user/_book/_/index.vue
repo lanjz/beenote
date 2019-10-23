@@ -44,6 +44,10 @@
     async fetch(context) {
       const {store, params} = context
       const {user, book, pathMatch} = params
+      // 如果是新建文件，直接渲染
+      if(context.route.query.new){
+        return
+      }
       // 不确定当前访问的是目录还是
       const getDirPath = findDirPath(pathMatch)
       const fullPath = `${user}/${book}/${pathMatch}.md`

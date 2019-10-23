@@ -65,10 +65,10 @@
       ></TreeItem>
     </div>
     <TreeItem
-      v-if="newDir.parentId === curNode['_id']"
+      v-if="newDir.parentPath === actCatalog"
       :curNode="newDir"
       @emitExitNewDir="exitNewDir"
-      :isNewDir="newDir.parentId === curNode['_id']"
+      :isNewDir="doNewDir"
     ></TreeItem>
   </div>
 </template>
@@ -104,7 +104,8 @@
           show: false,
           isNew: true
         },
-        clickOpen: ''
+        clickOpen: '',
+        doNewDir: false
       }
     },
     computed: {
@@ -117,6 +118,7 @@
         curNote: state => state.notes.curNote,
       }),
       ...mapGetters('catalogs', ['treeChainList']),
+      ...mapGetters('user', ['githubName']),
       hasChild() {
         const path = `${this.curNode['repo']}/${this.curNode['path']}`
         return this.catalogs[path]
@@ -146,7 +148,11 @@
         MUTATIONS.CATALOGS_CUR_SAVE,
         MUTATIONS.CATALOGS_TEMPLATE_CREATE,
         MUTATIONS.CATALOGS_OPEN_TOGGLE,
-        MUTATIONS.CATALOGS_OPEN_RESET
+        MUTATIONS.CATALOGS_OPEN_RESET,
+        MUTATIONS.CATALOGS_SAVE
+      ]),
+      ...mapMutations('notes', [
+        MUTATIONS.NOTE_CUR_UPDATE,
       ]),
       ...mapActions('catalogs', [
         ACTIONS.CATALOGS_GET,
@@ -191,11 +197,10 @@
         this.renameCatalog = true
       },
       todoCreateFile() {
-        this.chooseCatalog({
-          catalogId: this.curNode._id,
-          isNew: true
-        })
         this.closeMenu()
+        this[MUTATIONS.NOTE_CUR_UPDATE]('NEW')
+        this[MUTATIONS.CATALOGS_CUR_SAVE](this.curNode.fullPath)
+        this.$router.push(`/${this.githubName}/${this.actCatalog}?type=dir&new=1`)
       },
       todoDelete() {
         this.closeMenu()
@@ -225,7 +230,7 @@
       doRename() {
         this.renameCatalog = false
         if (this.isNewDir) {
-          this.addCatalog(this.renameValue, this.curNode.parentId)
+          this.addCatalog(this.renameValue, this.curNode.parentPath)
           return
         }
         if (this.renameValue && this.renameValue !== this.curNode.name) {
@@ -251,7 +256,20 @@
           this.getDate(item, true, true)
         }
       },
-      async addCatalog(name, parentId) {
+      async addCatalog(name, parentPath) {
+        console.log('parentPath', parentPath)
+        const fullPath = `${this.curBook}/${parentPath}`
+        const data = [
+          ...this.catalogs[fullPath],
+          {
+            path: `${fullPath.substring(this.curBook.length)}/${name}`,
+            fullPath: `${fullPath}/${name}`
+          }
+        ]
+        this[MUTATIONS.CATALOGS_SAVE]({
+          key: `${this.curBook}/${parentPath}`
+        })
+        return
         const result = await this[ACTIONS.CATALOGS_POST]({
           parentId: parentId.indexOf('root') > -1 ? 'root' : parentId,
           name,
@@ -260,15 +278,16 @@
         this.$emit('emitExitNewDir')
       },
       exitNewDir() {
-        this.getDate(this.curNode, true, true)
+        // this.getDate(this.curNode, true, true)
         this.newDir.parentId = ''
       },
       doCreateTemDir() {
         this.toggleOpenDir(true)
 //        this.isOpen = true
         this.closeMenu()
-        this.newDir.parentId = this.curNode['_id']
-        this.newDir.parentParentId = this.curNode['parentId']
+        this.doNewDir = true
+        this.newDir.parentPath = this.actCatalog
+        // this.newDir.parentParentId = this.curNode['parentId']
       },
       async getDate(treeNode, isParentId, force) {
         const params = treeNode || this.curNode

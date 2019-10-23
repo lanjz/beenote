@@ -128,7 +128,7 @@ const actions = {
         url: path ? `/repos/${githubName}/${bookName}/contents/${path}` : `/repos/${githubName}/${bookName}/contents`
       })
     }
-   
+
     const { err, data } = result
     if(!err) {
       // 接口返回的数数据既包含文件夹目录也包含文件，所以过滤出来，分开保存
@@ -145,7 +145,7 @@ const actions = {
           dispatch(ACTIONS.CATALOGS_GET, {
             path: item.path,
             bookName,
-            force,
+            force: false,
           })
         })
       }
