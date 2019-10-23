@@ -65,7 +65,7 @@
       ></TreeItem>
     </div>
     <TreeItem
-      v-if="newDir.parentPath === actCatalog"
+      v-if="doNewDir"
       :curNode="newDir"
       @emitExitNewDir="exitNewDir"
       :isNewDir="doNewDir"
@@ -99,7 +99,6 @@
         operateMenuStyle: {left: -1, top: '50%'},
         renameValue: '',
         newDir: {
-          parentId: '',
           name: '新建文件夹',
           show: false,
           isNew: true
@@ -149,7 +148,8 @@
         MUTATIONS.CATALOGS_TEMPLATE_CREATE,
         MUTATIONS.CATALOGS_OPEN_TOGGLE,
         MUTATIONS.CATALOGS_OPEN_RESET,
-        MUTATIONS.CATALOGS_SAVE
+        MUTATIONS.CATALOGS_SAVE,
+        MUTATIONS.CATALOGS_NOTE_MAP_SAVE,
       ]),
       ...mapMutations('notes', [
         MUTATIONS.NOTE_CUR_UPDATE,
@@ -258,35 +258,37 @@
       },
       async addCatalog(name, parentPath) {
         console.log('parentPath', parentPath)
-        const fullPath = `${this.curBook}/${parentPath}`
+        const getData = (this.catalogs[parentPath] && this.catalogs[parentPath].childNodes) ?
+          this.catalogs[parentPath].childNodes : []
         const data = [
-          ...this.catalogs[fullPath],
+          ...getData,
           {
-            path: `${fullPath.substring(this.curBook.length)}/${name}`,
-            fullPath: `${fullPath}/${name}`
+            path: `${parentPath.substring(this.curBook.length+1)}/${name}`,
+            fullPath: `${parentPath}/${name}`,
+            name: `${name}`
           }
         ]
         this[MUTATIONS.CATALOGS_SAVE]({
-          key: `${this.curBook}/${parentPath}`
+          key: parentPath,
+          data
         })
-        return
-        const result = await this[ACTIONS.CATALOGS_POST]({
-          parentId: parentId.indexOf('root') > -1 ? 'root' : parentId,
-          name,
-          bookId: this.curBook
+        this[MUTATIONS.CATALOGS_NOTE_MAP_SAVE]({
+          key: `${parentPath}/${name}`,
+          data: []
         })
         this.$emit('emitExitNewDir')
       },
       exitNewDir() {
-        // this.getDate(this.curNode, true, true)
-        this.newDir.parentId = ''
+        this.newDir.parentPath = ''
+        this.doNewDir = false
       },
       doCreateTemDir() {
         this.toggleOpenDir(true)
 //        this.isOpen = true
         this.closeMenu()
         this.doNewDir = true
-        this.newDir.parentPath = this.actCatalog
+        console.log('this.curNode.fullPath', this.curNode.fullPath)
+        this.newDir.parentPath = this.curNode.fullPath
         // this.newDir.parentParentId = this.curNode['parentId']
       },
       async getDate(treeNode, isParentId, force) {
