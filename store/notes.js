@@ -136,10 +136,15 @@ const actions = {
     })
     return result
   },
-  async [ACTIONS.NOTE_DELETE]({commit}, data) {
+  async [ACTIONS.NOTE_DELETE]({commit, rootState}, data) {
+    const { user, books } = rootState
     const result = await fetch({
-      url: `/api/note/${data._id}`,
+      url: `/repos/${user.userInfo.githubName}/${books.curBook}/contents/${data.path}`,
       method: 'DELETE',
+      data: {
+        message: `delete ${books.curBook}/${data.path}`,
+        sha: data.sha
+      }
     })
     return result
   },
@@ -149,7 +154,7 @@ const actions = {
       url: `/repos/${user.userInfo.githubName}/${books.curBook}/contents/${data.path}`,
       method: 'put',
       data: {
-        message: `${data.new ? 'add:' : 'update:'}${books.curBook}/${data.path} at ${new Date}`,
+        message: `${data.newFile ? 'add:' : 'update:'}${books.curBook}/${data.path} at ${new Date}`,
         sha: data.sha,
         content: Base64.encode(data.content)
       }

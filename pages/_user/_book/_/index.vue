@@ -276,20 +276,44 @@
        * */
       async doUpdateNote(arg = {}) {
         const { force } = arg
-        let getData = ''
-        getData = await this[ACTIONS.NOTE_DES_GET]({
-          force,
-          user: this.githubName,
-          repo: this.curBook,
-          path: arg.path,
-        })
+        let fetchArr = [Promise.resolve({})]
+        // 如果是新增文件或修改文件，重新拉这个文件的数据
+        if(arg.newFile || arg.modify) {
+          fetchArr.push(
+            this[ACTIONS.NOTE_DES_GET]({
+              force,
+              user: this.githubName,
+              repo: this.curBook,
+              path: arg.path, // path是包含后缀的路径
+            })
+          )
+        }
+        // 如果新增或删除，需要更新一下所在目录
+        if(arg.newFile || arg.delete) {
+          fetchArr.push(
+            this[ACTIONS.CATALOGS_GET]({
+              force,
+              path: findDirPath(arg.path)
+            })
+          )
+        }
+        this.$showLoading()
+        const getData = await Promise.all(fetchArr)
+        this.$hideLoading()
+        const fineErr = getData.find(item => item.err)
+        if(fineErr && fineErr.err) {
+          this.$toast('重新接取数失败')
+        }
         if(arg.newFile) {
           this.newFileNode = null
-          this[ACTIONS.CATALOGS_GET]({
-            force: true,
-            path: findDirPath(arg.path)
-          })
+          // 新增的话跳到新增的文件路径
           this.$router.push(`/${this.githubName}/${this.curBook}/${slitSuffix(arg.path)}`)
+        } else if(arg.delete) {
+          // 判断当前删除的文件是否是当前选择的文件，如果是的话需要重新自动先个当前目录下的文件
+          if(this.curNote.indexOf(arg.path) !== this.curNote.length - arg.path.length) {
+            return
+          }
+          this.$router.push(`/${this.githubName}/${this.curBook}/${findDirPath(arg.path)}?type=dir`)
         }
       },
       initEmitOn() {

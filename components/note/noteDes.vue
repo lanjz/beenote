@@ -137,7 +137,8 @@
         const result = await this[ACTIONS.NOTE_PUT](
           {
             content: this.content,
-            path: curPath
+            path: curPath,
+            newFile: true
           }
         )
         this.$hideLoading()
@@ -179,6 +180,7 @@
           }
         )
         this.$hideLoading()
+        console.log('result', result)
         if(result.err){
           this.$toast({
             title: result.err.message
@@ -196,7 +198,8 @@
         this.$emit('emitUpdateNote',
           {
             force: true,
-            path: this.curNote.path
+            path: this.curNote.path,
+            modify: true
           })
       },
     },

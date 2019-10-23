@@ -132,7 +132,7 @@
       },
       todoDelete(item) {
         this.$alert({
-          title: `你确认要删除"${item.title}"`,
+          title: `你确认要删除"${item.name}"`,
         })
           .then(async res => {
             if(res) {
@@ -142,19 +142,18 @@
       },
       async doDeleteNote(item = {}) {
         this.$showLoading()
-        const result = await this[ACTIONS.NOTE_DELETE]({
-          _id: item._id
-        })
+        const result = await this[ACTIONS.NOTE_DELETE](item)
         this.$hideLoading()
         if(!result.err) {
           this.$toast({
             title: '删除成功'
           })
         }
-        if(this.curNote === item._id) {
-          this[MUTATIONS.NOTE_CUR_UPDATE]('')
-        }
-        this.$emit('emitUpdateNote', {force: true})
+        this.$emit('emitUpdateNote', {
+          force: true,
+          path: item.path,
+          delete: true
+        })
       },
       shortcutAdd() {
         this.$emit('emitToCreateNote')
