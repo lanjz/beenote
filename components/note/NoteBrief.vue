@@ -20,7 +20,7 @@
                 :id="item._id"
                 class="article-item"
                 v-for="(item, index) in filterList"
-                :key="item.sha"
+                :key="item.sha+index"
                 :class="{'act': isAct(item.path)}"
                 @click="chooseNote(item)">
                 <div class="article-item-title">{{item.name}}</div>
@@ -157,18 +157,7 @@
         this.$emit('emitUpdateNote', {force: true})
       },
       shortcutAdd() {
-        const catalogId = this.notesMap[this.curNote].catalogId
-        if(!catalogId){
-          this.$alert({
-            title: 'shortcutAdd',
-            content: '缺少catalogId，无法创建笔记'
-          })
-          return
-        }
-        this.$emit('emitToCreateNote', {
-          _id: 'new',
-          catalogId
-        })
+        this.$emit('emitToCreateNote')
         /*this.chooseCatalog({
           schemaId: item._id,
           catalogId: this.curNode._id,

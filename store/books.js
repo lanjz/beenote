@@ -51,11 +51,12 @@ const actions = {
         start
       }
     })
+    console.log('result', result)
     const { err, data } = result
-    const list = data.map((item) => {
-      return {name: item.name, _id: item.id}
-    })
     if(!err) {
+      const list = data.map((item) => {
+        return {name: item.name, _id: item.id}
+      })
       commit(MUTATIONS.BOOK_LIST_SAVE, { data: list, start })
     }
     return result

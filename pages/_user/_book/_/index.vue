@@ -10,6 +10,7 @@
     ></NoteBrief>
     <note-des
       :curNote="curEditNote"
+      :newFileNode = 'newFileNode'
       @emitUpdateNote="doUpdateNote"
       v-if="!noData"
     ></note-des>
@@ -84,6 +85,7 @@
     data: function () {
       return {
         noData: false,
+        newFileNode: null
 //        curEditNote: {}
       }
     },
@@ -129,12 +131,10 @@
       },
       curEditNote: function () {
         const findNote = this.notesMap[this.curNote]
-        if (!findNote) {
-          return {
-            _id: 'new'
-          }
+        if(this.newFileNode) {
+          return { ...this.newFileNode }
         }
-        return findNote
+        return { ...findNote } || {}
       }
     },
     methods: {
@@ -199,11 +199,22 @@
             user,
             repo: book
           }))
+
         }
         Promise.all(fetchArr)
           .then((res) => {
+            const findErr = res.find(item => item.err)
+            if(findErr && findErr.err) {
+              this.$alert({
+                title: 'getBookData',
+                content: findErr.err.message
+              })
+              return
+            }
             if($nuxt._route.query.type === 'dir' ) {
-              if (!this.catalogMapNotes[this.curCatalog] || !this.catalogMapNotes[this.curCatalog].length) {
+              if($nuxt._route.query.new){
+                this.todoCreateNewFile()
+              } else if (!this.catalogMapNotes[this.curCatalog] || !this.catalogMapNotes[this.curCatalog].length) {
                 this.noData = true
               } else {
                 this.$router.push(`/${this.githubName}/${slitSuffix(this.catalogMapNotes[this.curCatalog][0].fullPath)}`)
@@ -241,8 +252,16 @@
             })
           })
       },
+      todoCreateNewFile() {
+        this.newFileNode = {
+          repo: this.curBook,
+          path: this.curCatalog.replace(`${this.curBook}/`, ''),
+          newFile: true
+        }
+      },
       toCreateNote(arg) {
-        this.$router.push(`/${this.curBook}/${returnCatalog(arg.catalogId)}/new`)
+        this[MUTATIONS.NOTE_CUR_UPDATE]('NEW')
+        this.$router.push(`/${this.githubName}/${this.curCatalog}?type=dir&new=1`)
       },
       doChooseCatalog(arg){
         if(this.catalogMapNotes[arg.fullPath] && this.catalogMapNotes[arg.fullPath].length) {
@@ -264,6 +283,14 @@
           repo: this.curBook,
           path: arg.path,
         })
+        if(arg.newFile) {
+          this.newFileNode = null
+          this[ACTIONS.CATALOGS_GET]({
+            force: true,
+            path: findDirPath(arg.path)
+          })
+          this.$router.push(`/${this.githubName}/${this.curBook}/${slitSuffix(arg.path)}`)
+        }
       },
       initEmitOn() {
         /**

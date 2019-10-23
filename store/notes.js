@@ -83,18 +83,18 @@ const actions = {
     const findInfo = fetch({
       url: `/repos/${user}/${repo}/contents/${path}`
     })
-    const getContent = fetch({
+    // 可以直接解码出原来的数据，所以不需要在获取内容了
+   /* const getContent = fetch({
       url: `/${user}/${repo}/master/${path}`,
       baseUrl: 'raw'
-    })
-    const result = await Promise.all([findInfo, getContent])
-
-    if (!result[0].err && !result[1].err) {
+    })*/
+    const result = await Promise.all([findInfo])
+    if (!result[0].err) {
       commit(MUTATIONS.NOTE_MAP_SAVE,
         {
           data: {
             ...result[0].data,
-            contentMD: result[1].data
+            contentMD: Base64.decode(result[0].data.content)
           },
           key: fullPath
         })
@@ -149,7 +149,7 @@ const actions = {
       url: `/repos/${user.userInfo.githubName}/${books.curBook}/contents/${data.path}`,
       method: 'put',
       data: {
-        message: 'update contents',
+        message: `${data.new ? 'add:' : 'update:'}${books.curBook}/${data.path} at ${new Date}`,
         sha: data.sha,
         content: Base64.encode(data.content)
       }

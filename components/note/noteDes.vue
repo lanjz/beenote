@@ -8,7 +8,7 @@
       <div class="schema-operate" v-if="!isVisitor">
         <span class="schema-operate-btn"
               :class="{'disable-btn': !true}"
-              v-show="curNote._id==='new'"
+              v-show="curNote.newFile"
               @click="todoSave">保存</span>
       </div>
     </div>
@@ -23,7 +23,7 @@
         <!--<div class="noSave" v-show="dataHasChange"></div>-->
         <div class="flex-1 relative">
           <div class="form-layout theme-1">
-            <markdown-edit v-model="content" :onlyView="isVisitor" :showEdit="curNote._id==='new'"></markdown-edit>
+            <markdown-edit v-model="content" :onlyView="isVisitor" :showEdit="curNote.newFile"></markdown-edit>
           </div>
         </div>
       </div>
@@ -118,9 +118,10 @@
         this.cacheName = this.articleName = this.getTitle(val.name) || '未命名'
       },
       async todoEdit(force = false) {
+        return
         if (!force) {
           if (
-            this.curNote._id === 'new' ||
+            this.curNote.newFile ||
             !this.articleName ||
             this.cacheName === this.articleName
           ) {
@@ -132,41 +133,39 @@
       async todoSave() {
         if (!this.articleName) return
         this.$showLoading()
-        const result = await this[ACTIONS.NOTE_POST]({
-          content: this.content,
-          title: this.articleName,
-        })
-        if (!result.err) {
-          this.$toast({
-            title: '添加成功'
-          })
-          const id = result.data.id
-          this.$emit('emitUpdateNote', {
-            id,
-            force: true
-          })
-        }
-        this.$hideLoading()
-      },
-      async getData(id, force = false) {
-        this.editId = id
-        this.$showLoading()
-        const result = await this[ACTIONS.ARTICLE_DES_GET]({
-          _id: id,
-          force
-        })
-        if (!result.err) {
-          const {bookId, catalogId} = result.data
-          const {MOCK} = process.env
-          if (!MOCK) {
-            this[MUTATIONS.BOOK_CUR_UPDATE](bookId)
+        const curPath = `${this.curNote.path}/${this.articleName}.md`
+        const result = await this[ACTIONS.NOTE_PUT](
+          {
+            content: this.content,
+            path: curPath
           }
-        }
+        )
         this.$hideLoading()
+        if(result.err){
+          this.$toast({
+            title: result.err.message
+          })
+          return
+        } else {
+          if (!result.err) {
+            this.$toast({
+              title: '添加成功'
+            })
+          }
+          this.cacheName = this.articleName
+          this.cacheContent = this.content
+          this.$emit('emitUpdateNote',
+            {
+              force: true,
+              path: result.data.content.path,
+              newFile: true,
+            })
+        }
+
       },
       async toDoPutNote() {
         if (this.isVisitor) return
-        if (!this.dataHasChange || this.curNote._id === 'new') return
+        if (!this.dataHasChange || this.curNote.newFile) return
         this.doPutNote()
       },
       async doPutNote() {
@@ -200,16 +199,8 @@
             path: this.curNote.path
           })
       },
-      async init() {
-        const {id} = this.$route.params
-        if (id) {
-          this.editId = id
-          await this.getData(id)
-        }
-      }
     },
     mounted() {
-      this.init()
     }
   }
 </script>

@@ -47,9 +47,12 @@ const mutations = {
           childNodes: data
       } }
     }
-    const findRepoName = key.substring(0, key.indexOf('/'))
+    const findRepoName = key.indexOf('/')>-1 ? key.substring(0, key.indexOf('/')) : key
+    // 这一步会把childNodes属性覆盖掉，所以要把之前属性加上
     data.forEach((item) => {
+      const originData = state.list[`${findRepoName}/${item.path}`] || {}
       list[`${findRepoName}/${item.path}`] = {
+        ...originData,
         ...item
       }
     })
@@ -93,15 +96,25 @@ const mutations = {
   },
 }
 
+/**
+ * @params <force> {'' || bool} 是否强行刷新数据
+ * @params <path> {'' || string} 不包含仓库名的路径地址
+ * @params <bookName> {'' || string} 所属仓库
+ * @params <getChild> {'' || bool} 是否要获取子目录
+ * */
 const actions = {
   async [ACTIONS.CATALOGS_GET]({ state, commit, rootState, dispatch }, params = {
     force: false,
   }) {
     let { force, path, bookName = rootState.books.curBook, getChild = true } = params
     // bookName: 仓库名
-    const fullPath = path ? `${bookName}/${path}` : `${bookName}` // 保存目录做为key使用
+    const fullPath = path ? `${bookName}/${path}` : `${bookName}` // 为了保存key的唯一性，所以path前加上仓库名
     let result = {}
-    if(!force && fullPath && state.list[fullPath] && state.list[fullPath].childNodes) {
+    const { list, catalogMapNotes } = state
+    // 如果list或者catalogMapNotes包含当前key的数据，说明这个数据获取过了
+    const hasData = (list[fullPath] && list[fullPath].childNodes) || catalogMapNotes[fullPath]
+    // 对于获取过的数据，直接返回
+    if(!force &&hasData) {
       result = {
         err: null,
         data: [
@@ -118,21 +131,21 @@ const actions = {
    
     const { err, data } = result
     if(!err) {
+      // 接口返回的数数据既包含文件夹目录也包含文件，所以过滤出来，分开保存
       const findDirs = data
         .filter(item => item.type === 'dir')
         .map(item => ({ ...item, repo: bookName, fullPath: `${bookName}/${item.path}`}))
       const findFiles = data
         .filter(item => item.type === 'file' && item.name.indexOf('.md') > -1)
         .map(item => ({ ...item, repo: bookName, fullPath: `${bookName}/${item.path}`}))
-      commit(MUTATIONS.CATALOGS_SAVE, { key: fullPath, data: findDirs })
-      commit(MUTATIONS.CATALOGS_NOTE_MAP_SAVE, { key: fullPath, data: findFiles })
+      commit(MUTATIONS.CATALOGS_SAVE, { key: fullPath, data: [ ...findDirs ] })
+      commit(MUTATIONS.CATALOGS_NOTE_MAP_SAVE, { key: fullPath, data: [ ...findFiles ] })
       if(getChild) {
         findDirs.forEach(item => {
           dispatch(ACTIONS.CATALOGS_GET, {
             path: item.path,
             bookName,
             force,
-            parentId: item._id
           })
         })
       }

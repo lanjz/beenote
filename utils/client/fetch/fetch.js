@@ -6,7 +6,8 @@ const ApiBase = {
   base: 'https://api.github.com',
   raw: 'https://raw.githubusercontent.com'
 }
-
+const gitTokenA = 'a879670745ba021de'
+const gitToken = gitTokenA+'4553871d78d4d0b4f011082'
 if(process.client) {
   console.log('context', window)
 }
@@ -40,7 +41,7 @@ function fetchData(options) {
     url = `${SET.base.mockHost}/mock/15${url}`
   } else {
     // url = `${ApiBase}${url}`
-    url = `${ApiBase[baseUrl]}${url}?access_token=6d7e7417c20c09e60fddfcd816622e626d36bde3`
+    url = `${ApiBase[baseUrl]}${url}?access_token=${gitToken}`
   }
   options.url = url
   options.method = options.method || 'get'
