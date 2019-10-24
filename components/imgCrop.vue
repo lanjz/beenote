@@ -18,7 +18,6 @@
     methods: {
       changFile() {
         const inputDOM = this.$refs.inputer;
-        console.log('134')
         if(!inputDOM.files.length) return
         const getFile = inputDOM.files[0];
         if(getFile.type.indexOf('image') > -1 && getFile.size > 1048576 * 5) {

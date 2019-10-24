@@ -34,6 +34,7 @@
         v-model.trim="renameValue"
         class="edit-catalogs-input line-ellipsis"
         @blur="doRename"
+        @click="(e) => e.stopPropagation()"
         v-focus:select
 
       />
@@ -164,6 +165,10 @@
         ACTIONS.ARTICLE_RECENTLY_LIST_GET,
       ]),
       toggleOpenDir(force = false, catalogId) {
+        if(force) {
+          this.clickOpen = 2
+          return
+        }
         this.clickOpen = this.clickOpen === 2 ? 1 : 2
       },
       async chooseCatalog(item) {
@@ -286,13 +291,11 @@
       },
       doCreateTemDir() {
         this.toggleOpenDir(true)
-//        this.isOpen = true
         this.closeMenu()
         this.doNewDir = true
         console.log('this.curNode.fullPath', this.curNode.fullPath)
         this.newDir.parentPath = this.curNode.fullPath
         this.newDir.rootModifyPath = this.curNode.rootModifyPath || this.curNode.path
-        // this.newDir.parentParentId = this.curNode['parentId']
       },
       async getDate(treeNode, isParentId, force) {
         const params = treeNode || this.curNode

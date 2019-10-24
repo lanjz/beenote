@@ -134,7 +134,6 @@ const actions = {
       })
     }
 
-    console.log('ABC')
     const { err, data } = result
     let PromiseAll = [Promise.resolve({})]
     if(!err) {

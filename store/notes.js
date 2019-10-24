@@ -3,6 +3,7 @@ import fetch from '../utils/client/fetch/fetch.js'
 import constKey from '../utils/client/const.js'
 import * as MUTATIONS from './const/mutaions'
 import * as ACTIONS from './const/actions'
+import { getCurTime } from '../utils/client/blackHole'
 
 const state = () => (
   {
@@ -142,7 +143,7 @@ const actions = {
       url: `/repos/${user.userInfo.githubName}/${books.curBook}/contents/${data.path}`,
       method: 'DELETE',
       data: {
-        message: `delete ${books.curBook}/${data.path}`,
+        message: `DELETE: ${books.curBook}/${data.path} At ${getCurTime()}`,
         sha: data.sha
       }
     })
@@ -154,7 +155,7 @@ const actions = {
       url: `/repos/${user.userInfo.githubName}/${books.curBook}/contents/${data.path}`,
       method: 'put',
       data: {
-        message: `${data.newFile ? 'add:' : 'update:'}${books.curBook}/${data.path} at ${new Date}`,
+        message: `${data.newFile ? 'ADD: ' : 'UPDATE: '}${books.curBook}/${data.path} At ${getCurTime()}`,
         sha: data.sha,
         content: Base64.encode(data.content)
       }
