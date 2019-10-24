@@ -114,6 +114,7 @@ const actions = {
     // 如果list或者catalogMapNotes包含当前key的数据，说明这个数据获取过了
     const hasData = (list[fullPath] && list[fullPath].childNodes) || catalogMapNotes[fullPath]
     // 对于获取过的数据，直接返回
+    // 之所以这里没直接return，是因为服务端渲染时会先获取一个目录的数据，不能确定所有的数据都加载过了，所以这里需要继续循环
     if(!force &&hasData) {
       result = {
         err: null,
@@ -122,6 +123,10 @@ const actions = {
           ...state.catalogMapNotes[fullPath]
         ]
       }
+      // 首屏渲染只会加一个key的数据的加上默认的root，如果大于两个，说明是全部加载过的，就是直接return
+      if(Object.keys(list[fullPath]).length > 2) {
+        return result
+      }
     } else {
       const githubName = rootState.user.userInfo.githubName
       result = await fetch({
@@ -129,7 +134,9 @@ const actions = {
       })
     }
 
+    console.log('ABC')
     const { err, data } = result
+    let PromiseAll = [Promise.resolve({})]
     if(!err) {
       // 接口返回的数数据既包含文件夹目录也包含文件，所以过滤出来，分开保存
       const findDirs = data
@@ -142,15 +149,16 @@ const actions = {
       commit(MUTATIONS.CATALOGS_NOTE_MAP_SAVE, { key: fullPath, data: [ ...findFiles ] })
       if(getChild) {
         findDirs.forEach(item => {
-          dispatch(ACTIONS.CATALOGS_GET, {
+          PromiseAll.push(dispatch(ACTIONS.CATALOGS_GET, {
             path: item.path,
             bookName,
-            force: false,
-          })
+            force,
+            isTree: true
+          }))
         })
       }
     }
-    return result
+    return await Promise.all(PromiseAll)
   },
   /* eslint-disable no-unused-vars */
   async [ACTIONS.CATALOGS_POST]({ commit }, data) {

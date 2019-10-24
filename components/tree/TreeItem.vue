@@ -257,15 +257,17 @@
         }
       },
       async addCatalog(name, parentPath) {
-        console.log('parentPath', parentPath)
         const getData = (this.catalogs[parentPath] && this.catalogs[parentPath].childNodes) ?
           this.catalogs[parentPath].childNodes : []
+        const curPath = `${parentPath.substring(this.curBook.length+1)}/${name}`
         const data = [
           ...getData,
           {
-            path: `${parentPath.substring(this.curBook.length+1)}/${name}`,
+            path: curPath,
             fullPath: `${parentPath}/${name}`,
-            name: `${name}`
+            name: `${name}`,
+            type: 'dir',
+            rootModifyPath: this.curNode.rootModifyPath
           }
         ]
         this[MUTATIONS.CATALOGS_SAVE]({
@@ -289,6 +291,7 @@
         this.doNewDir = true
         console.log('this.curNode.fullPath', this.curNode.fullPath)
         this.newDir.parentPath = this.curNode.fullPath
+        this.newDir.rootModifyPath = this.curNode.rootModifyPath || this.curNode.path
         // this.newDir.parentParentId = this.curNode['parentId']
       },
       async getDate(treeNode, isParentId, force) {

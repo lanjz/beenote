@@ -121,6 +121,7 @@
         curNote: state => state.notes.curNote,
         showDir: state => state.config.showDir,
         curCatalog: state => state.catalogs.curCatalog,
+        catalogs: state => state.catalogs.list,
         catalogMapNotes: state => state.catalogs.catalogMapNotes,
         curUserInfo: state => state.user.curUserInfo,
         pageExtend: state => state.config.extend,
@@ -205,6 +206,7 @@
           }))
 
         }
+        this.$showLoading()
         Promise.all(fetchArr)
           .then((res) => {
             const findErr = res.find(item => item.err)
@@ -255,6 +257,9 @@
               content: err.message
             })
           })
+          .finally(() => {
+            this.$hideLoading()
+          })
       },
       todoCreateNewFile() {
         this.newFileNode = {
@@ -294,10 +299,12 @@
         }
         // 如果新增或删除，需要更新一下所在目录
         if(arg.newFile || arg.delete) {
+          // 要更新的目录不定是当前目录，优化取rootModifyPath属性
+          const updatePath = this.catalogs[this.curCatalog].rootModifyPath || this.catalogs[this.curCatalog].path
           fetchArr.push(
             this[ACTIONS.CATALOGS_GET]({
               force,
-              path: findDirPath(arg.path)
+              path: updatePath
             })
           )
         }
