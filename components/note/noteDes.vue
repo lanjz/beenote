@@ -36,6 +36,7 @@
   import * as MUTATIONS from '../../store/const/mutaions'
   import * as ACTIONS from '../../store/const/actions'
   import MarkdownEdit from '../markdownEdit.vue'
+  import { findDirPath } from '../../utils/client/blackHole'
 
   export default {
     props: {
@@ -120,7 +121,6 @@
         this.cacheName = this.articleName = this.getTitle(val.name) || '未命名'
       },
       async todoEdit(force = false) {
-        return
         if (!force) {
           if (
             this.curNote.newFile ||
@@ -130,7 +130,15 @@
             return
           }
         }
-        this.doPutNote()
+        const curPath = `${findDirPath(this.curNote.path)}/${this.articleName}.md`
+        if(this.catalogMapNote[this.curCatalog].find(item => item.path === curPath)){
+          this.$toast({
+            title: `该目录已经存在"${this.articleName}"`
+          })
+          return
+        }
+        const newPath = `${findDirPath(this.curNote.path)}/${this.articleName}.md`
+        this.doPutNote(newPath)
       },
       async todoSave() {
         console.log(this.articleName)
@@ -181,36 +189,47 @@
         if (!this.dataHasChange || this.curNote.newFile) return
         this.doPutNote()
       },
-      async doPutNote() {
+      /**
+       * @params {path} <String || null> :如果有则说是修改文件名
+       * */
+      async doPutNote(path) {
         this.isEditContents = false
         this.$showLoading()
-        const result = await this[ACTIONS.NOTE_PUT](
+        let result = await this[ACTIONS.NOTE_PUT](
           {
             sha: this.curNote.sha,
             content: this.content,
-            path: this.curNote.path
+            path: path || this.curNote.path
           }
         )
-        this.$hideLoading()
         if (result.err) {
           this.$toast({
             title: result.err.message
           })
           return
         } else {
-          if (!result.err) {
+          if(path) {
+            result = await this[ACTIONS.NOTE_DELETE](this.curNote)
+          }
+          if (result.err) {
+            this.$toast({
+              title: '删除旧文件失败：'+result.err.message
+            })
+          } else  {
             this.$toast({
               title: '修改成功'
             })
           }
         }
+        this.$hideLoading()
         this.cacheName = this.articleName
         this.cacheContent = this.content
         this.$emit('emitUpdateNote',
           {
             force: true,
-            path: this.curNote.path,
-            modify: true
+            path: path || this.curNote.path,
+            modify: true,
+            newFile: path ? true : false
           })
       },
     },

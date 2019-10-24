@@ -14,8 +14,9 @@
     },
     methods: {
       toCreateNote(arg) {
-        const {bookId, catalogId} = $nuxt._route.params
-        this.$router.push(`/${bookId}/${catalogId}/new`)
+        const {user, book, pathMatch} = $nuxt._route.params
+        this.$emit('toCreateFile')
+        this.$router.push(`/${user}/${book}/${pathMatch}?type=dir&new=1`)
       },
     },
     mounted() {

@@ -51,8 +51,8 @@
           新建笔记
         </div>
         <div class="catalog-operate-item" @click.stop="doCreateTemDir">新建文件夹</div>
-        <div class="catalog-operate-item" @click.stop="todoRename" v-if="curNode._id !== 'root'">重命名</div>
-        <div class="catalog-operate-item" @click.stop="todoDelete" v-if="curNode._id !== 'root'">删除</div>
+        <div class="catalog-operate-item" @click.stop="todoRename" v-if="curNode.path !== 'root'">重命名</div>
+        <div class="catalog-operate-item" @click.stop="todoDelete" v-if="curNode.path !== 'root'">删除</div>
       </div>
     </div>
     <div
@@ -79,6 +79,7 @@
   import * as ACTIONS from '../../store/const/actions'
   import bus from '../../utils/client/global/eventBus'
   import constKey from '../../utils/client/const'
+  import {findDirPath} from "../../utils/client/blackHole";
 
   export default {
     name: 'TreeItem',
@@ -116,6 +117,7 @@
         schemaList: state => Object.values(state.schema.list).filter(item => item.fields.length),
         curBook: state => state.books.curBook,
         curNote: state => state.notes.curNote,
+        catalogMapNotes: state => state.catalogs.catalogMapNotes
       }),
       ...mapGetters('catalogs', ['treeChainList']),
       ...mapGetters('user', ['githubName']),
@@ -164,6 +166,9 @@
       ...mapActions('articles', [
         ACTIONS.ARTICLE_RECENTLY_LIST_GET,
       ]),
+      ...mapActions('notes', [
+        ACTIONS.NOTE_DELETE
+      ]),
       toggleOpenDir(force = false, catalogId) {
         if(force) {
           this.clickOpen = 2
@@ -209,6 +214,20 @@
       },
       todoDelete() {
         this.closeMenu()
+        console.log(11)
+        const combine = [
+          ...(this.catalogMapNotes[this.curNode.fullPath] || []),
+          ...(this.catalogs[this.curNode.fullPath].childNodes || [])
+        ]
+        if(combine.length){
+          this.$alert(
+            {
+              title: '该目录存在文件，不可删除',
+              showCancel: false
+            }
+          )
+          return
+        }
         this.$alert({
           title: `你确认要删除"${this.curNode.name}"`
         })
@@ -218,16 +237,18 @@
       },
       async doDeleteCatalog() {
         this.$showLoading()
-        const result = await this[ACTIONS.CATALOGS_DELETE]({
-          _id: this.curNode._id
-        })
-        this.$hideLoading()
+        const result = await this[ACTIONS.NOTE_DELETE](this.curNode)
         if (!result.err) {
           this.$toast({
             title: '删除成功'
           })
-          await this.getDate(this.curNode, true, true)
+          await this[ACTIONS.CATALOGS_GET]({
+            force: true,
+            path: findDirPath(this.curNode.path),
+            getChild: false
+          })
         }
+        this.$hideLoading()
       },
       /**
        * 重命名input失去焦点时

@@ -14,7 +14,7 @@
       @emitUpdateNote="doUpdateNote"
       v-if="!noData"
     ></note-des>
-    <noNotes v-else></noNotes>
+    <noNotes v-else @toCreateFile="todoCreateNewFile"></noNotes>
     <articleFixed v-if="!isVisitor"></articleFixed>
   </div>
 </template>
@@ -262,6 +262,7 @@
           })
       },
       todoCreateNewFile() {
+        this.noData = false
         this.newFileNode = {
           repo: this.curBook,
           path: this.curCatalog.replace(`${this.curBook}/`, ''),
