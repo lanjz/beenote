@@ -143,7 +143,7 @@
       }
     },
     methods: {
-      ...mapMutations('catalogs', [MUTATIONS.CATALOGS_CUR_SAVE,]),
+      ...mapMutations('catalogs', [MUTATIONS.CATALOGS_CUR_SAVE,MUTATIONS.CATALOGS_CACHE_SAVE]),
       ...mapMutations('notes', [MUTATIONS.NOTE_CUR_UPDATE,]),
       ...mapMutations('books', [MUTATIONS.BOOK_CUR_UPDATE,]),
       ...mapActions('books', [ACTIONS.BOOK_LIST_GET]),
@@ -321,12 +321,21 @@
           // 新增的话跳到新增的文件路径
           this.$router.push(`/${this.githubName}/${this.curBook}/${slitSuffix(arg.path)}`)
         } else if(arg.delete) {
-          // 判断当前删除的文件是否是当前选择的文件，如果是的话需要重新自动先个当前目录下的文件
+          // 判断当前删除的文件是否是当前选择的文件，如果是的话需要重新自动先个当前目录下或上级目录下的文件
           if(this.curNote.indexOf(arg.path) !== this.curNote.length - arg.path.length) {
             return
           }
-          this.$router.push(`/${this.githubName}/${this.curBook}/${findDirPath(arg.path)}?type=dir`)
+          this[MUTATIONS.CATALOGS_CACHE_SAVE]()
+          const getGoPath = this.findHasFileDir(`${this.curBook}/${findDirPath(arg.path)}`)
+          this.$router.push(`/${this.githubName}/${getGoPath}?type=dir`)
         }
+      },
+      findHasFileDir(path){
+        while(path && !(this.catalogs[path])){
+          path = findDirPath(path)
+        }
+        console.log('path', path)
+        return path
       },
       initEmitOn() {
         /**

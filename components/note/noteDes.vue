@@ -131,6 +131,12 @@
           }
         }
         const curPath = `${findDirPath(this.curNote.path)}/${this.articleName}.md`
+        if(this.articleName.indexOf('.') > -1) {
+          this.$toast({
+            title: `文件不能包吃住特殊字符“.”`
+          })
+          return
+        }
         if(this.catalogMapNote[this.curCatalog].find(item => item.path === curPath)){
           this.$toast({
             title: `该目录已经存在"${this.articleName}"`
@@ -141,8 +147,13 @@
         this.doPutNote(newPath)
       },
       async todoSave() {
-        console.log(this.articleName)
         if (!this.articleName) return
+        if(this.articleName.indexOf('.') > -1) {
+          this.$toast({
+            title: `文件不能包吃住特殊字符“.”`
+          })
+          return
+        }
         const curPath = `${this.curNote.path}/${this.articleName}.md`
         if (this.catalogMapNote[this.curCatalog]) {
           const findPath = this.catalogMapNote[this.curCatalog].find(item => item.path === curPath)

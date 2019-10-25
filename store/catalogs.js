@@ -4,18 +4,22 @@ import * as ACTIONS from './const/actions'
 import constKey from '../utils/client/const'
 import { getPath } from '../utils/client/blackHole'
 
+const defaultList = {
+  root: {
+    _id: 'root',
+    parentId: '',
+    bookId: 'default'
+  }
+}
 const state = () => (
   {
-    list: {
-      root: {
-        _id: 'root',
-        parentId: '',
-        bookId: 'default'
-      }
-    },
+    list: defaultList,
     curCatalog: constKey.recentlyArticlesKey,
     isOpen: [],
-    catalogMapNotes: {}
+    catalogMapNotes: {},
+  
+    catchList: defaultList,
+    cacheCatalogMapNotes: {},// 副本
   }
 )
 const getters = {
@@ -38,6 +42,9 @@ const mutations = {
   [MUTATIONS.CATALOGS_NOTE_MAP_SAVE](state, { data, key }) {
     state.catalogMapNotes[key] = data
     state.catalogMapNotes = { ...state.catalogMapNotes }
+    
+    state.cacheCatalogMapNotes[key] = data
+    state.cacheCatalogMapNotes = { ...state.cacheCatalogMapNotes }
   },
   [MUTATIONS.CATALOGS_SAVE](state, { key, data }) {
     const list = {
@@ -58,6 +65,11 @@ const mutations = {
     })
     state.list = {
       ...state.list,
+      ...list
+    }
+  
+    state.catchList = {
+      ...state.catchList,
       ...list
     }
   },
@@ -94,6 +106,14 @@ const mutations = {
   [MUTATIONS.CATALOGS_OPEN_RESET](state, id) {
     state.isOpen = []
   },
+  [MUTATIONS.CATALOGS_CACHE_CLEAR](state) {
+    state.cacheCatalogMapNotes = []
+    state.catchList = defaultList
+  },
+  [MUTATIONS.CATALOGS_CACHE_SAVE](state) {
+    state.catalogMapNotes = state.cacheCatalogMapNotes
+    state.list = state.catchList
+  }
 }
 
 /**
@@ -110,6 +130,10 @@ const actions = {
     // bookName: 仓库名
     const fullPath = path ? `${bookName}/${path}` : `${bookName}` // 为了保存key的唯一性，所以path前加上仓库名
     let result = {}
+    // 刷新数据时，把cache的state清空
+    if(!path && force) {
+      commit(MUTATIONS.CATALOGS_CACHE_CLEAR)
+    }
     const { list, catalogMapNotes } = state
     // 如果list或者catalogMapNotes包含当前key的数据，说明这个数据获取过了
     const hasData = (list[fullPath] && list[fullPath].childNodes) || catalogMapNotes[fullPath]

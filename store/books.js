@@ -45,13 +45,13 @@ const actions = {
       return { err: null, data: { list: state.list } }
     }
     const result = await fetch({
-      url: `/users/${rootState.user.userInfo.githubName}/repos`,
+      // url: `/users/${rootState.user.userInfo.githubName}/repos`,
+      url: `/users/${rootState.user.userInfo.githubName}/repos?type=all`,
       data: {
         limit,
         start
       }
     })
-    console.log('result', result)
     const { err, data } = result
     if(!err) {
       const list = data.map((item) => {
