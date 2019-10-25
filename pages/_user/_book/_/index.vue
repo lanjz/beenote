@@ -301,7 +301,7 @@
         // 如果新增或删除，需要更新一下所在目录
         if(arg.newFile || arg.delete) {
           // 要更新的目录不定是当前目录，优化取rootModifyPath属性
-          const updatePath = this.catalogs[this.curCatalog].rootModifyPath || this.catalogs[this.curCatalog].path
+          const updatePath = this.catalogs[this.curCatalog].rootModifyPath || ''
           fetchArr.push(
             this[ACTIONS.CATALOGS_GET]({
               force,

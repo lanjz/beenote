@@ -51,8 +51,8 @@
           新建笔记
         </div>
         <div class="catalog-operate-item" @click.stop="doCreateTemDir">新建文件夹</div>
-        <div class="catalog-operate-item" @click.stop="todoRename" v-if="curNode.path !== 'root'">重命名</div>
-        <div class="catalog-operate-item" @click.stop="todoDelete" v-if="curNode.path !== 'root'">删除</div>
+        <!--<div class="catalog-operate-item" @click.stop="todoRename" v-if="curNode.path !== 'root'">重命名</div>-->
+        <!--<div class="catalog-operate-item" @click.stop="todoDelete" v-if="curNode.path !== 'root'">删除</div>-->
       </div>
     </div>
     <div
