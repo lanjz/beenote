@@ -6,9 +6,9 @@ import { getPath } from '../utils/client/blackHole'
 
 const defaultList = {
   root: {
-    _id: 'root',
-    parentId: '',
-    bookId: 'default'
+    name: '我的文件',
+    path: '/',
+    fullPath: 'root'
   }
 }
 const state = () => (
@@ -17,7 +17,7 @@ const state = () => (
     curCatalog: constKey.recentlyArticlesKey,
     isOpen: [],
     catalogMapNotes: {},
-  
+
     catchList: defaultList,
     cacheCatalogMapNotes: {},// 副本
   }
@@ -42,7 +42,7 @@ const mutations = {
   [MUTATIONS.CATALOGS_NOTE_MAP_SAVE](state, { data, key }) {
     state.catalogMapNotes[key] = data
     state.catalogMapNotes = { ...state.catalogMapNotes }
-    
+
     state.cacheCatalogMapNotes[key] = data
     state.cacheCatalogMapNotes = { ...state.cacheCatalogMapNotes }
   },
@@ -67,7 +67,7 @@ const mutations = {
       ...state.list,
       ...list
     }
-  
+
     state.catchList = {
       ...state.catchList,
       ...list

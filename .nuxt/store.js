@@ -16,32 +16,32 @@ void (function updateModules() {
   // Enforce store modules
   store.modules = store.modules || {}
 
-  resolveStoreModules(require('..\\store\\articles.js'), 'articles.js')
-  resolveStoreModules(require('..\\store\\books.js'), 'books.js')
-  resolveStoreModules(require('..\\store\\catalogs.js'), 'catalogs.js')
-  resolveStoreModules(require('..\\store\\config.js'), 'config.js')
-  resolveStoreModules(require('..\\store\\notes.js'), 'notes.js')
-  resolveStoreModules(require('..\\store\\schema.js'), 'schema.js')
-  resolveStoreModules(require('..\\store\\todos.js'), 'todos.js')
-  resolveStoreModules(require('..\\store\\user.js'), 'user.js')
-  resolveStoreModules(require('..\\store\\const\\actions.js'), 'const/actions.js')
-  resolveStoreModules(require('..\\store\\const\\mutaions.js'), 'const/mutaions.js')
+  resolveStoreModules(require('../store/articles.js'), 'articles.js')
+  resolveStoreModules(require('../store/books.js'), 'books.js')
+  resolveStoreModules(require('../store/catalogs.js'), 'catalogs.js')
+  resolveStoreModules(require('../store/config.js'), 'config.js')
+  resolveStoreModules(require('../store/notes.js'), 'notes.js')
+  resolveStoreModules(require('../store/schema.js'), 'schema.js')
+  resolveStoreModules(require('../store/todos.js'), 'todos.js')
+  resolveStoreModules(require('../store/user.js'), 'user.js')
+  resolveStoreModules(require('../store/const/actions.js'), 'const/actions.js')
+  resolveStoreModules(require('../store/const/mutaions.js'), 'const/mutaions.js')
 
   // If the environment supports hot reloading...
 
   if (process.client && module.hot) {
     // Whenever any Vuex module is updated...
     module.hot.accept([
-      '..\\store\\articles.js',
-      '..\\store\\books.js',
-      '..\\store\\catalogs.js',
-      '..\\store\\config.js',
-      '..\\store\\notes.js',
-      '..\\store\\schema.js',
-      '..\\store\\todos.js',
-      '..\\store\\user.js',
-      '..\\store\\const\\actions.js',
-      '..\\store\\const\\mutaions.js',
+      '../store/articles.js',
+      '../store/books.js',
+      '../store/catalogs.js',
+      '../store/config.js',
+      '../store/notes.js',
+      '../store/schema.js',
+      '../store/todos.js',
+      '../store/user.js',
+      '../store/const/actions.js',
+      '../store/const/mutaions.js',
     ], () => {
       // Update `root.modules` with the latest definitions.
       updateModules()

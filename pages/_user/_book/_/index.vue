@@ -94,22 +94,19 @@
       }
     },
     head() {
-      /*      let baseKey = [this.curEditNote.title]
-            if(this.pageExtend.catalogMap) {
-              baseKey = [...baseKey, this.pageExtend.catalogMap]
-            }
-            const documentTitle = [ ...baseKey, this.curUserInfo.username ]
-            let des = ''
-            if(this.curEditNote.content) {
-              des = this.curEditNote.content.slice(0, 150)
-            }
-            return {
-              title: setTitle(documentTitle.join('-')),
-              meta: [
-                { hid: 'keywords', name: 'keywords', content: baseKey.join(',') },
-                { hid: 'description', name: 'description', content: des }
-              ]
-            }*/
+      let baseKey = [this.curEditNote.name]
+      const documentTitle = [ ...baseKey, this.curUserInfo.username ]
+      let des = ''
+      if(this.curEditNote.contentMD) {
+        des = this.curEditNote.contentMD.slice(0, 150)
+      }
+      return {
+        title: setTitle(documentTitle.join('-')),
+        meta: [
+          { hid: 'keywords', name: 'keywords', content: baseKey.join(',') },
+          { hid: 'description', name: 'description', content: des }
+        ]
+      }
 
     },
     computed: {
