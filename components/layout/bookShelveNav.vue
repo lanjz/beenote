@@ -2,6 +2,7 @@
   <div class="left-layout flex">
     <div class="book-slider-layout">
       <div
+        v-if="false"
         class="book-layout"
         :class="{'act':　item._id === curBook}"
         @click="todoSetCurBook(item)"
@@ -27,6 +28,7 @@
             class="file-input-hide"
             @change="uploadFile('inputer')"/>
         </div>-->
+        <div class="book-layout"></div>
         <div
           class="book-layout">
           <div>
@@ -47,9 +49,10 @@
   </div>
 </template>
 <script>
-  import { mapState, mapGetters, mapMutations } from 'vuex'
+  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   import { uploadFile } from '../../utils/client/fetch/fetch'
   import * as MUTATIONS from '../../store/const/mutaions'
+  import * as ACTIONS from '../../store/const/actions'
   import bus from '../../utils/client/global/eventBus'
   import imgPreBox from '../imgPreBox'
   export default {
@@ -62,6 +65,10 @@
       }),
       ...mapGetters('books', [
         'curBookInfo'
+      ]),
+      ...mapGetters('user', ['isVisitor', 'githubName']),
+      ...mapActions('notes', [
+        ACTIONS.NOTE_PUT
       ])
     },
     components: {
@@ -103,17 +110,29 @@
           })
           return
         }
-        uploadFile({
-          file: inputDOM.files[0],
-          name:'test_.png',
-        }, tar === 'inputerCdn')
-          .then((res) => {
-            console.log('res', res)
-            const { err, data } = res
-            if(!err) {
-              this.$refs.imgPreBox.open(data[0])
-            }
+        const reader = new FileReader()
+        reader.readAsDataURL(inputDOM.files[0])
+        reader.onloadend = function (e) {
+          let base64 = e.target.result;
+          const str = 'base64,'
+          const pre = base64.indexOf(str) + str.length
+          const curDateStamp = (new Date()).getTime()
+          uploadFile({
+            path: `${this.githubName}/${this.curBook}/contents/static/images/${curDateStamp}_${inputDOM.files[0].name}`,
+            content: base64.substring(pre)
           })
+            .then(res => {
+              if(res.err) {
+                this.$toast({
+                  title: res.err.message
+                })
+                return
+              }
+              if(!res.err) {
+                this.$refs.imgPreBox.open(res.data.content.download_url)
+              }
+            })
+        }.bind(this);
       }
     }
   }

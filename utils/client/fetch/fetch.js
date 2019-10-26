@@ -1,6 +1,8 @@
 import axios from 'axios'
 import SET from '../../hide/webSecret'
 import helloAlert from '../../../components/messageBox/messageBox'
+import {getCurTime} from '../blackHole';
+import {Base64} from 'js-base64';
 
 const ApiBase = {
   base: 'https://api.github.com',
@@ -93,12 +95,14 @@ const doFetchData = function (options) {
   })
 }
 
-const uploadFile = function (params, cdn) {
+const uploadFile = function (data) {
   const options = {
-    data: params,
-    type: 'formData',
-    method: 'post',
-    url: cdn ? '/api/uploadImgCdn' : '/api/uploadImg'
+    url: `/repos/${data.path}`,
+    method: 'put',
+    data: {
+      message: `ADD: images At ${getCurTime()}`,
+      content: data.content
+    }
   }
   return doFetchData(options)
 }
