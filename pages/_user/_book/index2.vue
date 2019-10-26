@@ -1,32 +1,48 @@
- <template>
+<template>
   <div>
     <div class="book-list-layout">
       <div
-        v-for="(item, index) in bookList"
-        :key="index2"
+        v-for="(item, index) in dirList"
+        :key="item.sha"
         class="book-item-layout"
-        :class="{'act': item._id === curBook}"
-        @click.stop="todoSetCurBook(item)"
+        @click.stop="gotoCatalog(item)"
       >
-        <!--<div class="delete-icon book-item-delete" v-if="item._id !== 'default'" @click.stop="todoDeleteBook(item)"></div>-->
+        <div class="delete-icon book-item-delete" v-if="item._id !== 'default'" @click.stop="todoDeleteBook(item)"></div>
+        <div>
+          <svg class="icon book-iconfont" aria-hidden="true">
+            <use xlink:href="#icon-wenjianjia1"></use>
+          </svg>
+        </div>
+        {{item.name}}(文件)
+        <div class="book-item-layout-edit">
+          <div class="book-item-layout-in-edit" @click.stop="todoEditBook(item)">编辑</div>
+        </div>
+      </div>
+      <div
+        v-for="(item, index) in fileList"
+        :key="item.sha"
+        class="book-item-layout"
+        @click.stop="gotoFile(item)"
+      >
+        <div class="delete-icon book-item-delete" v-if="item._id !== 'default'" @click.stop="todoDeleteBook(item)"></div>
         <div>
           <svg class="icon book-iconfont" aria-hidden="true">
             <use xlink:href="#icon-wenjianjia1"></use>
           </svg>
         </div>
         {{item.name}}
-    <!--    <div class="book-item-layout-edit">
+        <div class="book-item-layout-edit">
           <div class="book-item-layout-in-edit" @click.stop="todoEditBook(item)">编辑</div>
-        </div>-->
+        </div>
       </div>
-<!--      <div class="book-item-layout" style="padding-top: 25px">
+      <div class="book-item-layout" style="padding-top: 25px">
         <div class="book-item-layout-add" @click="todoAddBook"></div>
         <div>
           <svg class="icon book-iconfont" aria-hidden="true">
             <use xlink:href="#icon-wenjianjia1"></use>
           </svg>
         </div>
-      </div>-->
+      </div>
     </div>
     <div class="modal-mark-bg" v-if="showModal">
       <div class="modal-layout">
@@ -63,8 +79,10 @@
 </template>
 <script>
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-  import * as MUTATIONS from '../../store/const/mutaions'
-  import * as ACTIONS from '../../store/const/actions'
+  import * as MUTATIONS from '../../../store/const/mutaions'
+  import * as ACTIONS from '../../../store/const/actions'
+  import {returnCatalog, setTitle, findDirPath, slitSuffix} from '../../../utils/client/blackHole'
+
   export default {
     data(){
       return {
@@ -77,120 +95,71 @@
     },
     computed: {
       ...mapState({
-        bookList: state => Object.values(state.books.list),
+        catalogs: state => state.catalogs.list,
+        catalogMapNotes: state => state.catalogs.catalogMapNotes,
         curBook: state => state.books.curBook
       }),
-      ...mapGetters('user', ['githubName']),
-      disableBtn: function () {
-        if(this.curId && this.originData === `${this.editBookName}${this.isPrivate}`){
-          return true
-        } else if(!this.curId && !this.editBookName) {
-          return true
+      ...mapGetters('user', ['isVisitor', 'githubName']),
+      dirList() {
+        if(!this.catalogs || !this.catalogs[this.curBook]) {
+          return []
         }
-        return false
+        return this.catalogs[this.curBook].childNodes
+      },
+      fileList() {
+        if(!this.catalogMapNotes || !this.catalogMapNotes[this.curBook]) {
+          return []
+        }
+        return this.catalogMapNotes[this.curBook]
       }
     },
     methods: {
-      ...mapMutations('books', [
-        MUTATIONS.BOOK_CUR_UPDATE
+      ...mapMutations('books', [MUTATIONS.BOOK_CUR_UPDATE,]),
+      ...mapActions('catalogs', [
+        ACTIONS.CATALOGS_GET
       ]),
-      ...mapActions('books', [
-        ACTIONS.BOOK_LIST_GET,
-        ACTIONS.BOOK_LIST_PUT,
-        ACTIONS.BOOK_LIST_POST,
-        ACTIONS.BOOK_LIST_DELETE,
-      ]),
-      todoSetCurBook(item) {
-        // this[MUTATIONS.BOOK_CUR_UPDATE](item._id)
-        this.$router.push(`/${this.githubName}/${item.name}`)
-      },
-      async getData(force = true) {
-        const result = await this[ACTIONS.BOOK_LIST_GET]({force})
-      },
       async init() {
         this.$showLoading()
-        await this.getData(false)
+        const result = await this[ACTIONS.CATALOGS_GET]({ getChild: false})
+        if(result.err){
+          this.$toast({
+            title: result.err.message
+          })
+        }
         this.$hideLoading()
+      },
+      dealParams() {
+        const { user, book } = $nuxt._route.params
+        this[MUTATIONS.BOOK_CUR_UPDATE](book)
+        this.init()
+      },
+      gotoCatalog(item) {
+        this.$router.push(`/${this.githubName}/${item.fullPath}?type=dir`)
+      },
+      gotoFile(item) {
+        this.$router.push(`/${this.githubName}/${slitSuffix(item.fullPath)}`)
       },
       todoDeleteBook(item) {
-        this.$alert({
-          content: `你确认要删除"${item.name}"`,
-          showCancel: false
-        })
-          .then(async res => {
-            if(res) {
-              this.doDeleteBook(item)
-            }
-          })
-      },
-      async doDeleteBook(item) {
-        this.$showLoading()
-        const result = await this[ACTIONS.BOOK_LIST_DELETE]({
-          _id: item._id
-        })
-        this.$hideLoading()
-        if(!result.err) {
-          this.$toast({
-            title: '删除成功'
-          })
-          await this.getData()
-        }
-      },
-      doCloseModal() {
-        this.curId = ''
-        this.editBookName = ''
-        this.showModal = false
-      },
-      todoAddBook() {
-        this.curId = ''
-        this.showModal = true
+        console.log('todoDeleteBook', item)
       },
       todoEditBook(item) {
-        this.curId = item._id
-        this.editBookName = item.name
-        this.showModal = true
-        this.isPrivate = item.isPrivate
-        this.originData = `${item.name}${item.isPrivate}`
+        console.log('todoEditBook', item)
       },
-      async doSaveBook() {
-        if(this.disableBtn) return
-        if(!this.editBookName){
-          this.$alert({
-            content: '名称不能为空'
-          })
-          return
-        }
-        let result
-        if(!this.curId) {
-          result = await this[ACTIONS.BOOK_LIST_POST]({
-            name: this.editBookName,
-            isPrivate: this.isPrivate
-          })
-        } else {
-          result = await this[ACTIONS.BOOK_LIST_PUT]({
-            _id: this.curId,
-            name: this.editBookName,
-            isPrivate: this.isPrivate
-          })
-        }
-        this.$showLoading()
-        if(!result.err) {
-          const toastMsg = !this.curId ? '添加成功' : '修改成功'
-          this.$toast({
-            title: toastMsg
-          })
-          await this.getData()
-        }
-        this.$hideLoading()
-        this.doCloseModal()
+      todoAddBook(item) {
+        console.log('todoAddBook', item)
+      },
+      doCloseModal(item) {
+        console.log('doCloseModal', item)
+      },
+      doCloseModal(item) {
+        console.log('doCloseModal', item)
+      },
+      doSaveBook(item) {
+        console.log('doSaveBook', item)
       }
     },
     mounted() {
-/*      this.$nextTick(() => {
-        this.$nuxt.$loading.start()
-        setTimeout(() => this.$nuxt.$loading.finish(), 500)
-      })*/
-      this.init()
+      this.dealParams()
     }
   }
 </script>

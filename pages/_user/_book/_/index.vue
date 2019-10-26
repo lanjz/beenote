@@ -89,12 +89,14 @@
     data: function () {
       return {
         noData: false,
-        newFileNode: null
+        newFileNode: null,
+        routerParams: {}
 //        curEditNote: {}
       }
     },
     head() {
-      let baseKey = [this.curEditNote.name]
+      const {user, book, pathMatch} = this.routerParams
+      let baseKey = [pathMatch || book]
       const documentTitle = [ ...baseKey, this.curUserInfo.username ]
       let des = ''
       if(this.curEditNote.contentMD) {
@@ -193,7 +195,7 @@
           this[ACTIONS.CATALOGS_GET]()
         ]
         if($nuxt._route.query.type !== 'dir' && !this.notesMap[this.curNote]) {
-          const {user, book, pathMatch} = $nuxt._route.params
+          const {user, book, pathMatch = ''} = $nuxt._route.params
           const fullPath = `${user}/${book}/${pathMatch}`
           fetchArr.push(this[ACTIONS.NOTE_DES_GET]({
             fullPath,
@@ -260,9 +262,10 @@
       },
       todoCreateNewFile() {
         this.noData = false
+
         this.newFileNode = {
           repo: this.curBook,
-          path: this.curCatalog.replace(`${this.curBook}/`, ''),
+          path: this.curCatalog === this.curBook ? '' : this.curCatalog.replace(`${this.curBook}/`, ''),
           newFile: true
         }
       },
@@ -298,7 +301,7 @@
         // 如果新增或删除，需要更新一下所在目录
         if(arg.newFile || arg.delete) {
           // 要更新的目录不定是当前目录，优化取rootModifyPath属性
-          const updatePath = this.catalogs[this.curCatalog].rootModifyPath || ''
+          const updatePath = (this.catalogs[this.curCatalog] && this.catalogs[this.curCatalog].rootModifyPath) || ''
           fetchArr.push(
             this[ACTIONS.CATALOGS_GET]({
               force,
@@ -331,7 +334,6 @@
         while(path && !(this.catalogs[path])){
           path = findDirPath(path)
         }
-        console.log('path', path)
         return path
       },
       initEmitOn() {
@@ -367,7 +369,8 @@
         this.initEmitOn()
       },
       async dealParams() {
-        const {user, book, pathMatch} = $nuxt._route.params
+        this.routerParams = $nuxt._route.params
+        const {user, book, pathMatch = ''} = $nuxt._route.params
         this[MUTATIONS.BOOK_CUR_UPDATE](book)
         if($nuxt._route.query.type === 'dir') {
           // 如果当前是文件夹，而直接保存当前路径

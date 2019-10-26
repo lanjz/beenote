@@ -154,7 +154,8 @@
           })
           return
         }
-        const curPath = `${this.curNote.path}/${this.articleName}.md`
+        const prePath = this.curNote.path ? `${this.curNote.path}/` : ''
+        const curPath = `${prePath}${this.articleName}.md`
         if (this.catalogMapNote[this.curCatalog]) {
           const findPath = this.catalogMapNote[this.curCatalog].find(item => item.path === curPath)
           if (findPath) {

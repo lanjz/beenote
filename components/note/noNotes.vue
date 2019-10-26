@@ -14,7 +14,7 @@
     },
     methods: {
       toCreateNote(arg) {
-        const {user, book, pathMatch} = $nuxt._route.params
+        const {user, book, pathMatch = ''} = $nuxt._route.params
         this.$emit('toCreateFile')
         this.$router.push(`/${user}/${book}/${pathMatch}?type=dir&new=1`)
       },

@@ -10,6 +10,7 @@ const _3c520222 = () => interopDefault(import('../pages/schema.vue' /* webpackCh
 const _18b6423e = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
 const _08fc867c = () => interopDefault(import('../pages/_user/index.vue' /* webpackChunkName: "pages/_user/index" */))
 const _764e4f75 = () => interopDefault(import('../pages/_user/_book/index.vue' /* webpackChunkName: "pages/_user/_book/index" */))
+const _5393488d = () => interopDefault(import('../pages/_user/_book/index2.vue' /* webpackChunkName: "pages/_user/_book/index2" */))
 const _15dd59f6 = () => interopDefault(import('../pages/_user/_book/_/index.vue' /* webpackChunkName: "pages/_user/_book/_/index" */))
 
 Vue.use(Router)
@@ -49,6 +50,10 @@ export const routerOptions = {
       path: "/:user/:book",
       component: _764e4f75,
       name: "user-book"
+    }, {
+      path: "/:user/:book/index2",
+      component: _5393488d,
+      name: "user-book-index2"
     }, {
       path: "/:user/:book/*",
       component: _15dd59f6,

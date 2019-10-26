@@ -191,7 +191,7 @@
         this[MUTATIONS.CATALOGS_CUR_SAVE]('recently')
       },
       showOperateMenu(e) {
-        if (this.curNode.icon) return
+        // if (this.curNode.icon) return
         const {clientX, clientY} = e
         this.operateMenuStyle = {
           top: `${clientY}px`,
