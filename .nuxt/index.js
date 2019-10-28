@@ -12,12 +12,12 @@ import { createStore } from './store.js'
 
 /* Plugins */
 
-import nuxt_plugin_loading_0a3fd5f4 from 'nuxt_plugin_loading_0a3fd5f4' // Source: ../plugins/loading (mode: 'all')
-import nuxt_plugin_messageBox_2594f43a from 'nuxt_plugin_messageBox_2594f43a' // Source: ../plugins/messageBox (mode: 'all')
-import nuxt_plugin_toast_3357971e from 'nuxt_plugin_toast_3357971e' // Source: ../plugins/toast (mode: 'all')
-import nuxt_plugin_filters_98405076 from 'nuxt_plugin_filters_98405076' // Source: ../plugins/filters (mode: 'all')
-import nuxt_plugin_directive_36717199 from 'nuxt_plugin_directive_36717199' // Source: ../plugins/directive (mode: 'all')
-import nuxt_plugin_route_338f5eda from 'nuxt_plugin_route_338f5eda' // Source: ../plugins/route (mode: 'all')
+import nuxt_plugin_loading_0a3fd5f4 from 'nuxt_plugin_loading_0a3fd5f4' // Source: ..\\plugins\\loading (mode: 'all')
+import nuxt_plugin_messageBox_2594f43a from 'nuxt_plugin_messageBox_2594f43a' // Source: ..\\plugins\\messageBox (mode: 'all')
+import nuxt_plugin_toast_3357971e from 'nuxt_plugin_toast_3357971e' // Source: ..\\plugins\\toast (mode: 'all')
+import nuxt_plugin_filters_98405076 from 'nuxt_plugin_filters_98405076' // Source: ..\\plugins\\filters (mode: 'all')
+import nuxt_plugin_directive_36717199 from 'nuxt_plugin_directive_36717199' // Source: ..\\plugins\\directive (mode: 'all')
+import nuxt_plugin_route_338f5eda from 'nuxt_plugin_route_338f5eda' // Source: ..\\plugins\\route (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)

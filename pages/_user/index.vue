@@ -3,7 +3,7 @@
     <div class="book-list-layout">
       <div
         v-for="(item, index) in bookList"
-        :key="index2"
+        :key="index"
         class="book-item-layout"
         :class="{'act': item._id === curBook}"
         @click.stop="todoSetCurBook(item)"
@@ -102,7 +102,7 @@
       ]),
       todoSetCurBook(item) {
         // this[MUTATIONS.BOOK_CUR_UPDATE](item._id)
-        this.$router.push(`/${this.githubName}/${item.name}`)
+        this.$router.push(`/${this.githubName}/${item.name}?type=dir`)
       },
       async getData(force = true) {
         const result = await this[ACTIONS.BOOK_LIST_GET]({force})

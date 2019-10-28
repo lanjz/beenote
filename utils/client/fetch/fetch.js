@@ -8,8 +8,8 @@ const ApiBase = {
   base: 'https://api.github.com',
   raw: 'https://raw.githubusercontent.com'
 }
-const gitTokenA = 'a879670745ba021de'
-const gitToken = gitTokenA+'4553871d78d4d0b4f011082'
+const gitTokenA = 'f796fefa4f7e21'
+const gitToken = gitTokenA+'fae14364a16bf816b67fd61409'
 if(process.client) {
   console.log('context', window)
 }

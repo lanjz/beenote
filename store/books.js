@@ -46,10 +46,9 @@ const actions = {
     }
     const result = await fetch({
       // url: `/users/${rootState.user.userInfo.githubName}/repos`,
-      url: `/users/${rootState.user.userInfo.githubName}/repos?type=all`,
+      url: `/user/repos`,
       data: {
-        limit,
-        start
+        type: 'all'
       }
     })
     const { err, data } = result
