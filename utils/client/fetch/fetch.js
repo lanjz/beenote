@@ -3,13 +3,12 @@ import SET from '../../hide/webSecret'
 import helloAlert from '../../../components/messageBox/messageBox'
 import {getCurTime} from '../blackHole';
 import {Base64} from 'js-base64';
+import gitToken from './access_token'
 
 const ApiBase = {
   base: 'https://api.github.com',
   raw: 'https://raw.githubusercontent.com'
 }
-const gitTokenA = 'f796fefa4f7e21'
-const gitToken = gitTokenA+'fae14364a16bf816b67fd61409'
 if(process.client) {
   console.log('context', window)
 }
