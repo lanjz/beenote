@@ -28,6 +28,10 @@ For detailed explanation on how things work, checkout [Nuxt.js docs](https://nux
 
 服务器的配置太低，所以执行的build的时候直接出错了，所以只能先build这后再提交到服务器，服务器直接 ` pm2 start npm -- run start`
 
-## typescript
+## 参考
+
+[ 一篇文章搞定Github API 调用 (v3）](https://www.jianshu.com/p/a0c7d0482415)
+
+[v3版API的官方教程](https://developer.github.com/v3/guides/getting-started/)
 
 
