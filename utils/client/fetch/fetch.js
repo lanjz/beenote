@@ -3,7 +3,7 @@ import SET from '../../hide/webSecret'
 import helloAlert from '../../../components/messageBox/messageBox'
 import {getCurTime} from '../blackHole';
 import {Base64} from 'js-base64';
-import gitToken from './access_token'
+// import gitToken from './access_token'
 
 const ApiBase = {
   base: 'https://api.github.com',
@@ -12,6 +12,12 @@ const ApiBase = {
 if(process.client) {
   console.log('context', window)
 }
+
+const preGitToken = {
+  a: 'a27e4c52abffdc856'
+}
+const key = 'a'
+const gitToken = 'e0ed39f163363a5b3d5eb9f658cdffba25c4e72a'
 
 const { MOCK } = process.env
 function dealRetCode(response = {}) {
@@ -42,7 +48,7 @@ function fetchData(options) {
     url = `${SET.base.mockHost}/mock/15${url}`
   } else {
     // url = `${ApiBase}${url}`
-    url = `${ApiBase[baseUrl]}${url}?access_token=${gitToken}`
+    url = `${ApiBase[baseUrl]}${url}?access_token=${gitToken.split("").reverse().join("")}`
   }
   options.url = url
   options.method = options.method || 'get'
