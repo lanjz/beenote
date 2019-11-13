@@ -1,13 +1,19 @@
 <template>
-  <div class="app flex direction-column absolute-full">
+  <div class="app flex direction-column absolute-full" v-if="!isVisitor">
     <Header/>
     <div class="flex flex-1">
-      <bookShelveNav v-if="!isVisitor"></bookShelveNav>
+      <bookShelveNav></bookShelveNav>
       <div class="flex flex-1">
         <nuxt />
       </div>
     </div>
     <!--<Footer/>-->
+  </div>
+  <div v-else class="visitor-box">
+    <div class="visitor-box-header">
+      <Header/>
+    </div>
+    <nuxt />
   </div>
 </template>
 <script>
@@ -86,4 +92,13 @@ html {
   color: #fff;
   background-color: #35495e;
 }
+  .visitor-box{
+    padding: 66px 0 0 100px;
+    .visitor-box-header{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+  }
 </style>

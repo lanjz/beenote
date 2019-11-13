@@ -40,3 +40,59 @@ export function formatNum(num) {
   if(!num) return num
   return (num*1) < 10 ? '0' + num : num
 }
+
+export function filterTxt(txt) {
+  if(!txt) return txt
+  const filterReg = /(#|##)\s(.+)\n/g
+  const filterLink = /\[(.+)\]\(.+\)/g
+  let getText = txt.replace(filterReg, function () {
+    return arguments[2]
+  })
+  getText = getText.replace(filterLink, function () {
+    if(arguments[1]) {
+      return arguments[1]
+    }
+  })
+  getText = getText.replace('`', '')
+  return getText
+}
+export function createCatalogue(title, test) {
+  if(!test) return test
+  let parentTitle = title
+  const obj = {
+    [title]: []
+  }
+  const reg = /(#|##)\s(.*)\n/g
+  const find = test.match(reg)
+  console.log(find)
+  if(find && find.length) {
+    find.forEach(item => {
+      const t = filterTxt(item)
+      if(item[0] === '#' && item[1] != '#') {
+        obj[title].push({
+          name: t,
+          parent: title,
+          fullPath: t,
+          path: t,
+          type: 'mao'
+        })
+        parentTitle = t
+      } else if(item[0] === '#' && item[1] == '#') {
+        const curParent = parentTitle || title
+        if(!obj[curParent]) {
+          obj[curParent] = []
+        }
+        obj[curParent].push(
+          {
+            name: t,
+            parent: curParent,
+            fullPath: t,
+            path: t,
+            type: 'mao'
+          }
+        )
+      }
+    })
+  }
+  return obj
+}

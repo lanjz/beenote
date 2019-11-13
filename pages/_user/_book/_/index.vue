@@ -1,9 +1,10 @@
 <template>
   <div class="flex flex-1">
-    <div class="catalog-layout box-shadow" :class="{'hidden-catalog': !showDir}" v-if="!isVisitor">
+    <div class="catalog-layout box-shadow" :class="{'hidden-catalog': !showDir}">
       <TreeItem></TreeItem>
     </div>
     <NoteBrief
+      v-if="!isVisitor"
       @emitToCreateNote="toCreateNote"
       :list="curNoteList"
       @emitUpdateNote="doUpdateNote"

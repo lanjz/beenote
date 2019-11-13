@@ -39,7 +39,7 @@
     }
   */
   import marked from 'marked'
-  // import hljs from 'highlight.js'
+  import hljs from 'highlight.js'
 
   const renderer = new marked.Renderer()
   marked.setOptions({
@@ -52,7 +52,7 @@
     smartLists: true,
     smartypants: false,
     highlight: function (code) {
-      // return hljs.highlightAuto(code).value;
+      return hljs.highlightAuto(code).value;
     }
   });
 

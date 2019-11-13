@@ -3,7 +3,7 @@ import fetch from '../utils/client/fetch/fetch.js'
 import constKey from '../utils/client/const.js'
 import * as MUTATIONS from './const/mutaions'
 import * as ACTIONS from './const/actions'
-import { getCurTime } from '../utils/client/blackHole'
+import { getCurTime, createCatalogue } from '../utils/client/blackHole'
 
 const state = () => (
   {
@@ -11,6 +11,7 @@ const state = () => (
     curNote: "",
     notesMap: {},
     curNoteContent: {},
+    noteCatalogue: {}
   }
 )
 const getters = {
@@ -36,6 +37,10 @@ const mutations = {
   },
   [MUTATIONS.NOTE_CUR_CONTENT_UPDATE](state, data) {
     state.curNoteContent = data
+  },
+  [MUTATIONS.NOTE_CATALOGUE_SAVE](state, {data, key}) {
+    state.noteCatalogue[key] = data
+    state.noteCatalogue = {...state.noteCatalogue}
   }
 }
 
@@ -91,14 +96,19 @@ const actions = {
     })*/
     const result = await Promise.all([findInfo])
     if (!result[0].err) {
+      const curData = {
+        ...result[0].data,
+        contentMD: Base64.decode(result[0].data.content)
+      }
       commit(MUTATIONS.NOTE_MAP_SAVE,
         {
-          data: {
-            ...result[0].data,
-            contentMD: Base64.decode(result[0].data.content)
-          },
+          data: curData,
           key: fullPath
         })
+      commit(MUTATIONS.NOTE_CATALOGUE_SAVE, {
+        data: createCatalogue(`${repo}/${path}`, curData.contentMD),
+        key: fullPath
+      })
     }
     return result
   },
