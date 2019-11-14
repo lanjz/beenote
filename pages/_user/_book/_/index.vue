@@ -1,6 +1,8 @@
 <template>
-  <div class="flex flex-1">
-    <div class="catalog-layout box-shadow" :class="{'hidden-catalog': !showDir}">
+  <div class="" :class="{'flex flex-1': !isVisitor}">
+    <div
+      class="catalog-layout"
+      :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
       <TreeItem></TreeItem>
     </div>
     <NoteBrief
@@ -496,6 +498,17 @@
     width: 200px;
     max-width: 200px;
     transition: .3s;
+  }
+  .catalog-layout-isVisitor{
+    position: fixed;
+    left: 0;
+    width: 280px;
+    max-width: 280px;
+    top: 66px;
+    bottom: 0;
+    background: none;
+    color: @bg-color;
+    border-right: solid 1px #e9e7e7
   }
 
   .hidden-catalog {

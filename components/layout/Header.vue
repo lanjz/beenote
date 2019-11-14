@@ -53,12 +53,24 @@
     }
   }
 </script>
-<style lang="less" scoped>
+<style lang="less">
   .head{
-    padding: 15px;
+    padding: 8px;
     background: @bg-color;
     position: relative;
 
+  }
+  .visitor-box-header{
+    .head{
+      background: none;
+      color: @bg-color;
+    }
+    .logo-test{
+      color: @bg-color;
+    }
+    .head-nav a{
+      color: @bg-color;
+    }
   }
   .logo{
     position: absolute;

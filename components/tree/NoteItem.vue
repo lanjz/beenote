@@ -1,5 +1,5 @@
 <template>
-  <div class="catalogs-layout">
+  <div class="catalogs-layout" :class="{'catalogs-layout-visitor' : isVisitor}">
     <div
       class="flex align-items-center catalogs-item-layout"
       @click.left="chooseNote(null)"
@@ -8,8 +8,10 @@
         'catalogs-item-hover': !(isNewDir || renameCatalog)
       }"
     >
-      <div class="catalogs-name line-ellipsis">{{curNode.name}}</div>
-
+      <div class="catalogs-name line-ellipsis"  v-if="curNode.type==='mao'">
+        <a :href="'#'+curNode.name">{{curNode.name}}</a>
+      </div>
+      <div class="catalogs-name line-ellipsis b" v-else>{{curNode.name}}</div>
     </div>
     <div
       v-if="childList">
@@ -143,6 +145,9 @@
         this.clickOpen = this.clickOpen === 2 ? 1 : 2
       },
       async chooseNote(item) {
+        if(this.curNode.type === 'mao') {
+          return
+        }
         this.toggleOpenDir(true)
 //        this.isOpen = true
         this[MUTATIONS.NOTE_CUR_UPDATE](`/${this.githubName}/${this.curNode.fullPath}`)
@@ -416,14 +421,6 @@
     background: @tree-hover-bg-color;
   }
 
-  .catalogs-item-layout.act2:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 4px;
-    background: #398dee;
-  }
   .catalogs-item-layout.act {
     background: @tree-light-bg-color;
     color: @tree-light-color;
@@ -451,10 +448,17 @@
 
   .catalogs-name {
     position: relative;
-    max-width: 150px;
     padding: 0 5px;
+    a{
+      color: inherit;
+      text-decoration: none;
+    }
   }
 
+  .catalogs-name.b{
+    font-weight: bold;
+    font-size: 18px;
+  }
   .edit-catalogs-input {
     position: relative;
     z-index: 1;
@@ -519,6 +523,25 @@
     }
   }
 
+  .catalogs-layout-visitor{
+    .catalogs-item-hover:after {
+      display: none;
+    }
+    .catalogs-item-hover:hover {
+      background: none;
+      color: #3eaf7c;
+    }
+
+    .catalogs-item-layout.act2:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 6px;
+      display: block;
+      background: #3eaf7c;
+    }
+  }
   #hello_recent {
     font-size: 24px;
   }

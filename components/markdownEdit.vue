@@ -1,5 +1,5 @@
 <template>
-  <div class="code-mirror absolute-full flex direction-column markdown-layout">
+  <div class="code-mirror absolute-full flex direction-column markdown-layout" v-if="!onlyView">
     <!--    <div class="code-mirror-tags flex align-items-center justify-content-space-between">
           <div>
             <div class="tags-item" @click="editMirror" :class="{'act': editMode !== 2}">Edit file</div>
@@ -8,7 +8,7 @@
           <div class="tags-item-2 default-btn" @click="editAndPre":class="{'act': editMode === 3}" >Edit | Pre</div>
         </div>-->
     <div class="flex-1 flex absolute-full" :class="{'hideSplit': editMode !== 3}">
-      <div class="markdown-operate-layout" v-if="!onlyView">
+      <div class="markdown-operate-layout">
         <div class="icon-layout" @click="toggleEdit" :class="{'act': isEdit}"><i class="iconfont icon-bianji2"></i>
         </div>
         <div class="icon-layout" @click="togglePreview" :class="{'act': isPreview}"><i class="iconfont icon-yulan"></i>
@@ -18,13 +18,15 @@
         <textarea class="markdown-edit-box box-shadow-inset" v-model="markDownValue"></textarea>
       </div>
       <div class="flex-1 md-body-layout edit-layout relative" v-if="isPreview">
-        <div class="absolute-full markdown-style" :class="{'black-theme' :onlyView}">
+        <div class="absolute-full markdown-style">
           <div class="markdown-content-style" v-html="markdownHTML"></div>
         </div>
-
         <!--<div :class="onlyView ? 'markdown-edit-box box-shadow-inset' : 'markdown-style'" v-html="markdownHTML"></div>-->
       </div>
     </div>
+  </div>
+  <div class="md-body-layout markdown-style markdown-style-view" v-else="onlyView">
+    <div class="markdown-content-style" v-html="markdownHTML"></div>
   </div>
 </template>
 

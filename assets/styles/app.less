@@ -540,7 +540,15 @@ textarea.form-input{
   *{
     position: relative;
   }
-  h1:before, h2:before, h3:before, h4:before, h5:before, h6:before{
+  h1, h2{
+    margin-top: 0;
+  }
+  h1:before, h2:before{
+    content: '';
+    height: 90px;
+    display: inline-block;
+  }
+  h1:after, h2:after, h3:after, h4:after, h5:after, h6:after{
     color: #d6d5d5;
     font-size: 15px;
     font-weight: normal;
@@ -548,27 +556,27 @@ textarea.form-input{
     left: -30px;
     bottom: 0;
   }
-  h1:before{
+  h1:after{
     content: 'H1';
     bottom: 3px;
   }
-  h2:before{
+  h2:after{
     content: 'H2';
     bottom: 2px;
   }
-  h3:before{
+  h3:after{
     content: 'H3';
     bottom: 1px;
   }
-  h4:before{
+  h4:after{
     content: 'H4';
     font-size: 14px;
   }
-  h5:before{
+  h5:after{
     content: 'H5';
     font-size: 13px;
   }
-  h6:before{
+  h6:after{
     content: 'H6';
     font-size: 12px;
   }
@@ -722,6 +730,15 @@ textarea.form-input{
     }
   }
 }
+.markdown-style-view{
+  padding: 0 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.box-shadow2{
+
+}
+markdown-style-view
 /*.markdown-style > * {
   padding: 0 20px;
 }*/

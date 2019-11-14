@@ -93,12 +93,15 @@ html {
   background-color: #35495e;
 }
   .visitor-box{
-    padding: 66px 0 0 100px;
+    padding: 66px 0 0 280px;
     .visitor-box-header{
+      background: #fff;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
+      z-index: 2;
+      border-bottom: solid 1px #e9e7e7;
     }
   }
 </style>

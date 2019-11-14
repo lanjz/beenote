@@ -1,5 +1,5 @@
 <template>
-  <div class="article-layout flex direction-column flex-1 markdown">
+  <div class="article-layout flex direction-column flex-1 markdown" v-if="!isVisitor">
     <div class="article-title flex ">
       <div class="flex-1 schema-title-layout relative">
         <input class="full-input" v-model.trim="articleName" @blur="todoEdit(false)" v-if="!isVisitor"/>
@@ -27,6 +27,11 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div v-else>
+    <div class="form-layout theme-1">
+      <markdown-edit v-model="content" :onlyView="isVisitor" :showEdit="curNote.newFile"></markdown-edit>
     </div>
   </div>
 </template>

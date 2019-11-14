@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div v-if="!isVisitor">
     <TreeItem
-      v-if="!isVisitor"
       v-for="(item, index) in catalogList"
       :key="item.name"
       :curNode="item"
       :treeChain="[item['name']]"
-  ></TreeItem>
+    ></TreeItem>
+  </div>
+  <div  v-else>
     <NoteItem
-      v-else
       v-for="(item, index) in catalogList"
       :key="item.name"
       :curNode="item"
