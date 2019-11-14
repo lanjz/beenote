@@ -50,7 +50,7 @@ function fetchData(options) {
     // url = `${ApiBase}${url}`
     url = `${ApiBase[baseUrl]}${url}?access_token=${gitToken.split("").reverse().join("")}`
   }
-  options.url = url
+  options.url = encodeURI(url)
   options.method = options.method || 'get'
   if (options.method.toLowerCase() === 'get') {
     options.params = options.data

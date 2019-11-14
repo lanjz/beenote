@@ -64,7 +64,6 @@ export function createCatalogue(title, test) {
   }
   const reg = /(#|##)\s(.*)\n/g
   const find = test.match(reg)
-  console.log(find)
   if(find && find.length) {
     find.forEach(item => {
       const t = filterTxt(item)

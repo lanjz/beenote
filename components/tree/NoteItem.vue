@@ -93,9 +93,9 @@
       },
       childList() {
         let child = null
-        if(this.isVisitor && this.noteCatalogue[this.curNote] && this.noteCatalogue[this.curNote][this.curNode.fullPath]) {
-          child = this.noteCatalogue[this.curNote][this.curNode.fullPath]
-          console.log('child', child)
+        const curNotePath = `${this.githubName}/${this.curNode.fullPath}`
+        if(this.isVisitor && this.noteCatalogue[curNotePath] && this.noteCatalogue[curNotePath][this.curNode.fullPath]) {
+          child = this.noteCatalogue[curNotePath][this.curNode.fullPath]
         } else {
           if(this.catalogs[this.curNode['fullPath']]&&this.catalogs[this.curNode['fullPath']].childNodes&&this.catalogs[this.curNode['fullPath']].childNodes.length) {
             child = this.catalogs[this.curNode['fullPath']].childNodes

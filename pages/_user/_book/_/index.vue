@@ -62,7 +62,7 @@
       }
       store.commit('catalogs/CATALOGS_CUR_SAVE', `${book}/${getDirPath}`)
       store.commit('notes/NOTE_CUR_UPDATE', fullPath)
-      if (store.state.notesMap && store.state.notesMap[fullPath]) {
+      if (store.state.notes.notesMap && store.state.notes.notesMap[fullPath]) {
         return
       }
       const result = await Promise.all([
@@ -78,6 +78,18 @@
           repo: book
         })
       ])
+      if(result && !result[0].err && store.state.catalogs.catalogMapNotes[book+'/'+getDirPath]) {
+        const fetchAll = []
+        store.state.catalogs.catalogMapNotes[book+'/'+getDirPath].forEach(item => {
+          fetchAll.push( store.dispatch('notes/NOTE_DES_GET',{
+            fullPath,
+            path: item.path,
+            user,
+            repo: book
+          }))
+        })
+        fetchAll.length && await Promise.all(fetchAll)
+      }
     },
     components: {
       TreeItem,
@@ -368,6 +380,7 @@
       async init() {
         // await this[ACTIONS.USER_INFO_GET]()
         // if (this.isVisitor && this.noteId) return
+        if(this.isVisitor) return
         this.getNoteData()
         this.initEmitOn()
       },
