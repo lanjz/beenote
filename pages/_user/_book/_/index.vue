@@ -78,6 +78,7 @@
           repo: book
         })
       ])
+      return
       if(result && !result[0].err && store.state.catalogs.catalogMapNotes[book+'/'+getDirPath]) {
         const fetchAll = []
         store.state.catalogs.catalogMapNotes[book+'/'+getDirPath].forEach(item => {
