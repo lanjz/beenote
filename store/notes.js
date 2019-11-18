@@ -106,7 +106,7 @@ const actions = {
           key: fullPath
         })
       commit(MUTATIONS.NOTE_CATALOGUE_SAVE, {
-        data: createCatalogue(`${repo}/${path}`, curData.contentMD),
+        data: createCatalogue(`${user}/${repo}/${path}`, curData.contentMD),
         key: fullPath
       })
     }

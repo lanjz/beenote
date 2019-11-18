@@ -13,7 +13,7 @@ const state = () => (
 )
 const getters = {
   isVisitor: state => {
-    return false
+    return true
     // 有登录状且没有当前页面所属用户则非游客
     if(state.userInfo['_id'] && !state.curUserInfo['_id']){
       return false
