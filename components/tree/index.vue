@@ -19,13 +19,16 @@
 <script>
   import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
   import constKey from '../../utils/client/const'
+  import bus from '../../utils/client/global/eventBus'
   import TreeItem from './TreeItem'
   import NoteItem from './NoteItem'
 
   export default {
     name: 'Tree',
     data() {
-      return {}
+      return {
+        actHash: ''
+      }
     },
     components: {
       TreeItem,

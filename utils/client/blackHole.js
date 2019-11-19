@@ -54,6 +54,7 @@ export function filterTxt(txt) {
     }
   })
   getText = getText.replace('`', '')
+  getText = getText.replace(' ', '')
   return getText
 }
 export function createCatalogue(title, test) {
@@ -73,7 +74,7 @@ export function createCatalogue(title, test) {
           parent: title,
           fullPath: t,
           path: t,
-          type: 'mao'
+          type: '#'
         })
         parentTitle = t
       } else if(item[0] === '#' && item[1] == '#') {
@@ -87,7 +88,7 @@ export function createCatalogue(title, test) {
             parent: curParent,
             fullPath: t,
             path: t,
-            type: 'mao'
+            type: '##'
           }
         )
       }
