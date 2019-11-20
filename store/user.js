@@ -8,6 +8,7 @@ const state = () => (
       githubName: 'lanjz'
     },
     curUserInfo: {},
+    onlyView: false,
     userInfoStatus: '' // info:个人信息，modify:修改，reg:注册，login：登录
   }
 )
@@ -40,6 +41,9 @@ const mutations = {
   },
   [MUTATIONS.CUR_USER_LAYOUT_SAVE](state, info = '') {
     state.userInfoStatus = info
+  },
+  [MUTATIONS.VIEW_STATUS_SAVE](state, status) {
+    state.onlyView = status
   }
 }
 

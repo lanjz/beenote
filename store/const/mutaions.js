@@ -26,6 +26,7 @@ export const USER_SAVE = 'USER_SAVE'
 export const ISVISITOR_SAVE = 'ISVISITOR_SAVE'
 export const CUR_USER_INFO_SAVE = 'CUR_USER_INFO_SAVE'
 export const CUR_USER_LAYOUT_SAVE = 'CUR_USER_LAYOUT_SAVE'
+export const VIEW_STATUS_SAVE = 'VIEW_STATUS_SAVE'
 
 // notes
 

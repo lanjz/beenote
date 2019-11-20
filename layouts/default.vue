@@ -9,7 +9,7 @@
     </div>
     <!--<Footer/>-->
   </div>
-  <div v-else class="visitor-box">
+  <div v-else class="visitor-box" :class="{'visitor-box-view': onlyView}">
     <div class="visitor-box-header">
       <Header/>
     </div>
@@ -29,6 +29,9 @@
       bookShelveNav
     },
     computed: {
+      ...mapState({
+        onlyView: state => state.user.onlyView,
+      }),
       ...mapGetters('user', ['isVisitor']),
     },
     methods: {
@@ -103,5 +106,8 @@ html {
       z-index: 2;
       border-bottom: solid 1px #e9e7e7;
     }
+  }
+  .visitor-box-view{
+    padding: 66px 0 0 0;
   }
 </style>

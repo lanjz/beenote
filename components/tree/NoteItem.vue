@@ -8,10 +8,7 @@
         'catalogs-item-hover': !(isNewDir || renameCatalog)
       }"
     >
-      <div class="catalogs-name line-ellipsis"  v-if="curNode.type==='mao'">
-        <a :href="'#'+curNode.name">{{curNode.name}}</a>
-      </div>
-      <div class="catalogs-name line-ellipsis b" v-else>{{curNode.name}}</div>
+      <div class="catalogs-name line-ellipsis">{{curNode.name}}</div>
     </div>
     <div
       v-if="childList">

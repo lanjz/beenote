@@ -1,6 +1,7 @@
 <template>
   <div class="" :class="{'flex flex-1': !isVisitor}">
     <div
+      v-if="!onlyView"
       class="catalog-layout"
       :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
       <TreeItem></TreeItem>
@@ -53,46 +54,38 @@
       if(context.route.query.new){
         return
       }
-      // 不确定当前访问的是目录还是
-      const getDirPath = findDirPath(pathMatch)
-      const fullPath = `${user}/${book}/${pathMatch}.md`
-      store.commit('books/BOOK_CUR_UPDATE', book)
 
+      store.commit('books/BOOK_CUR_UPDATE', book)
+      // 如果当前type是dir说明是访问是目录级
       if(context.route.query.type === 'dir') {
         store.commit('catalogs/CATALOGS_CUR_SAVE', `${book}/${pathMatch}`)
         return
       }
+      // 如果当前文件级，取先目录
+      const getDirPath = findDirPath(pathMatch)
+      const fullPath = `${user}/${book}/${pathMatch}.md`
       store.commit('catalogs/CATALOGS_CUR_SAVE', `${book}/${getDirPath}`)
       store.commit('notes/NOTE_CUR_UPDATE', fullPath)
       if (store.state.notes.notesMap && store.state.notes.notesMap[fullPath]) {
         return
       }
-      const result = await Promise.all([
-        store.dispatch('catalogs/CATALOGS_GET',{
+      const fetchArr = [store.dispatch('notes/NOTE_DES_GET',{
+        fullPath,
+        path: pathMatch+'.md',
+        user,
+        repo: book
+      })]
+      // 如果当前只是浏览当前文件，则不需要获取目录了
+      if(!context.route.query.view) {
+        fetchArr.push( store.dispatch('catalogs/CATALOGS_GET',{
           path: getDirPath,
           getChild: false,
           bookName: book
-        }),
-        store.dispatch('notes/NOTE_DES_GET',{
-          fullPath,
-          path: pathMatch+'.md',
-          user,
-          repo: book
-        })
-      ])
-      return
-      if(result && !result[0].err && store.state.catalogs.catalogMapNotes[book+'/'+getDirPath]) {
-        const fetchAll = []
-        store.state.catalogs.catalogMapNotes[book+'/'+getDirPath].forEach(item => {
-          fetchAll.push( store.dispatch('notes/NOTE_DES_GET',{
-            fullPath,
-            path: item.path,
-            user,
-            repo: book
-          }))
-        })
-        fetchAll.length && await Promise.all(fetchAll)
+        }))
+      } else {
+        store.commit('user/VIEW_STATUS_SAVE', true)
       }
+      await Promise.all(fetchArr)
     },
     components: {
       TreeItem,
@@ -143,6 +136,7 @@
         catalogMapNotes: state => state.catalogs.catalogMapNotes,
         curUserInfo: state => state.user.curUserInfo,
         pageExtend: state => state.config.extend,
+        onlyView: state => state.user.onlyView,
       }),
       ...mapGetters('catalogs', ['treeChainList']),
       ...mapGetters('user', ['isVisitor', 'githubName']),
@@ -525,7 +519,8 @@
     bottom: 0;
     background: none;
     color: @bg-color;
-    border-right: solid 1px #e9e7e7
+    border-right: solid 1px #e9e7e7;
+    z-index: 2;
   }
 
   .hidden-catalog {

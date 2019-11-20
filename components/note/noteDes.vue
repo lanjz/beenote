@@ -31,6 +31,7 @@
   </div>
   <div v-else>
     <div class="form-layout theme-1">
+      <h1 class="view-title">{{articleName}}</h1>
       <markdown-edit v-model="content" :onlyView="isVisitor" :showEdit="curNote.newFile"></markdown-edit>
     </div>
   </div>
@@ -78,7 +79,7 @@
         bookList: state => state.books.list,
         articles: state => state.articles.list,
       }),
-      ...mapGetters('user', ['isVisitor']),
+      ...mapGetters('user', ['isVisitor', 'githubName']),
       dataHasChange() {
         return JSON.stringify(this.content) !== JSON.stringify(this.cacheContent)
       }
@@ -391,5 +392,15 @@
     border-radius: 2px;
     font-size: 14px;
     cursor: pointer;
+  }
+  .view-title{
+    text-align: center;
+    padding-right: 250px;
+    small{
+      color: #666;
+      font-size: 16px;
+      font-weight: normal;
+      margin-left: 20px;
+    }
   }
 </style>
