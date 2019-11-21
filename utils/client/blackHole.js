@@ -15,9 +15,15 @@ export function findDirPath(path) {
   return path.substring(0, findTag)
 }
 
-
+// 去除文件后缀名 如 .md
 export function slitSuffix(path) {
   return path.substring(0, path.lastIndexOf('.'))
+}
+
+// 最底的文件夹名
+export function getLastName(path) {
+  const findPath = path.lastIndexOf('/')
+  return slitSuffix(path.substring(findPath))
 }
 
 export function getPath(path) {

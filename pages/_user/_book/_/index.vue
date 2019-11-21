@@ -20,7 +20,7 @@
     ></note-des>
     <noNotes v-else @toCreateFile="todoCreateNewFile"></noNotes>
     <articleFixed v-if="!isVisitor"></articleFixed>
-    <Catalogue></Catalogue>
+    <Catalogue v-if="isVisitor"></Catalogue>
   </div>
 </template>
 <script>
@@ -54,7 +54,11 @@
       if(context.route.query.new){
         return
       }
-
+      if(context.route.query.visitor){
+        store.commit('user/USER_SAVE', {
+          visitor: true
+        })
+      }
       store.commit('books/BOOK_CUR_UPDATE', book)
       // 如果当前type是dir说明是访问是目录级
       if(context.route.query.type === 'dir') {

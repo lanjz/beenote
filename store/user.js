@@ -5,7 +5,8 @@ import * as ACTIONS from './const/actions'
 const state = () => (
   {
     userInfo: {
-      githubName: 'lanjz'
+      githubName: 'lanjz',
+      visitor: false
     },
     curUserInfo: {},
     onlyView: false,
@@ -14,7 +15,7 @@ const state = () => (
 )
 const getters = {
   isVisitor: state => {
-    return true
+    return state.userInfo.visitor
     // 有登录状且没有当前页面所属用户则非游客
     if(state.userInfo['_id'] && !state.curUserInfo['_id']){
       return false
@@ -31,6 +32,7 @@ const getters = {
 const mutations = {
   [MUTATIONS.USER_SAVE](state, data) {
     state.userInfo = {
+      ...state.userInfo,
       ...data
     }
   },
