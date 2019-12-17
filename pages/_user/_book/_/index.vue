@@ -8,7 +8,7 @@
     </div>
     <NoteBrief
       v-if="!isVisitor"
-      @emitToCreateNote="toCreateNote"
+      @emitToCreateNote="todoCreateNewFile"
       :list="curNoteList"
       @emitUpdateNote="doUpdateNote"
     ></NoteBrief>
@@ -96,9 +96,6 @@
       NoteBrief,
       noteDes,
       articleFixed,
-      bookId: '',
-      catalogId: '',
-      noteId: '',
       noNotes,
       Catalogue
     },
@@ -175,42 +172,14 @@
         ACTIONS.USER_INFO_GET
       ]),
       /**
-       * 初始化的时候，获取note列表 最近文章
-       * */
-      /*      async getNoteData() {
-              const getCatalogsData = this.catalogId === constKey.recentlyArticlesKey ?
-                this[ACTIONS.NOTES_RECENTLY_GET]() : this[ACTIONS.NOTES_GET]()
-              Promise.all([
-                getCatalogsData,
-                this[ACTIONS.BOOK_LIST_GET](),
-                this[ACTIONS.CATALOGS_GET]()
-              ])
-                .then((res) => {
-                  const data = res[0].data.list
-                  if (data.length && !this.noteId) {
-                    this.$router.push(`/${this.bookId}/${this.catalogId}/${data[0]._id}`)
-                  } else {
-                    if (!this.noteId) {
-                      this.noData = true
-                    }
-                  }
-                  // this[ACTIONS.NOTES_RECENTLY_GET]()
-                })
-                .catch(err => {
-                  this.$alert({
-                    title: 'getBookData',
-                    content: err.message
-                  })
-                })
-            },*/
-      /**
-       * 初始化的时候，获取note列表 最近文章
+       * 获取仓库列表和当前仓库的文件目录
        * */
       async getNoteData() {
         const fetchArr = [
           this[ACTIONS.BOOK_LIST_GET](),
           this[ACTIONS.CATALOGS_GET]()
         ]
+        // 如果当前是访问的文章不存在如需要获取当前文章
         if($nuxt._route.query.type !== 'dir' && !this.notesMap[this.curNote]) {
           const {user, book, pathMatch = ''} = $nuxt._route.params
           const fullPath = `${user}/${book}/${pathMatch}`
@@ -220,7 +189,6 @@
             user,
             repo: book
           }))
-
         }
         this.$showLoading()
         Promise.all(fetchArr)
@@ -228,44 +196,23 @@
             const findErr = res.find(item => item.err)
             if(findErr && findErr.err) {
               this.$alert({
-                title: 'getBookData',
+                title: 'getNoteData',
                 content: findErr.err.message
               })
               return
             }
             if($nuxt._route.query.type === 'dir' ) {
+              // 如果带有new参数，说明当前是要新建笔记
               if($nuxt._route.query.new){
                 this.todoCreateNewFile()
+                // 如果当前目录下没有笔记
               } else if (!this.catalogMapNotes[this.curCatalog] || !this.catalogMapNotes[this.curCatalog].length) {
                 this.noData = true
               } else {
+                // 否则跳到该目录下第一篇笔记
                 this.$router.push(`/${this.githubName}/${slitSuffix(this.catalogMapNotes[this.curCatalog][0].fullPath)}`)
               }
             }
-
-      /*      const data = res[0].data.list
-            if (data.length && !this.noteId) {
-              this.$router.push(`/${this.bookId}/${this.catalogId}/${data[0]._id}`)
-            } else {
-              if (!this.noteId) {
-                this.noData = true
-              }
-            }
-            if (this.noteId) {
-              this.$nextTick(() => {
-                const getBriefItem = document.getElementById(this.noteId)
-                const getBriefBox = document.getElementById('article-item-box')
-                if (getBriefItem && getBriefBox) {
-                  const totalH = getBriefItem.offsetTop + getBriefItem.clientHeight
-                  const dis = totalH - getBriefBox.clientHeight
-                  if (dis) {
-                    getBriefBox.scrollTop = dis * 2
-                  }
-                }
-              })
-
-            }*/
-            // this[ACTIONS.NOTES_RECENTLY_GET]()
           })
           .catch(err => {
             this.$alert({
@@ -277,14 +224,18 @@
             this.$hideLoading()
           })
       },
+      /**
+       * 仓库新的笔记
+       * */
       todoCreateNewFile() {
         this.noData = false
-
         this.newFileNode = {
           repo: this.curBook,
           path: this.curCatalog === this.curBook ? '' : this.curCatalog.replace(`${this.curBook}/`, ''),
           newFile: true
         }
+
+        this.$router.push(`/${this.githubName}/${this.curCatalog}?type=dir&new=1`)
       },
       toCreateNote(arg) {
         this[MUTATIONS.NOTE_CUR_UPDATE]('NEW')
@@ -365,6 +316,7 @@
           this.toCreateNote(arg)
         })
         bus.$on('emitFromCatalog', (arg) => {
+          console.log('arg', arg)
           const {isNew} = arg
           if (isNew) {
             this.toCreateNote({
@@ -379,13 +331,18 @@
           this.getNoteData()
         })
       },
+      /**
+       * 初始化函数
+       * 因为文章是服务端渲染的，所以是游客模式下就不需要获取其它的数据了
+       * */
       async init() {
-        // await this[ACTIONS.USER_INFO_GET]()
-        // if (this.isVisitor && this.noteId) return
         if(this.isVisitor) return
         this.getNoteData()
         this.initEmitOn()
       },
+      /**
+       * 根据URL上的参数进行初始化配置
+       * */
       async dealParams() {
         this.routerParams = $nuxt._route.params
         const {user, book, pathMatch = ''} = $nuxt._route.params
@@ -396,12 +353,10 @@
         } else {
           // 如果是文件，则需要获取上一层目录做为当前目录
           this[MUTATIONS.CATALOGS_CUR_SAVE](`${book}/${findDirPath(pathMatch)}`)
+          // 为了保证切换用户时的唯一性，所以加上user，考虑到
           this[MUTATIONS.NOTE_CUR_UPDATE](`${user}/${book}/${pathMatch}.md`)
         }
-        // this.catalog = catalog
-        this.noteId = pathMatch
         this.pathMatch = pathMatch
-        // this.createToCatalog = catalog
         this.init()
       }
     },

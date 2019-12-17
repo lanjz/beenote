@@ -40,7 +40,7 @@
 
         </div>
       </div>
-      <div class="shortcut-add-layout" @click="shortcutAdd" v-if="notesMap[curNote] && !isVisitor">
+      <div class="shortcut-add-layout" @click="shortcutAdd" v-if="!isVisitor">
         <i class="iconfont icon-tianjiawenjian"></i>
       </div>
     </div>

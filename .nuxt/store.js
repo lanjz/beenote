@@ -16,7 +16,6 @@ void (function updateModules() {
   // Enforce store modules
   store.modules = store.modules || {}
 
-  resolveStoreModules(require('..\\store\\articles.js'), 'articles.js')
   resolveStoreModules(require('..\\store\\books.js'), 'books.js')
   resolveStoreModules(require('..\\store\\catalogs.js'), 'catalogs.js')
   resolveStoreModules(require('..\\store\\config.js'), 'config.js')
@@ -32,7 +31,6 @@ void (function updateModules() {
   if (process.client && module.hot) {
     // Whenever any Vuex module is updated...
     module.hot.accept([
-      '..\\store\\articles.js',
       '..\\store\\books.js',
       '..\\store\\catalogs.js',
       '..\\store\\config.js',
