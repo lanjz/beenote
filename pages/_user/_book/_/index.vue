@@ -1,26 +1,33 @@
 <template>
-  <div class="" :class="{'flex flex-1': !isVisitor}">
-    <div
-      v-if="!onlyView"
-      class="catalog-layout"
-      :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
-      <TreeItem></TreeItem>
+  <div class="flex" :class="{'flex-1': !isVisitor, 'visitor-content': isVisitor}">
+    <div class="page-left flex">
+      <div
+        v-if="!isVisitor"
+        class="catalog-layout"
+        :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
+        <TreeItem></TreeItem>
+      </div>
+      <NoteBrief
+        v-if="!isVisitor"
+        @emitToCreateNote="todoCreateNewFile"
+        :list="curNoteList"
+        @emitUpdateNote="doUpdateNote"
+      ></NoteBrief>
+      <div class="page-left-visitor" v-if="isVisitor"></div>
     </div>
-    <NoteBrief
-      v-if="!isVisitor"
-      @emitToCreateNote="todoCreateNewFile"
-      :list="curNoteList"
-      @emitUpdateNote="doUpdateNote"
-    ></NoteBrief>
-    <note-des
-      :curNote="curEditNote"
-      :newFileNode = 'newFileNode'
-      @emitUpdateNote="doUpdateNote"
-      v-if="!noData"
-    ></note-des>
-    <noNotes v-else @toCreateFile="todoCreateNewFile"></noNotes>
-    <articleFixed v-if="!isVisitor"></articleFixed>
-    <Catalogue v-if="isVisitor"></Catalogue>
+
+    <div class="flex-1 flex">
+      <note-des
+        :curNote="curEditNote"
+        :newFileNode = 'newFileNode'
+        @emitUpdateNote="doUpdateNote"
+        v-if="!noData"
+      ></note-des>
+      <noNotes v-else @toCreateFile="todoCreateNewFile"></noNotes>
+    </div>
+    <div class="page-right" v-if="isVisitor">
+      <Catalogue></Catalogue>
+    </div>
   </div>
 </template>
 <script>
@@ -33,7 +40,6 @@
   import NoteBrief from '@/components/note/NoteBrief.vue'
   import noteDes from '@/components/note/noteDes.vue'
   import noNotes from '@/components/note/noNotes.vue'
-  import articleFixed from '@/components/article/articleFixed.vue'
   import constKey from '../../../../utils/client/const'
   import {returnCatalog, setTitle, findDirPath, slitSuffix} from '../../../../utils/client/blackHole'
   import fetch from '../../../../utils/client/fetch/fetch'
@@ -95,7 +101,6 @@
       TreeItem,
       NoteBrief,
       noteDes,
-      articleFixed,
       noNotes,
       Catalogue
     },
@@ -358,6 +363,9 @@
   }
 </script>
 <style lang="less" scoped>
+  .visitor-content{
+    padding-top: 65px;
+  }
   .book-slider-layout {
     padding: 15px;
     background: @bg-second-color;
@@ -460,6 +468,8 @@
     width: 200px;
     max-width: 200px;
     transition: .3s;
+    position: relative;
+    height: 100%;
   }
   .catalog-layout-isVisitor{
     position: fixed;
@@ -480,4 +490,10 @@
     overflow: hidden;
   }
 
+  .page-left-visitor{
+    width: 280px;
+  }
+  .page-right{
+    width: 280px;
+  }
 </style>

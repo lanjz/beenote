@@ -115,11 +115,12 @@
     height: 100%;
     opacity: 0.5;
   }
-  .catalogs-layout:first-child:before{
-    transform: translateY(50%);
-  }
   .catalogs-layout:last-child:before{
-    transform: translateY(-50%);
+    /*transform: translateY(-50%);*/
+  }
+
+  .catalogs-layout:first-child:before{
+    /*transform: translateY(50%);*/
   }
 
 

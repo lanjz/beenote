@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isVisitor">
+  <div v-if="!isVisitor" class="absolute-full">
     <TreeItem
       v-for="(item, index) in catalogList"
       :key="item.name"
