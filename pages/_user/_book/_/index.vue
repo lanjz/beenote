@@ -126,8 +126,6 @@
     },
     computed: {
       ...mapState({
-        schemaList: state => state.schema.list,
-        noteList: state => state.notes.list,
         notesMap: state => state.notes.notesMap,
         curBook: state => state.books.curBook,
         curNote: state => state.notes.curNote,
@@ -136,7 +134,6 @@
         catalogs: state => state.catalogs.list,
         catalogMapNotes: state => state.catalogs.catalogMapNotes,
         curUserInfo: state => state.user.curUserInfo,
-        pageExtend: state => state.config.extend,
         onlyView: state => state.user.onlyView,
       }),
       ...mapGetters('catalogs', ['treeChainList']),
@@ -156,7 +153,7 @@
       }
     },
     methods: {
-      ...mapMutations('catalogs', [MUTATIONS.CATALOGS_CUR_SAVE,MUTATIONS.CATALOGS_CACHE_SAVE]),
+      ...mapMutations('catalogs', [MUTATIONS.CATALOGS_CUR_SAVE,MUTATIONS.CATALOGS_CACHE_SAVE, MUTATIONS.CATALOGS_REMOVE]),
       ...mapMutations('notes', [MUTATIONS.NOTE_CUR_UPDATE,]),
       ...mapMutations('books', [MUTATIONS.BOOK_CUR_UPDATE,]),
       ...mapActions('books', [ACTIONS.BOOK_LIST_GET]),
@@ -234,13 +231,12 @@
           path: this.curCatalog === this.curBook ? '' : this.curCatalog.replace(`${this.curBook}/`, ''),
           newFile: true
         }
-
-        this.$router.push(`/${this.githubName}/${this.curCatalog}?type=dir&new=1`)
-      },
-      toCreateNote(arg) {
         this[MUTATIONS.NOTE_CUR_UPDATE]('NEW')
         this.$router.push(`/${this.githubName}/${this.curCatalog}?type=dir&new=1`)
       },
+      /**
+       * 选择了目录
+       * */
       doChooseCatalog(arg){
         if(this.catalogMapNotes[arg.fullPath] && this.catalogMapNotes[arg.fullPath].length) {
           this.$router.push(`/${this.githubName}/${slitSuffix(this.catalogMapNotes[arg.fullPath][0].fullPath)}`)
@@ -270,6 +266,7 @@
         if(arg.newFile || arg.delete) {
           // 要更新的目录不定是当前目录，优化取rootModifyPath属性
           const updatePath = (this.catalogs[this.curCatalog] && this.catalogs[this.curCatalog].rootModifyPath) || ''
+          // const updatePath = `${findDirPath(arg.path)}`
           fetchArr.push(
             this[ACTIONS.CATALOGS_GET]({
               force,
@@ -289,10 +286,11 @@
           // 新增的话跳到新增的文件路径
           this.$router.push(`/${this.githubName}/${this.curBook}/${slitSuffix(arg.path)}`)
         } else if(arg.delete) {
-          // 判断当前删除的文件是否是当前选择的文件，如果是的话需要重新自动先个当前目录下或上级目录下的文件
+          // 判断当前删除的文件是否是当前选择的文件，如果是的话需要重新自动选个当前目录下或上级目录下的文件
           if(this.curNote.indexOf(arg.path) !== this.curNote.length - arg.path.length) {
             return
           }
+          this[MUTATIONS.CATALOGS_REMOVE]({ key: `${this.curBook}/${findDirPath(arg.path)}` })
           this[MUTATIONS.CATALOGS_CACHE_SAVE]()
           const getGoPath = this.findHasFileDir(`${this.curBook}/${findDirPath(arg.path)}`)
           this.$router.push(`/${this.githubName}/${getGoPath}?type=dir`)
@@ -308,18 +306,12 @@
         /**
          * @params <Object> arg 包含schemaId字段id和当前articleId(如果是添加则为'new')
          * */
-        bus.$off("emitToCreateArticle")
         bus.$off("updateCurBooks")
         bus.$off("emitFromCatalog")
-
-        bus.$on('emitToCreateArticle', (arg) => {
-          this.toCreateNote(arg)
-        })
         bus.$on('emitFromCatalog', (arg) => {
-          console.log('arg', arg)
           const {isNew} = arg
           if (isNew) {
-            this.toCreateNote({
+            this.todoCreateNewFile({
               catalogId: arg.catalogId
             })
           } else {

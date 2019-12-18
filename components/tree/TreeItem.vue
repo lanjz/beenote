@@ -178,7 +178,6 @@
       },
       async chooseCatalog(item) {
         this.toggleOpenDir(true)
-//        this.isOpen = true
         this[MUTATIONS.CATALOGS_CUR_SAVE](`${this.curNode.fullPath}`)
         bus.$emit('emitFromCatalog', item || {
           ...this.curNode,
@@ -208,9 +207,11 @@
       },
       todoCreateFile() {
         this.closeMenu()
-        this[MUTATIONS.NOTE_CUR_UPDATE]('NEW')
         this[MUTATIONS.CATALOGS_CUR_SAVE](this.curNode.fullPath)
-        this.$router.push(`/${this.githubName}/${this.actCatalog}?type=dir&new=1`)
+        bus.$emit('emitFromCatalog', {
+          isNew: 1
+        })
+        // this.$router.push(`/${this.githubName}/${this.actCatalog}?type=dir&new=1`)
       },
       todoDelete() {
         this.closeMenu()
