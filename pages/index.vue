@@ -124,7 +124,7 @@
         /**
          * @params <Object> arg 包含schemaId字段id和当前articleId(如果是添加则为'new')
          * */
-        bus.$on('emitToCreateArticle', (arg) => {
+ /*       bus.$on('emitToCreateArticle', (arg) => {
           this.toCreateNote(arg)
         })
         bus.$on('emitFromCatalog', (arg) => {
@@ -136,7 +136,7 @@
           } else {
             this.doUpdateNote(arg)
           }
-        })
+        })*/
         bus.$on('updateCurBooks', () => {
           this[MUTATIONS.CATALOGS_CUR_SAVE](constKey.recentlyArticlesKey)
           this.getNoteData()

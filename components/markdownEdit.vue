@@ -25,7 +25,7 @@
       </div>
     </div>
   </div>
-  <div class="md-body-layout markdown-style markdown-style-view" v-else="onlyView">
+  <div class="md-body-layout markdown-style" v-else="onlyView">
     <div class="markdown-content-style" v-html="markdownHTML"></div>
   </div>
 </template>

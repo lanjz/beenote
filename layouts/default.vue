@@ -96,7 +96,7 @@ html {
   background-color: #35495e;
 }
   .visitor-box{
-    padding: 66px 0 0 280px;
+    /*padding: 66px 0 0 280px;*/
     .visitor-box-header{
       background: #fff;
       position: fixed;

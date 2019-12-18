@@ -7,7 +7,26 @@
       </div>
       <div class="flex-1 relative">
         <div class="absolute-full article-item-box" id="article-item-box">
-          <draggable
+          <div
+            :id="item._id"
+            class="article-item"
+            v-for="(item, index) in filterList"
+            :key="item.sha+index"
+            :class="{'act': isAct(item.path)}"
+            @click="chooseNote(item)">
+            <div class="article-item-title">{{item.name}}</div>
+            <div class="article-label">
+              <span class="article-label-item">{{item.path}}</span>
+            </div>
+            <!--                <div class="article-item-mark">{{item.createTime | timestampToBriefTime}}~{{item.updateTime | timestampToBriefTime}}</div>-->
+            <div class="operate-icon operate-icon-delete" @click.stop="todoDelete(item)">
+              <i class="iconfont icon-shanchu1"></i>
+            </div>
+            <div class="operate-icon operate-icon-sort" v-show="!filterKeys" @click.stop="todoDelete(item)">
+              <i class="iconfont icon-paixu"></i>
+            </div>
+          </div>
+<!--          <draggable
             v-model="filterList"
             group="people"
             handle=".operate-icon-sort"
@@ -27,7 +46,7 @@
                 <div class="article-label">
                   <span class="article-label-item">{{item.path}}</span>
                 </div>
-<!--                <div class="article-item-mark">{{item.createTime | timestampToBriefTime}}~{{item.updateTime | timestampToBriefTime}}</div>-->
+&lt;!&ndash;                <div class="article-item-mark">{{item.createTime | timestampToBriefTime}}~{{item.updateTime | timestampToBriefTime}}</div>&ndash;&gt;
                 <div class="operate-icon operate-icon-delete" @click.stop="todoDelete(item)">
                   <i class="iconfont icon-shanchu1"></i>
                 </div>
@@ -36,11 +55,11 @@
                 </div>
               </div>
             </transition-group>
-          </draggable>
+          </draggable>-->
 
         </div>
       </div>
-      <div class="shortcut-add-layout" @click="shortcutAdd" v-if="notesMap[curNote] && !isVisitor">
+      <div class="shortcut-add-layout" @click="shortcutAdd" v-if="!isVisitor && curNote !== 'NEW'">
         <i class="iconfont icon-tianjiawenjian"></i>
       </div>
     </div>

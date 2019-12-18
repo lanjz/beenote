@@ -85,7 +85,6 @@
   .note-catalogue{
     position: fixed;
     right: 10px;
-    top: 100px;
     padding: 15px;
     z-index: 2;
     background: #fff;

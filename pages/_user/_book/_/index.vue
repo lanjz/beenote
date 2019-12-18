@@ -1,26 +1,33 @@
 <template>
-  <div class="" :class="{'flex flex-1': !isVisitor}">
-    <div
-      v-if="!onlyView"
-      class="catalog-layout"
-      :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
-      <TreeItem></TreeItem>
+  <div class="flex" :class="{'flex-1': !isVisitor, 'visitor-content': isVisitor}">
+    <div class="page-left flex">
+      <div
+        v-if="!isVisitor"
+        class="catalog-layout"
+        :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
+        <TreeItem></TreeItem>
+      </div>
+      <NoteBrief
+        v-if="!isVisitor"
+        @emitToCreateNote="todoCreateNewFile"
+        :list="curNoteList"
+        @emitUpdateNote="doUpdateNote"
+      ></NoteBrief>
+      <div class="page-left-visitor" v-if="isVisitor"></div>
     </div>
-    <NoteBrief
-      v-if="!isVisitor"
-      @emitToCreateNote="toCreateNote"
-      :list="curNoteList"
-      @emitUpdateNote="doUpdateNote"
-    ></NoteBrief>
-    <note-des
-      :curNote="curEditNote"
-      :newFileNode = 'newFileNode'
-      @emitUpdateNote="doUpdateNote"
-      v-if="!noData"
-    ></note-des>
-    <noNotes v-else @toCreateFile="todoCreateNewFile"></noNotes>
-    <articleFixed v-if="!isVisitor"></articleFixed>
-    <Catalogue v-if="isVisitor"></Catalogue>
+
+    <div class="flex-1 flex">
+      <note-des
+        :curNote="curEditNote"
+        :newFileNode = 'newFileNode'
+        @emitUpdateNote="doUpdateNote"
+        v-if="!noData"
+      ></note-des>
+      <noNotes v-else @toCreateFile="todoCreateNewFile"></noNotes>
+    </div>
+    <div class="page-right" v-if="isVisitor">
+      <Catalogue></Catalogue>
+    </div>
   </div>
 </template>
 <script>
@@ -33,7 +40,6 @@
   import NoteBrief from '@/components/note/NoteBrief.vue'
   import noteDes from '@/components/note/noteDes.vue'
   import noNotes from '@/components/note/noNotes.vue'
-  import articleFixed from '@/components/article/articleFixed.vue'
   import constKey from '../../../../utils/client/const'
   import {returnCatalog, setTitle, findDirPath, slitSuffix} from '../../../../utils/client/blackHole'
   import fetch from '../../../../utils/client/fetch/fetch'
@@ -95,10 +101,6 @@
       TreeItem,
       NoteBrief,
       noteDes,
-      articleFixed,
-      bookId: '',
-      catalogId: '',
-      noteId: '',
       noNotes,
       Catalogue
     },
@@ -129,8 +131,6 @@
     },
     computed: {
       ...mapState({
-        schemaList: state => state.schema.list,
-        noteList: state => state.notes.list,
         notesMap: state => state.notes.notesMap,
         curBook: state => state.books.curBook,
         curNote: state => state.notes.curNote,
@@ -139,7 +139,6 @@
         catalogs: state => state.catalogs.list,
         catalogMapNotes: state => state.catalogs.catalogMapNotes,
         curUserInfo: state => state.user.curUserInfo,
-        pageExtend: state => state.config.extend,
         onlyView: state => state.user.onlyView,
       }),
       ...mapGetters('catalogs', ['treeChainList']),
@@ -159,7 +158,7 @@
       }
     },
     methods: {
-      ...mapMutations('catalogs', [MUTATIONS.CATALOGS_CUR_SAVE,MUTATIONS.CATALOGS_CACHE_SAVE]),
+      ...mapMutations('catalogs', [MUTATIONS.CATALOGS_CUR_SAVE,MUTATIONS.CATALOGS_CACHE_SAVE, MUTATIONS.CATALOGS_REMOVE]),
       ...mapMutations('notes', [MUTATIONS.NOTE_CUR_UPDATE,]),
       ...mapMutations('books', [MUTATIONS.BOOK_CUR_UPDATE,]),
       ...mapActions('books', [ACTIONS.BOOK_LIST_GET]),
@@ -175,42 +174,14 @@
         ACTIONS.USER_INFO_GET
       ]),
       /**
-       * 初始化的时候，获取note列表 最近文章
-       * */
-      /*      async getNoteData() {
-              const getCatalogsData = this.catalogId === constKey.recentlyArticlesKey ?
-                this[ACTIONS.NOTES_RECENTLY_GET]() : this[ACTIONS.NOTES_GET]()
-              Promise.all([
-                getCatalogsData,
-                this[ACTIONS.BOOK_LIST_GET](),
-                this[ACTIONS.CATALOGS_GET]()
-              ])
-                .then((res) => {
-                  const data = res[0].data.list
-                  if (data.length && !this.noteId) {
-                    this.$router.push(`/${this.bookId}/${this.catalogId}/${data[0]._id}`)
-                  } else {
-                    if (!this.noteId) {
-                      this.noData = true
-                    }
-                  }
-                  // this[ACTIONS.NOTES_RECENTLY_GET]()
-                })
-                .catch(err => {
-                  this.$alert({
-                    title: 'getBookData',
-                    content: err.message
-                  })
-                })
-            },*/
-      /**
-       * 初始化的时候，获取note列表 最近文章
+       * 获取仓库列表和当前仓库的文件目录
        * */
       async getNoteData() {
         const fetchArr = [
           this[ACTIONS.BOOK_LIST_GET](),
           this[ACTIONS.CATALOGS_GET]()
         ]
+        // 如果当前是访问的文章不存在如需要获取当前文章
         if($nuxt._route.query.type !== 'dir' && !this.notesMap[this.curNote]) {
           const {user, book, pathMatch = ''} = $nuxt._route.params
           const fullPath = `${user}/${book}/${pathMatch}`
@@ -220,7 +191,6 @@
             user,
             repo: book
           }))
-
         }
         this.$showLoading()
         Promise.all(fetchArr)
@@ -228,44 +198,23 @@
             const findErr = res.find(item => item.err)
             if(findErr && findErr.err) {
               this.$alert({
-                title: 'getBookData',
+                title: 'getNoteData',
                 content: findErr.err.message
               })
               return
             }
             if($nuxt._route.query.type === 'dir' ) {
+              // 如果带有new参数，说明当前是要新建笔记
               if($nuxt._route.query.new){
                 this.todoCreateNewFile()
+                // 如果当前目录下没有笔记
               } else if (!this.catalogMapNotes[this.curCatalog] || !this.catalogMapNotes[this.curCatalog].length) {
                 this.noData = true
               } else {
+                // 否则跳到该目录下第一篇笔记
                 this.$router.push(`/${this.githubName}/${slitSuffix(this.catalogMapNotes[this.curCatalog][0].fullPath)}`)
               }
             }
-
-      /*      const data = res[0].data.list
-            if (data.length && !this.noteId) {
-              this.$router.push(`/${this.bookId}/${this.catalogId}/${data[0]._id}`)
-            } else {
-              if (!this.noteId) {
-                this.noData = true
-              }
-            }
-            if (this.noteId) {
-              this.$nextTick(() => {
-                const getBriefItem = document.getElementById(this.noteId)
-                const getBriefBox = document.getElementById('article-item-box')
-                if (getBriefItem && getBriefBox) {
-                  const totalH = getBriefItem.offsetTop + getBriefItem.clientHeight
-                  const dis = totalH - getBriefBox.clientHeight
-                  if (dis) {
-                    getBriefBox.scrollTop = dis * 2
-                  }
-                }
-              })
-
-            }*/
-            // this[ACTIONS.NOTES_RECENTLY_GET]()
           })
           .catch(err => {
             this.$alert({
@@ -277,19 +226,22 @@
             this.$hideLoading()
           })
       },
+      /**
+       * 仓库新的笔记
+       * */
       todoCreateNewFile() {
         this.noData = false
-
         this.newFileNode = {
           repo: this.curBook,
           path: this.curCatalog === this.curBook ? '' : this.curCatalog.replace(`${this.curBook}/`, ''),
           newFile: true
         }
-      },
-      toCreateNote(arg) {
         this[MUTATIONS.NOTE_CUR_UPDATE]('NEW')
         this.$router.push(`/${this.githubName}/${this.curCatalog}?type=dir&new=1`)
       },
+      /**
+       * 选择了目录
+       * */
       doChooseCatalog(arg){
         if(this.catalogMapNotes[arg.fullPath] && this.catalogMapNotes[arg.fullPath].length) {
           this.$router.push(`/${this.githubName}/${slitSuffix(this.catalogMapNotes[arg.fullPath][0].fullPath)}`)
@@ -319,6 +271,7 @@
         if(arg.newFile || arg.delete) {
           // 要更新的目录不定是当前目录，优化取rootModifyPath属性
           const updatePath = (this.catalogs[this.curCatalog] && this.catalogs[this.curCatalog].rootModifyPath) || ''
+          // const updatePath = `${findDirPath(arg.path)}`
           fetchArr.push(
             this[ACTIONS.CATALOGS_GET]({
               force,
@@ -338,10 +291,11 @@
           // 新增的话跳到新增的文件路径
           this.$router.push(`/${this.githubName}/${this.curBook}/${slitSuffix(arg.path)}`)
         } else if(arg.delete) {
-          // 判断当前删除的文件是否是当前选择的文件，如果是的话需要重新自动先个当前目录下或上级目录下的文件
+          // 判断当前删除的文件是否是当前选择的文件，如果是的话需要重新自动选个当前目录下或上级目录下的文件
           if(this.curNote.indexOf(arg.path) !== this.curNote.length - arg.path.length) {
             return
           }
+          this[MUTATIONS.CATALOGS_REMOVE]({ key: `${this.curBook}/${findDirPath(arg.path)}` })
           this[MUTATIONS.CATALOGS_CACHE_SAVE]()
           const getGoPath = this.findHasFileDir(`${this.curBook}/${findDirPath(arg.path)}`)
           this.$router.push(`/${this.githubName}/${getGoPath}?type=dir`)
@@ -357,17 +311,12 @@
         /**
          * @params <Object> arg 包含schemaId字段id和当前articleId(如果是添加则为'new')
          * */
-        bus.$off("emitToCreateArticle")
         bus.$off("updateCurBooks")
         bus.$off("emitFromCatalog")
-
-        bus.$on('emitToCreateArticle', (arg) => {
-          this.toCreateNote(arg)
-        })
         bus.$on('emitFromCatalog', (arg) => {
           const {isNew} = arg
           if (isNew) {
-            this.toCreateNote({
+            this.todoCreateNewFile({
               catalogId: arg.catalogId
             })
           } else {
@@ -379,13 +328,18 @@
           this.getNoteData()
         })
       },
+      /**
+       * 初始化函数
+       * 因为文章是服务端渲染的，所以是游客模式下就不需要获取其它的数据了
+       * */
       async init() {
-        // await this[ACTIONS.USER_INFO_GET]()
-        // if (this.isVisitor && this.noteId) return
         if(this.isVisitor) return
         this.getNoteData()
         this.initEmitOn()
       },
+      /**
+       * 根据URL上的参数进行初始化配置
+       * */
       async dealParams() {
         this.routerParams = $nuxt._route.params
         const {user, book, pathMatch = ''} = $nuxt._route.params
@@ -396,12 +350,10 @@
         } else {
           // 如果是文件，则需要获取上一层目录做为当前目录
           this[MUTATIONS.CATALOGS_CUR_SAVE](`${book}/${findDirPath(pathMatch)}`)
+          // 为了保证切换用户时的唯一性，所以加上user，考虑到
           this[MUTATIONS.NOTE_CUR_UPDATE](`${user}/${book}/${pathMatch}.md`)
         }
-        // this.catalog = catalog
-        this.noteId = pathMatch
         this.pathMatch = pathMatch
-        // this.createToCatalog = catalog
         this.init()
       }
     },
@@ -411,6 +363,9 @@
   }
 </script>
 <style lang="less" scoped>
+  .visitor-content{
+    padding-top: 65px;
+  }
   .book-slider-layout {
     padding: 15px;
     background: @bg-second-color;
@@ -513,6 +468,8 @@
     width: 200px;
     max-width: 200px;
     transition: .3s;
+    position: relative;
+    height: 100%;
   }
   .catalog-layout-isVisitor{
     position: fixed;
@@ -533,4 +490,10 @@
     overflow: hidden;
   }
 
+  .page-left-visitor{
+    width: 280px;
+  }
+  .page-right{
+    width: 280px;
+  }
 </style>

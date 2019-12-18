@@ -46,6 +46,17 @@ const mutations = {
     state.cacheCatalogMapNotes[key] = data
     state.cacheCatalogMapNotes = { ...state.cacheCatalogMapNotes }
   },
+  [MUTATIONS.CATALOGS_REMOVE](state, { key }) {
+    state.list[key] = null
+    state.catchList[key] = null
+    state.list = {
+      ...state.list,
+    }
+    
+    state.catchList = {
+      ...state.catchList,
+    }
+  },
   [MUTATIONS.CATALOGS_SAVE](state, { key, data }) {
     const list = {
       ...{ [key]: {

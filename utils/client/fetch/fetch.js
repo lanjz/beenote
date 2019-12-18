@@ -69,6 +69,7 @@ function fetchData(options) {
   }
   options.url = encodeURI(url)
   options.method = options.method || 'get'
+  
   if (options.method.toLowerCase() === 'get') {
     options.params = options.data
   }

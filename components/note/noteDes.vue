@@ -29,11 +29,27 @@
       </div>
     </div>
   </div>
-  <div v-else>
-    <div class="form-layout theme-1">
-      <h1 class="view-title">{{articleName}}</h1>
-      <markdown-edit v-model="content" :onlyView="isVisitor" :showEdit="curNote.newFile"></markdown-edit>
+  <div class="form-layout theme-1" style="width: 100%" v-else>
+    <div class="author-info-box">
+      <div class="author-info flex align-items-center">
+        <div class="author-avatar">
+          <img src="http://img2.touxiang.cn/file/20170124/f7d7f55fb3c9c11bda3bae8ff27e7347.jpg">
+        </div>
+        <div class="author-txt">
+          <div class="author-name">lanjz</div>
+          <div class="label-box">
+            <div class="label label-1">前端</div>
+            <div class="label label-2">JavaScript</div>
+          </div>
+        </div>
+      </div>
+      <div class="icon-operate">
+        <div>
+          <img src="https://www.easyicon.net/api/resizeApi.php?id=1109058&size=128">
+        </div>
+      </div>
     </div>
+    <markdown-edit v-model="content" :onlyView="isVisitor" :showEdit="curNote.newFile"></markdown-edit>
   </div>
 </template>
 
@@ -401,6 +417,53 @@
       font-size: 16px;
       font-weight: normal;
       margin-left: 20px;
+    }
+  }
+  .author-info-box{
+    padding: 40px 40px 0 40px;
+    background: #fff;
+    position: relative;
+    .author-txt{
+      margin-left: 10px;
+      color: #666;
+    }
+    .author-info{
+      .author-avatar{
+        overflow: hidden;
+        img{
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+      }
+      .author-name{
+        font-weight: 500;
+        font-size: 20px;
+      }
+    }
+    .label-box{
+      .label{
+        display: inline-block;
+        padding: 1px 6px;
+        font-size: 12px;
+        color: #fff;
+        border-radius: 2px;
+      }
+      .label-1{
+        background: #398dee;
+      }
+      .label-2{
+        background: #F4606C;
+      }
+    }
+    .icon-operate{
+      position: absolute;
+      right: 40px;
+      bottom: 0;
+      img{
+        width: 30px;
+        height: 30px;
+      }
     }
   }
 </style>
