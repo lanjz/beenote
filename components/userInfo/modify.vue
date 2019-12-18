@@ -38,10 +38,10 @@
         </div>
         <div class="form-group flex">
           <div class="form-label-layout">
-            邮箱：
+            Github-Token：
           </div>
           <div class="flex flex-1 align-items-center">
-            <input class="form-input" v-model.trim="email"/>
+            <input class="form-input" v-model.trim="gitToken"/>
           </div>
         </div>
         <!--radios默认值-->
@@ -101,7 +101,7 @@
     },
     computed:{
       ...mapState({
-        userInfo: state => state.user.userInfo,
+        userInfo: state => state.user.loginUserInfo,
         userLayoutStatus: state => state.user.userInfoStatus,
       }),
     },
@@ -151,6 +151,10 @@
           this[item] = defaultData[item]
         })
       },
+      initData() {
+        this.gitToken = this.userInfo.gitToken
+        this.nickname = this.userInfo.nickname
+      },
       toDoCloseUserLayout() {
         this[MUTATIONS.CUR_USER_LAYOUT_SAVE]()
       },
@@ -165,8 +169,8 @@
       async doEdit() {
         this.$showLoading()
         const data = {
-          nickname: this.nicknamem,
-          email: this.email,
+          nickname: this.nickname,
+          gitToken: this.gitToken,
           sex: this.sex
         }
         this[ACTIONS.USER_PUT](data)
@@ -193,7 +197,7 @@
         this.doReset()
       } else {
         this.doReset()
-        this.todoEdit()
+        this.initData()
       }
     }
   }

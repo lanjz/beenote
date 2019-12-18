@@ -5,9 +5,15 @@ import {getCurTime} from '../blackHole';
 import {Base64} from 'js-base64';
 // import gitToken from './access_token'
 
-const ApiBase = {
+/*const ApiBase = {
   base: 'https://api.github.com',
   raw: 'https://raw.githubusercontent.com'
+}*/
+// axios.defaults.withCredentials = true
+const ApiBase = {
+  base: 'http://192.168.31.250:8080/git',
+  api: 'http://192.168.31.250:8080',
+  raw: 'https://raw.githubusercontent.com',
 }
 if(process.client) {
   console.log('context', window)
@@ -22,7 +28,7 @@ const gitToken = 'e0ed39f163363a5b3d5eb9f658cdffba25c4e72a'
 const { MOCK } = process.env
 function dealRetCode(response = {}) {
   const res = { err: null, data: response.data }
-  if(response.retCode === 4){
+  if(response.retCode === -5){
     res.notAlert = true
     res.err = new Error('未登录')
     if(process.client) {
@@ -47,15 +53,26 @@ function fetchData(options) {
   if (MOCK) {
     url = `${SET.base.mockHost}/mock/15${url}`
   } else {
-    // url = `${ApiBase}${url}`
-    url = `${ApiBase[baseUrl]}${url}?access_token=${gitToken.split("").reverse().join("")}`
+    if(url.indexOf('/api') === 0) {
+      options.withCredentials = true
+      url = `${ApiBase.api}${url}`
+    } else {
+      options.withCredentials = false
+      // url = `${ApiBase}${url}`
+      url = `${ApiBase[baseUrl]}${url}?access_token=${gitToken.split("").reverse().join("")}`
+    }
+  }
+  console.log('window.$nuxt.$store', window.$nuxt.$store)
+  const token = window.$nuxt.$store.state.user.loginUserInfo.token
+  if(token) {
+    url = `url${url.indexOf('?') > 0 ? '&' : '?'}token=${token}`
   }
   options.url = encodeURI(url)
   options.method = options.method || 'get'
   if (options.method.toLowerCase() === 'get') {
     options.params = options.data
   }
-   if(options.type === 'formData') {
+   if(true) {
     options.headers = { 'Content-Type': 'multipart/form-data' }
     const formData = new FormData();
     const forDataKeys = Object.keys(options.data)
@@ -63,6 +80,7 @@ function fetchData(options) {
       formData.append(value, options.data[value]);
     })
     options.data = formData
+
   }
   return axios(options)
 }
@@ -72,7 +90,8 @@ const doFetchData = function (options) {
   return new Promise((resolve) => {
     fetchData(options)
       .then((response) => {
-      /*  const result = dealRetCode(response.data)
+        const result = dealRetCode(response.data)
+        console.log('result', result)
         if(result.err) {
           res.err = result.err
           if(!result.notAlert && !options.notAlert) {
@@ -84,8 +103,8 @@ const doFetchData = function (options) {
           resolve(res)
           return
         }
-        res.data = result.data*/
-        res.data = response.data
+        res.data = result.data
+        // res.data = response.data
         resolve(res)
       })
       .catch((err) => {
