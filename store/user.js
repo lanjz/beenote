@@ -8,7 +8,9 @@ const state = () => (
       githubName: 'lanjz',
       visitor: false
     },
-    curUserInfo: {},
+    curUserInfo: {
+      githubName: 'lanjz',
+    },
     onlyView: false,
     userInfoStatus: '' // info:个人信息，modify:修改，reg:注册，login：登录
   }
@@ -27,7 +29,7 @@ const getters = {
     // 有登录状且有当前页面所属用户则判断他们是否相等
     return state.loginUserInfo['_id'] !== state.curUserInfo['_id']
   },
-  githubName: state => state.userInfo.githubName
+  githubName: state => state.curUserInfo.githubName
 }
 const mutations = {
   [MUTATIONS.USER_SAVE](state, data) {

@@ -94,6 +94,7 @@
       ...mapMutations('books', [
         MUTATIONS.BOOK_CUR_UPDATE
       ]),
+      ...mapActions('user', [MUTATIONS.CUR_USER_INFO_SAVE]),
       ...mapActions('books', [
         ACTIONS.BOOK_LIST_GET,
         ACTIONS.BOOK_LIST_PUT,

@@ -9,7 +9,7 @@ import {Base64} from 'js-base64';
   base: 'https://api.github.com',
   raw: 'https://raw.githubusercontent.com'
 }*/
-// axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 const ApiBase = {
   base: 'http://192.168.31.250:8080/git',
   api: 'http://192.168.31.250:8080',
@@ -54,34 +54,31 @@ function fetchData(options) {
     url = `${SET.base.mockHost}/mock/15${url}`
   } else {
     if(url.indexOf('/api') === 0) {
-      options.withCredentials = true
+      // options.withCredentials = true
       url = `${ApiBase.api}${url}`
     } else {
-      options.withCredentials = false
-      // url = `${ApiBase}${url}`
-      url = `${ApiBase[baseUrl]}${url}?access_token=${gitToken.split("").reverse().join("")}`
+      // options.withCredentials = false
+      url = `${ApiBase[baseUrl]}${url}`
+      // url = `${ApiBase[baseUrl]}${url}?access_token=${gitToken.split("").reverse().join("")}`
     }
   }
-  console.log('window.$nuxt.$store', window.$nuxt.$store)
-  const token = window.$nuxt.$store.state.user.loginUserInfo.token
-  if(token) {
+ /* if(token) {
     url = `url${url.indexOf('?') > 0 ? '&' : '?'}token=${token}`
-  }
+  }*/
   options.url = encodeURI(url)
   options.method = options.method || 'get'
-  
+
   if (options.method.toLowerCase() === 'get') {
     options.params = options.data
   }
-   if(true) {
+   if(true && process.client) {
     options.headers = { 'Content-Type': 'multipart/form-data' }
     const formData = new FormData();
-    const forDataKeys = Object.keys(options.data)
+    const forDataKeys = Object.keys(options.data || {})
     forDataKeys.forEach((value) => {
       formData.append(value, options.data[value]);
     })
     options.data = formData
-
   }
   return axios(options)
 }
@@ -92,7 +89,6 @@ const doFetchData = function (options) {
     fetchData(options)
       .then((response) => {
         const result = dealRetCode(response.data)
-        console.log('result', result)
         if(result.err) {
           res.err = result.err
           if(!result.notAlert && !options.notAlert) {

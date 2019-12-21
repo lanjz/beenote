@@ -52,7 +52,7 @@ const mutations = {
     state.list = {
       ...state.list,
     }
-    
+
     state.catchList = {
       ...state.catchList,
     }
@@ -163,7 +163,7 @@ const actions = {
         return result
       }
     } else {
-      const githubName = rootState.user.userInfo.githubName
+      const githubName = rootState.user.curUserInfo.githubName
       result = await fetch({
         url: path ? `/repos/${githubName}/${bookName}/contents/${path}` : `/repos/${githubName}/${bookName}/contents`
       })
