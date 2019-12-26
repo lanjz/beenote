@@ -20,11 +20,8 @@ export default async function ({ store, redirect, req, app, params }) {
     const response = await axios({
       url: `http://${req.headers.host}/api/getUserInfoInSerer?token=${helloToken}`
     })
-    console.log('response', response.data.data)
-    console.log('response', response.retCode)
     if(response.data.retCode === 1) {
       store.commit('user/USER_SAVE', response.data.data)
-      console.log('store.state.user', store.state.user)
     }
   }
 }

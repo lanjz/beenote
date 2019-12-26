@@ -52,6 +52,7 @@ const actions = {
       }
     })
     const { err, data } = result
+    console.log('err', err)
     if(!err) {
       const list = data.map((item) => {
         return {name: item.name, _id: item.id}

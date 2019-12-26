@@ -43,11 +43,7 @@ class UserModel extends (baseModel as { new(): any; }){
         required: true,
         validate: definedValidate(validator.password)
       },
-      email: {
-        type: String,
-        required: true,
-        validate: definedValidate(validator.email)
-      },
+      email: String,
       sex: {
         type: Number,
         required: true,

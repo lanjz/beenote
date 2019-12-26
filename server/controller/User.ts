@@ -23,6 +23,7 @@ class UserCtl extends (BaseCtl as { new(): any; }) {
   }
   setUserCookie(ctx, result) {
     const userTokenInfo = { clientUser: result._id, }
+    console.log('userTokenInfo', userTokenInfo)
     ctx.cookies.set(
       'helloToken',
       encodeLoginTypeJwt(userTokenInfo),
@@ -37,23 +38,23 @@ class UserCtl extends (BaseCtl as { new(): any; }) {
   async login(ctx, next) {
     const { username, password } = ctx.request.body
     if(!username) {
-      ctx.send(2, '', '用户名不能为空')
+      ctx.send(-1, '', '用户名不能为空')
       return
     }
     if(!password) {
-      ctx.send(2, '', '密码不能为空')
+      ctx.send(-1, '', '密码不能为空')
       return
     }
     try {
       const result = await this.Model.findOne({ username, password })
       if(!result) {
-        ctx.send(3, '', '登录失败：账号或密码错误')
+        ctx.send(-1, '', '登录失败：账号或密码错误')
       } else {
         this.setUserCookie(ctx, result)
         ctx.send(1, result, '登录成功')
       }
     } catch (e) {
-      ctx.send(2, '', dealError(e))
+      ctx.send(-1, '', dealError(e))
     } finally {
       next()
     }
@@ -64,7 +65,6 @@ class UserCtl extends (BaseCtl as { new(): any; }) {
     ctx.send(1, infoResult, '')
   }
   async findByCookie(ctx, next) {
-    console.log('getUserInfo')
     if(ctx.state.curUser && ctx.state.curUser._id) {
       ctx.send(1, ctx.state.curUser, '')
     } else {
@@ -76,7 +76,6 @@ class UserCtl extends (BaseCtl as { new(): any; }) {
   }
   async getUserInfoInSerer(ctx) {
     const { token } = ctx.request.query
-    console.log('clientUser', token)
     const { clientUser } = decodeLoginTypeJwt(token)
     const result = await this.userAuth(clientUser)
     ctx.send(1, result, '')

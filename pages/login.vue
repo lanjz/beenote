@@ -164,9 +164,14 @@
           password: this.password
         })
         this.$hideLoading()
+        console.log('result', result)
         if(!result.err){
           this[MUTATIONS.CUR_USER_INFO_SAVE]({_id: ''})
           this.$router.push('/')
+        } else {
+          this.$toast({
+            title: result.err.message()
+          })
         }
       },
       doReset() {

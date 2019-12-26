@@ -12,14 +12,14 @@ function passValidAuth(ctx: Context) {
   if(!passPath[getMethod]) {
     return false
   }
-  return passPath[getMethod].indexOf(ctx.url) > -1 ? true : false
+  return passPath[getMethod].indexOf(ctx.request.path) > -1 ? true : false
 }
 
 
 async function checkAuth(ctx: Context, next) {
   try{
     if(ctx.method.toLowerCase() === 'options') {
-      ctx.send(1, '', '准了')
+      ctx.send('', '', '准了')
       return
     }
     const getHelloToken = ctx.cookies.get('helloToken')
@@ -54,18 +54,18 @@ async function checkAuth(ctx: Context, next) {
 export async function checkAuthGit(ctx: Context, next) {
   // 非get请求且是访问git接口，需要验证是否有gitToken
   if(!ctx.request.query.gitName) {
-    ctx.send(-4, '', '缺少gitName参数')
+    ctx.send(-1, '', '缺少gitName参数')
     return
   }
   if(ctx.method.toLowerCase() !== 'get') {
     const { gitToken = '', gitName = '' } = ctx.state.curUser || {}
     if(!gitToken) {
-      ctx.send(-4, '', `求设置gitToken`)
+      ctx.send(-6, '', `求设置gitToken`)
       return
     }
     // 还得验证是当前登录的用户态与操作的git用户是否一致
     if(!gitName || gitName !== ctx.request.query.gitName) {
-      ctx.send(-4, '', '当前用户与github不匹配')
+      ctx.send(-6, '', '当前用户与github不匹配')
       return
     }
   }

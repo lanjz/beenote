@@ -70,6 +70,10 @@
           // window.location.reload()
           // this[MUTATIONS.CUR_USER_INFO_SAVE]({_id: ''})
           this.toDoCloseUserLayout()
+        } else {
+          this.$toast({
+            title: result.err.message
+          })
         }
       },
       toDoCloseUserLayout() {

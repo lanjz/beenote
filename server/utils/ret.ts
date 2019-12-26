@@ -1,13 +1,13 @@
 /**
  * @retCode
  * 1： 请求成功
- * 2： 一般错误
- * 3： 账号密码错误
- * 4: 未登录
+ * -1：普通失败
+ * -3：MYSQL错误
+ * -5：未登录
+ * -6：gitToken或者gitName未设置
  * */
 
-
-function render(retCode = 0, json = '', retMsg = '成功') {
+function render(retCode = 1, json = '', retMsg = '成功') {
   this.set('Content-Type', 'application/json')
   this.body = JSON.stringify({
     retCode: retCode,
