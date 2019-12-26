@@ -1,4 +1,7 @@
-// import fetch from '@/util/fetch/fetch.js'
+// import fetch from '@/utils/client/fetch/fetch.js'
+
+import axios from 'axios'
+
 const decodeLoginTypeJwt = process.server && require('jwt-simple')
 
 function cookeyToJson(req) {
@@ -10,29 +13,18 @@ function cookeyToJson(req) {
   return Cookies
 }
 
-export default function ({ store, redirect, req, app, params }) {
-/*  if(store.state.user.userInfo['_id']) {
-    return
-  }
+export default async function ({ store, redirect, req, app, params }) {
   if(process.server) {
     const { helloToken } = cookeyToJson(req)
     if(!helloToken) return
-    const SECRET = 'hello~'
-    const { clientUser } = decodeLoginTypeJwt.decode(helloToken, SECRET)
-    if(!clientUser) return
-    store.commit('user/USER_SAVE', {
-      _id: clientUser
+    const response = await axios({
+      url: `http://${req.headers.host}/api/getUserInfoInSerer?token=${helloToken}`
     })
-    // store.dispatch('books/BOOK_LIST_GET')
-  }*/
-  /*
-	if(process.client){
-	  if(store.state.user.userInfo['_id']) {
-		return true
-	  }
-	  return store.dispatch('user/USER_INFO_GET')
-	}
-  */
-  
-  
+    console.log('response', response.data.data)
+    console.log('response', response.retCode)
+    if(response.data.retCode === 1) {
+      store.commit('user/USER_SAVE', response.data.data)
+      console.log('store.state.user', store.state.user)
+    }
+  }
 }

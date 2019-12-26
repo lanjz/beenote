@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 import BaseCtl from './BaseCtl'
-import { dealError, encodeLoginTypeJwt } from '../utils/hello'
+import {dealError, decodeLoginTypeJwt, encodeLoginTypeJwt} from '../utils/hello'
 import UserModel from '../model/User'
 class UserCtl extends (BaseCtl as { new(): any; }) {
   constructor(){
@@ -64,6 +64,7 @@ class UserCtl extends (BaseCtl as { new(): any; }) {
     ctx.send(1, infoResult, '')
   }
   async findByCookie(ctx, next) {
+    console.log('getUserInfo')
     if(ctx.state.curUser && ctx.state.curUser._id) {
       ctx.send(1, ctx.state.curUser, '')
     } else {
@@ -72,6 +73,13 @@ class UserCtl extends (BaseCtl as { new(): any; }) {
       }, '')
     }
     await next()
+  }
+  async getUserInfoInSerer(ctx) {
+    const { token } = ctx.request.query
+    console.log('clientUser', token)
+    const { clientUser } = decodeLoginTypeJwt(token)
+    const result = await this.userAuth(clientUser)
+    ctx.send(1, result, '')
   }
 }
 

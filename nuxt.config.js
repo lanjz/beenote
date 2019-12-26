@@ -5,7 +5,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = {
   mode: 'universal',
   router: {
-    // middleware: 'check-auth'
+    middleware: 'check-auth'
   },
   modules: [
     '@nuxtjs/style-resources',
