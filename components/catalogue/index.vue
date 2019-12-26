@@ -30,8 +30,10 @@
       }),
       catalogList() {
         if(!this.noteCatalogue || !this.curNote) return []
-        const getTree = this.noteCatalogue[this.curNote]
-        return getTree[this.curNote] || []
+        console.log('this.noteCatalogue', this.noteCatalogue)
+        return []
+        // const getTree = this.noteCatalogue[this.curNote]
+        // return getTree[this.curNote] || []
       },
     },
     methods: {

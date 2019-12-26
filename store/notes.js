@@ -95,6 +95,7 @@ const actions = {
       baseUrl: 'raw'
     })*/
     const result = await Promise.all([findInfo])
+    console.log('result', result)
     if (!result[0].err) {
       const curData = {
         ...result[0].data,

@@ -30,6 +30,7 @@
         </div>-->
         <div class="book-layout"></div>
         <div
+          v-if="curBook"
           class="book-layout">
           <div>
             <svg class="icon shelve-svg-icon" aria-hidden="true">
@@ -117,8 +118,9 @@
           const str = 'base64,'
           const pre = base64.indexOf(str) + str.length
           const curDateStamp = (new Date()).getTime()
+          this.$showLoading()
           uploadFile({
-            path: `${this.githubName}/${this.curBook}/contents/static/images/${curDateStamp}_${inputDOM.files[0].name}`,
+            path: `${this.githubName}/${this.curBook}/contents/_static/images/${curDateStamp}_${inputDOM.files[0].name}`,
             content: base64.substring(pre)
           })
             .then(res => {
@@ -131,6 +133,9 @@
               if(!res.err) {
                 this.$refs.imgPreBox.open(res.data.content.download_url)
               }
+            })
+            .finally(() => {
+              this.$hideLoading()
             })
         }.bind(this);
       }

@@ -66,7 +66,10 @@ function fetchData(options) {
     })
     options.data = formData
   }
-  // options.url = `http://localhost:3001${options.url}`
+  console.log('process', process.client)
+  if(!process.client){
+    options.url = `http://localhost:3001${options.url}`
+  }
   return axios(options)
 }
 

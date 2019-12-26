@@ -4,14 +4,14 @@ import * as ACTIONS from './const/actions'
 
 const defaultBook = {
   default:{
-    _id: 'default',
+    _id: '',
     name: '默认'
   }
 }
 const state = () => (
   {
     list: defaultBook,
-    curBook: 'default'
+    curBook: ''
   }
 )
 const getters = {

@@ -74,6 +74,7 @@
       if (store.state.notes.notesMap && store.state.notes.notesMap[fullPath]) {
         return
       }
+      console.log('中间件22', store.state.user.curUserInfo.gitName)
       const fetchArr = [store.dispatch('notes/NOTE_DES_GET',{
         fullPath,
         path: pathMatch+'.md',
@@ -81,7 +82,8 @@
         repo: book
       })]
       // 如果当前只是浏览当前文件，则不需要获取目录了
-      if(!context.route.query.view) {
+      const isVisitor = store.state.user.curUserInfo.gitName !== store.state.user.loginUserInfo.gitName
+      if(!context.route.query.view || isVisitor) {
         fetchArr.push( store.dispatch('catalogs/CATALOGS_GET',{
           path: getDirPath,
           getChild: false,
@@ -156,6 +158,7 @@
       ...mapMutations('catalogs', [MUTATIONS.CATALOGS_CUR_SAVE,MUTATIONS.CATALOGS_CACHE_SAVE, MUTATIONS.CATALOGS_REMOVE]),
       ...mapMutations('notes', [MUTATIONS.NOTE_CUR_UPDATE,]),
       ...mapMutations('books', [MUTATIONS.BOOK_CUR_UPDATE,]),
+      ...mapMutations('user', [MUTATIONS.CUR_USER_INFO_SAVE]),
       ...mapActions('books', [ACTIONS.BOOK_LIST_GET]),
       ...mapActions('notes', [
         ACTIONS.NOTES_RECENTLY_GET,
@@ -339,6 +342,9 @@
         this.routerParams = $nuxt._route.params
         const {user, book, pathMatch = ''} = $nuxt._route.params
         this[MUTATIONS.BOOK_CUR_UPDATE](book)
+        this[MUTATIONS.CUR_USER_INFO_SAVE]({
+          gitName: user
+        })
         if($nuxt._route.query.type === 'dir') {
           // 如果当前是文件夹，而直接保存当前路径
           this[MUTATIONS.CATALOGS_CUR_SAVE](`${book}/${pathMatch}`)
