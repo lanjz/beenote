@@ -23,7 +23,6 @@ class UserCtl extends (BaseCtl as { new(): any; }) {
   }
   setUserCookie(ctx, result) {
     const userTokenInfo = { clientUser: result._id, }
-    console.log('userTokenInfo', userTokenInfo)
     ctx.cookies.set(
       'helloToken',
       encodeLoginTypeJwt(userTokenInfo),

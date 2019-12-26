@@ -70,6 +70,12 @@ function fetchData(options) {
   return axios(options)
 }
 
+function showHelloAlert(msg) {
+  helloAlert({
+    title: msg,
+    showCancel: false
+  })
+}
 const doFetchData = function (options) {
   const res = { err: null, data: '' }
   return new Promise((resolve) => {
@@ -79,10 +85,7 @@ const doFetchData = function (options) {
         if(result.err) {
           res.err = result.err
           if(!result.notAlert && !options.notAlert) {
-            helloAlert({
-              title: res.err.message,
-              showCancel: false
-            })
+            showHelloAlert(res.err.message)
           }
           resolve(res)
           return
@@ -93,9 +96,11 @@ const doFetchData = function (options) {
       })
       .catch((err) => {
         if(err.message === 'Request failed with status code 409') {
+          showHelloAlert('sha无效,刷新页面重试')
           resolve({ err: new Error('sha无效,刷新页面重试'), data: '' })
         }
         if(err.message === 'Request failed with status code 401') {
+          showHelloAlert('github Token无效')
           resolve({ err: new Error('github Token无效'), data: '' })
         }
         resolve({ err, data: '' })
