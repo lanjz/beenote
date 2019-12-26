@@ -25,6 +25,7 @@
     "js-base64": "^2.5.1",
     "jwt-simple": "^0.5.5",
     "koa": "^2.6.2",
+    "koa-better-http-proxy": "^0.2.4",
     "koa-body": "^4.1.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",

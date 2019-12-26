@@ -4,22 +4,12 @@ import userCtrl from '../controller/User'
 
 
 function passValidAuth(ctx: Context) {
-  if(ctx.url.indexOf('/api') < 0) {
-    return true
-  }
   const passPath = {
     get: ['/api/getUserInfo'],
     post: ['/api/login', '/api/user']
   }
   const getMethod = ctx.method.toLowerCase()
-  if(ctx.url.indexOf('/notes/') > -1) {
-    return true
-  }
-  // 所有的delete和put都需要权限
-  if(getMethod === 'delete' || getMethod === 'put') {
-    return false
-  }
-  if(!getMethod || !passPath[getMethod]) {
+  if(!passPath[getMethod]) {
     return false
   }
   return passPath[getMethod].indexOf(ctx.url) > -1 ? true : false
@@ -33,38 +23,53 @@ async function checkAuth(ctx: Context, next) {
       return
     }
     const getHelloToken = ctx.cookies.get('helloToken')
-
-    if(!getHelloToken) {
-      // 无token且需要登录的，直接返回4
-      if(!passValidAuth(ctx)) {
-        ctx.send(4, '', '请登录')
-        return
-      }
-      // 无token且不是必需登录的，直接过
-      await next()
-    } else {
-      // 有token则验证token
-      // todo 是否对不需要验证登录的跳过
+    // 如果有token则验证并保存到state中
+    if(getHelloToken) {
       const { clientUser } = decodeLoginTypeJwt(getHelloToken)
-      if(!clientUser) {
-        userCtrl.clearUserCookie(ctx)
-        ctx.send(4, '', 'token无效请重新登录')
-        return
-      }
-      // 有token则存入curUser中
       const result = await userCtrl.userAuth(clientUser)
-      // const result = {}
       if(!result) {
         userCtrl.clearUserCookie(ctx)
-        ctx.send(4, result, `请重新登录`)
+        ctx.send(-5, result, `当前登录态无效请重新登录`)
         return
       }
       ctx.state.curUser = result
-      await next()
     }
+
+    // 不需要验证登录态
+    if(passValidAuth(ctx) || ctx.method.toLowerCase() === 'get') {
+      await next()
+      return
+    }
+    // 否则如果没有获取到登录态
+    if(!ctx.state.curUser) {
+      ctx.send(-5, '', `未登录`)
+      return
+    }
+    await next()
   } catch(e) {
-    ctx.send(2, '', dealError(e))
+    ctx.send(-1, '', dealError(e))
   }
+}
+
+export async function checkAuthGit(ctx: Context, next) {
+  // 非get请求且是访问git接口，需要验证是否有gitToken
+  if(!ctx.request.query.gitName) {
+    ctx.send(-4, '', '缺少gitName参数')
+    return
+  }
+  if(ctx.method.toLowerCase() !== 'get') {
+    const { gitToken = '', gitName = '' } = ctx.state.curUser || {}
+    if(!gitToken) {
+      ctx.send(-4, '', `求设置gitToken`)
+      return
+    }
+    // 还得验证是当前登录的用户态与操作的git用户是否一致
+    if(!gitName || gitName !== ctx.request.query.gitName) {
+      ctx.send(-4, '', '当前用户与github不匹配')
+      return
+    }
+  }
+  await next()
 }
 
 export default checkAuth

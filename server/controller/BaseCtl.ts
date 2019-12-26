@@ -157,15 +157,15 @@ class BaseCtl {
         ctx.send(2, '', `没有要删除的${this.alias}`)
       }
     } catch (e) {
-      ctx.send(2, '', hello.dealError(e, ids))
+      ctx.send(-1, '', hello.dealError(e, ids))
     } finally {
       await next()
     }
   }
   async modify(ctx, next) {
-    const { _id } = ctx.request.body
+    const { _id } = ctx.state.curUser
     if(!_id){
-      ctx.send(2, '', '_id不能为空')
+      ctx.send(-1, '', '_id不能为空')
       return
     }
     try {

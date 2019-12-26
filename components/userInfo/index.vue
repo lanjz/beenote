@@ -40,7 +40,7 @@
     },
     computed:{
       ...mapState({
-        userInfo: state => state.user.userInfo,
+        userInfo: state => state.user.loginUserInfo,
         userLayoutStatus: state => state.user.userInfoStatus,
       }),
     },

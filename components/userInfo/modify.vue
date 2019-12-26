@@ -38,6 +38,14 @@
         </div>
         <div class="form-group flex">
           <div class="form-label-layout">
+            Github-Name：
+          </div>
+          <div class="flex flex-1 align-items-center">
+            <input class="form-input" v-model.trim="gitName"/>
+          </div>
+        </div>
+        <div class="form-group flex">
+          <div class="form-label-layout">
             Github-Token：
           </div>
           <div class="flex flex-1 align-items-center">
@@ -154,6 +162,7 @@
       initData() {
         this.gitToken = this.userInfo.gitToken
         this.nickname = this.userInfo.nickname
+        this.gitName = this.userInfo.gitName
       },
       toDoCloseUserLayout() {
         this[MUTATIONS.CUR_USER_LAYOUT_SAVE]()
@@ -171,6 +180,7 @@
         const data = {
           nickname: this.nickname,
           gitToken: this.gitToken,
+          gitName: this.gitName,
           sex: this.sex
         }
         this[ACTIONS.USER_PUT](data)

@@ -1,14 +1,13 @@
 import Vue from 'vue'
 import { getMatchedComponentsInstances, promisify, globalHandleError } from './utils'
 import NuxtLoading from './components/nuxt-loading.vue'
-import NuxtBuildIndicator from './components/nuxt-build-indicator'
 
-import '../assets/styles/app.less'
+import '..\\assets\\styles\\app.less'
 
-import '../utils/client/hightlight/hightlight.css'
+import '..\\utils\\client\\hightlight\\hightlight.css'
 
-import _2d21d098 from '../layouts/blog.vue'
-import _6f6c098b from '../layouts/default.vue'
+import _2d21d098 from '..\\layouts\\blog.vue'
+import _6f6c098b from '..\\layouts\\default.vue'
 
 const layouts = { "_blog": _2d21d098,"_default": _6f6c098b }
 
@@ -44,7 +43,7 @@ export default {
       domProps: {
         id: '__nuxt'
       }
-    }, [loadingEl, h(NuxtBuildIndicator), transitionEl])
+    }, [loadingEl, transitionEl])
   },
   data: () => ({
     isOnline: true,

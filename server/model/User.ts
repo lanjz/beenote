@@ -9,6 +9,7 @@ interface UserDocement extends Document, BaseDocument {
   password: string
   email: string
   avatar: string
+  gitToken: string
 
 }
 
@@ -16,7 +17,7 @@ class UserModel extends (baseModel as { new(): any; }){
   assectPath: string;
   constructor() {
     super()
-    this.assectPath = '_id username email sex createTime updateTime'
+    this.assectPath = '_id username email sex gitToken gitName createTime updateTime'
     this.findByEmail = this.findByEmail.bind(this)
   }
   getName() {
@@ -53,6 +54,12 @@ class UserModel extends (baseModel as { new(): any; }){
         validate: definedValidate(validator.sex)
       },
       avatar: {
+        type: String,
+      },
+      gitToken: {
+        type: String,
+      },
+      gitName: {
         type: String,
       },
       ...this.baseModel(),

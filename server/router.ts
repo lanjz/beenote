@@ -63,46 +63,4 @@ router.get('/', async function (ctx, next) {
   await next()
 })
 
-/*
-router.get('/schematas', schematasCtl.find)
-router.get('/schemata/:id', schematasCtl.findById)
-router.delete('/schemata', schematasCtl.deleteById)
-router.put('/schemata', schematasCtl.modify)
-router.post('/schemata', schematasCtl.add)
-router.post('/schemataField', schematasCtl.addField)
-router.put('/schemataField', schematasCtl.modifyField)
-router.delete('/schemataField', schematasCtl.delField)
-
-// router.get('/copy', articleCtl.copy)
-router.get('/articles', articleCtl.find)
-router.get('/article/:id', articleCtl.findById)
-router.delete('/article', articleCtl.deleteById)
-router.put('/article', articleCtl.modify)
-router.post('/article', articleCtl.add)
-router.post('/article_content', articleCtl.addContent)
-router.put('/article_content', articleCtl.modifyContent)
-router.delete('/article_content', articleCtl.delContent)
-router.get('/article_content', articleCtl.findContent)
-router.get('/recently_articles', articleCtl.findRecentContent)
-
-
-
-
-router.get('/qa', async (ctx, next) => {
-  ctx.body = 'Hello World2222!'
-})
-router.get('/qa/:id', async (ctx, next) => {
-  ctx.body = 'Hello World2222!'
-})
-router.delete('/qa', async (ctx, next) => {
-  ctx.body = 'Hello World2222!'
-})
-router.put('/qa/:id', async (ctx, next) => {
-  ctx.body = 'Hello World2222!'
-})
-router.post('/qa', async (ctx, next) => {
-  ctx.body = 'Hello World2222!'
-})
-*/
-
 export default router

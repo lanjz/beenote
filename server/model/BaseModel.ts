@@ -97,6 +97,7 @@ class baseModel {
    * @param <Object> projection 返回结果过滤
    * */
   findOne(query, projection = null) {
+    console.log('findOne', query)
     return this.Model.findOne(query, projection)
   }
   findById({ id = '', query = {}, addLean = false, assectPath = true }) {

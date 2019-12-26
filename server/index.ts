@@ -21,15 +21,18 @@ async function start(){
   } else {
     await nuxt.ready()
   }
-  middleware(app)
-  app.use(ctx => {
-    if(ctx.url.indexOf('/api') < 0) {
+  // 如果不是接口返回页面
+  app.use(async (ctx, next) => {
+    if(!(ctx.url.indexOf('/api') == 0 || ctx.url.indexOf('/git') === 0 || ctx.url.indexOf('/row') === 0)) {
       ctx.status = 200
       ctx.respond = false // Bypass Koa's built-in response handling
       ctx.req.ctx = ctx // This might be useful later on, e.g. in nuxtServerInit or with nuxt-stash
       nuxt.render(ctx.req, ctx.res)
+      return
     }
+    await next()
   })
+  middleware(app)
   app.listen(port, host)
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
