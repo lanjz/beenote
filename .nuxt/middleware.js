@@ -9,4 +9,7 @@ middleware['authenticated'] = middleware['authenticated'].default || middleware[
 middleware['check-auth'] = require('../middleware/check-auth.js');
 middleware['check-auth'] = middleware['check-auth'].default || middleware['check-auth']
 
+middleware['init-page'] = require('../middleware/init-page.js');
+middleware['init-page'] = middleware['init-page'].default || middleware['init-page']
+
 export default middleware

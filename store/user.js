@@ -2,7 +2,14 @@ import fetch from '../utils/client/fetch/fetch.js'
 import * as MUTATIONS from './const/mutaions'
 import * as ACTIONS from './const/actions'
 const baseUseInfo = {
+  nickname: '',
+  email: '',
+  username: '',
+  password: '',
+  sex: 1,
+  avatar: '',
   gitName: '',
+  gitToken: ''
 }
 const state = () => (
   {
@@ -36,6 +43,7 @@ const mutations = {
   },
   [MUTATIONS.CUR_USER_INFO_SAVE](state, info) {
     state.curUserInfo = {
+      ...state.curUserInfo,
       ...info
     }
   },
@@ -48,7 +56,7 @@ const mutations = {
 }
 
 const actions = {
-  async [ACTIONS.USER_PUT]({ state, commit }, data) {
+  async [ACTIONS.USER_PUT]({ state, commit, dispatch }, data) {
     const result = await fetch({
       url: '/api/user',
       method: 'put',
@@ -62,7 +70,7 @@ const actions = {
     }
     return result
   },
-  async [ACTIONS.USER_POST]({ commit }, data) {
+  async [ACTIONS.USER_POST]({ state, commit, dispatch }, data) {
     const result = await fetch({
       url: '/api/user',
       method: 'post',

@@ -5,7 +5,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = {
   mode: 'universal',
   router: {
-    middleware: 'check-auth'
+    middleware: ['init-page', 'check-auth']
   },
   modules: [
     '@nuxtjs/style-resources',
@@ -30,12 +30,12 @@ module.exports = {
       }
     ]
   },
-  
+
   /*
   ** Customize the progress-bar color
   */
   loading: {color: 'blue'},
-  
+
   /*
   ** Global CSS
   */
@@ -43,7 +43,7 @@ module.exports = {
     '@/assets/styles/app.less',
     '@/utils/client/hightlight/hightlight.css',
   ],
-  
+
   /*
   ** Plugins to load before mounting the App
   */
@@ -63,7 +63,7 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
-    
+
   },
   styleResources: {
     less: 'assets/styles/global.less'

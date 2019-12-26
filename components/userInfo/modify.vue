@@ -99,6 +99,8 @@
     rePassword: '',
     sex: 1,
     avatar: '',
+    gitName: '',
+    gitToken: ''
   }
   export default {
     data(){
@@ -116,6 +118,7 @@
     methods: {
       ...mapMutations('user', [MUTATIONS.CUR_USER_LAYOUT_SAVE]),
       ...mapActions('user', [ACTIONS.USER_POST, ACTIONS.USER_PUT]),
+      ...mapActions('books', [ACTIONS.BOOK_LIST_GET]),
       todoRegister() {
         if(!this.username){
           this.errMsg = '用户名不能为空'
@@ -160,9 +163,10 @@
         })
       },
       initData() {
-        this.gitToken = this.userInfo.gitToken
-        this.nickname = this.userInfo.nickname
-        this.gitName = this.userInfo.gitName
+        this.gitToken = this.userInfo.gitToken || ''
+        this.nickname = this.userInfo.nickname || ''
+        this.gitName = this.userInfo.gitName || ''
+        this.preGitToken = this.gitToken
       },
       toDoCloseUserLayout() {
         this[MUTATIONS.CUR_USER_LAYOUT_SAVE]()
@@ -171,9 +175,11 @@
         this[MUTATIONS.CUR_USER_LAYOUT_SAVE]('login')
       },
       todoEdit() {
+        this.initData()
+        /*
         this.nickname = this.userInfo.nickname
         this.email = this.userInfo.email
-        this.sex = this.userInfo.sex
+        this.sex = this.userInfo.sex*/
       },
       async doEdit() {
         this.$showLoading()
@@ -188,6 +194,12 @@
             this.$toast({
               title: '修改成功'
             })
+            if(this.preGitToken !== this.gitToken) {
+              this[ACTIONS.BOOK_LIST_GET]({
+                force: true
+              })
+              this.preGitToken = this.gitToken
+            }
            this.toDoCloseUserLayout()
           })
           .catch((err) => {

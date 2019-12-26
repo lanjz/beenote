@@ -15,7 +15,7 @@ const proxyOptions = {
     // 前端默认使用自己使用的api，如果判断是没有登录态，则把api改成游客的
     const { gitName } = ctx.request.query
     if((getPath.indexOf('/user/repos') === 0 && !ctx.state.curUser)
-      || (ctx.state.curUser.gitName !== gitName)) {
+      || !ctx.state.curUser.gitToken || (ctx.state.curUser.gitName !== gitName)) {
       getPath = `/users/${gitName}/repos`
     } else {
       const tokenQuery = ctx.state.curUser ? `access_token=${ctx.state.curUser.gitToken}` : ''

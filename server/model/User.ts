@@ -17,7 +17,7 @@ class UserModel extends (baseModel as { new(): any; }){
   assectPath: string;
   constructor() {
     super()
-    this.assectPath = '_id username email sex gitToken gitName createTime updateTime'
+    this.assectPath = '_id username email sex nickname gitToken gitName createTime updateTime'
     this.findByEmail = this.findByEmail.bind(this)
   }
   getName() {
@@ -54,9 +54,11 @@ class UserModel extends (baseModel as { new(): any; }){
       },
       gitToken: {
         type: String,
+        default: ''
       },
       gitName: {
         type: String,
+        default: ''
       },
       ...this.baseModel(),
     }

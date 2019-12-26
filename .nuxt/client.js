@@ -203,7 +203,7 @@ function resolveComponents(router) {
 }
 
 function callMiddleware(Components, context, layout) {
-  let midd = ["check-auth"]
+  let midd = ["init-page","check-auth"]
   let unknownMiddleware = false
 
   // If layout is undefined, only call global middleware
