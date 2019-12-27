@@ -14,13 +14,16 @@ const proxyOptions = {
     // 获取仓库有两个api，一个是游客访问使用，一个自己访问使用（可访问私有仓库），
     // 前端默认使用自己使用的api，如果判断是没有登录态，则把api改成游客的
     const { gitName } = ctx.request.query
-    if((getPath.indexOf('/user/repos') === 0 && !ctx.state.curUser)
-      || !ctx.state.curUser.gitToken || (ctx.state.curUser.gitName !== gitName)) {
-      getPath = `/users/${gitName}/repos`
-    } else {
-      const tokenQuery = ctx.state.curUser ? `access_token=${ctx.state.curUser.gitToken}` : ''
-      getPath = `${getPath}${getPath.indexOf('?') > 0 ? '&': '?'}${tokenQuery}`
+    if(getPath === '/user/repos') {
+      if(ctx.state.curUser&&ctx.state.curUser.gitToken&&(ctx.state.curUser.gitName === gitName)) {
+        const tokenQuery =( ctx.state.curUser && ctx.state.curUser.gitToken) ? `access_token=${ctx.state.curUser.gitToken}` : ''
+        getPath = `${getPath}${getPath.indexOf('?') > 0 ? '&': '?'}${tokenQuery}`
+      } else {
+        getPath = `/users/${gitName}/repos`
+      }
     }
+
+    console.log('getPath', getPath)
     return getPath
   },
   userResDecorator: function (proxyRes, proxyResData, ctx: Context): any {
@@ -29,10 +32,10 @@ const proxyOptions = {
 }
 
 export function prefixGit() {
-  return httpProxy('https://api.github.com', proxyOptions)
+  return httpProxy('http://api.github.com', proxyOptions)
 }
 export function prefixRow() {
-  return httpProxy('https://raw.githubusercontent.com', proxyOptions)
+  return httpProxy('http://raw.githubusercontent.com', proxyOptions)
 }
 
 

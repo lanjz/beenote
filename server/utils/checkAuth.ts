@@ -53,11 +53,11 @@ async function checkAuth(ctx: Context, next) {
 
 export async function checkAuthGit(ctx: Context, next) {
   // 非get请求且是访问git接口，需要验证是否有gitToken
-  if(!ctx.request.query.gitName) {
-    ctx.send(-1, '', '缺少gitName参数')
-    return
-  }
   if(ctx.method.toLowerCase() !== 'get') {
+    if(!ctx.request.query.gitName) {
+      ctx.send(-1, '', '缺少gitName参数')
+      return
+    }
     const { gitToken = '', gitName = '' } = ctx.state.curUser || {}
     if(!gitToken) {
       ctx.send(-6, '', `求设置gitToken`)

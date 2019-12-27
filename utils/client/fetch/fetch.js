@@ -66,18 +66,21 @@ function fetchData(options) {
     })
     options.data = formData
   }
-  console.log('process', process.client)
-  if(!process.client){
-    options.url = `http://localhost:3001${options.url}`
-  }
+  options.url = `http://localhost:3001${options.url}`
+/*  url = process.env.NODE_ENV === 'development' ?
+    `http://localhost:3001${url}` :
+    process.client ? `${url}`: `http://127.0.0.1:3001${url}`*/
   return axios(options)
 }
 
 function showHelloAlert(msg) {
-  helloAlert({
-    title: msg,
-    showCancel: false
-  })
+  if(process.client) {
+    helloAlert({
+      title: msg,
+      showCancel: false
+    })
+  }
+
 }
 const doFetchData = function (options) {
   const res = { err: null, data: '' }

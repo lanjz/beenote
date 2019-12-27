@@ -6,7 +6,6 @@ export default async function ({ store, redirect, req, app, params, route }) {
     store.commit('user/CUR_USER_INFO_SAVE', {
       gitName: user
     })
-    console.log('中间件', store.state.user.curUserInfo.gitName)
   }
   const { visitor } = route.query
   if(visitor) {
