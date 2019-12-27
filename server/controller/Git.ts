@@ -24,7 +24,6 @@ const proxyOptions = {
       }
     }
 
-    console.log('getPath', getPath)
     return getPath
   },
   userResDecorator: function (proxyRes, proxyResData, ctx: Context): any {
