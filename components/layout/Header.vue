@@ -1,5 +1,5 @@
 <template>
-  <div class="head flex">
+  <div class="head flex" :class="{'isVisitor':isVisitor}">
 <!--    <div class="logo">
       Black Hook - N
       <i class="iconfont icon-biji"></i>
@@ -10,11 +10,11 @@
     </div>
     <div class="flex flex-1 align-items-center justify-content-end">
       <div class="head-nav flex">
-        <nuxt-link to="/default/recently/">
+        <!--<nuxt-link to="/default/recently/">
           最近笔记
-        </nuxt-link>
+        </nuxt-link>-->
         <nuxt-link to="/BookList">
-          本子
+          我的仓库
         </nuxt-link>
       </div>
       <div @click="toDoShowUserLayout" class="user-avatar-layout cursor">
@@ -58,7 +58,9 @@
     padding: 8px;
     background: @bg-color;
     position: relative;
-
+  }
+  .head.isVisitor{
+    padding: 8px 280px;
   }
   .visitor-box-header{
     .head{

@@ -9,7 +9,7 @@
     </div>
     <!--<Footer/>-->
   </div>
-  <div v-else class="visitor-box" :class="{'visitor-box-view': onlyView}">
+  <div v-else class="visitor-box" :class="{'visitor-box-view': false}">
     <div class="visitor-box-header">
       <Header/>
     </div>

@@ -7,6 +7,13 @@
         :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
         <TreeItem></TreeItem>
       </div>
+      <div
+        v-else
+        class="catalog-layout"
+        :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
+        <VisitorTreeItem></VisitorTreeItem>
+      </div>
+
       <NoteBrief
         v-if="!isVisitor"
         @emitToCreateNote="todoCreateNewFile"
@@ -36,6 +43,7 @@
   import * as ACTIONS from '@/store/const/actions'
   import bus from '../../../../utils/client/global/eventBus'
   import TreeItem from '@/components/tree/index.vue'
+  import VisitorTreeItem from '@/components/tree/tem/index.vue'
   import Catalogue from '@/components/catalogue/index.vue'
   import NoteBrief from '@/components/note/NoteBrief.vue'
   import noteDes from '@/components/note/noteDes.vue'
@@ -88,7 +96,8 @@
           getChild: false,
           bookName: book
         }))
-      } else {
+      }
+      if(context.route.query.view) {
         store.commit('user/VIEW_STATUS_SAVE', true)
       }
       await Promise.all(fetchArr)
@@ -98,7 +107,8 @@
       NoteBrief,
       noteDes,
       noNotes,
-      Catalogue
+      Catalogue,
+      VisitorTreeItem
     },
     data: function () {
       return {
@@ -364,7 +374,7 @@
 </script>
 <style lang="less" scoped>
   .visitor-content{
-    /*padding-top: 65px;*/
+    padding-top: 65px;
   }
   .book-slider-layout {
     padding: 15px;
