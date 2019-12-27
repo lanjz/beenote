@@ -1,6 +1,7 @@
 import * as httpProxy from 'koa-better-http-proxy'
 import { Context, IRequestOption } from 'koa'
 const proxyOptions = {
+  // preserveHostHdr: true,
   proxyReqOptDecorator: function (proxyReqOpts: IRequestOption, ctx: Context): any{
     // console.log('proxyReqOpts')
     return proxyReqOpts

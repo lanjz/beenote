@@ -74,7 +74,6 @@
       if (store.state.notes.notesMap && store.state.notes.notesMap[fullPath]) {
         return
       }
-      console.log('中间件22', store.state.user.curUserInfo.gitName)
       const fetchArr = [store.dispatch('notes/NOTE_DES_GET',{
         fullPath,
         path: pathMatch+'.md',
@@ -83,7 +82,7 @@
       })]
       // 如果当前只是浏览当前文件，则不需要获取目录了
       const isVisitor = store.state.user.curUserInfo.gitName !== store.state.user.loginUserInfo.gitName
-      if(!context.route.query.view || isVisitor) {
+      if(!context.route.query.view && !isVisitor) {
         fetchArr.push( store.dispatch('catalogs/CATALOGS_GET',{
           path: getDirPath,
           getChild: false,
@@ -365,7 +364,7 @@
 </script>
 <style lang="less" scoped>
   .visitor-content{
-    padding-top: 65px;
+    /*padding-top: 65px;*/
   }
   .book-slider-layout {
     padding: 15px;

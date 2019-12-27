@@ -13,7 +13,7 @@ const gitToken = 'e0ed39f163363a5b3d5eb9f658cdffba25c4e72a'
 
 function dealRetCode(response = {}, reqOptions) {
   // 没有retCode说明不是自己的接口返回的，并且如果请求的是git的不对retCode做处理
-  if(/^\/(git|raw)\//.test(reqOptions.url) && !response.retCode) {
+  if(/\/(git|raw)\//.test(reqOptions.url) && !response.retCode) {
     return { err: null, data: response }
   }
   const res = { err: null, data: response.data }
