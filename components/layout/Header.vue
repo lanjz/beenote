@@ -82,7 +82,7 @@
     left: 0;
     bottom: 0px;
     width: 100%;
-    background: #f4f5f5;
+    background: @body-color;
   }
   .logo{
     position: absolute;

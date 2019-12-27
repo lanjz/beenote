@@ -8,6 +8,7 @@
     ></TreeItem>
   </div>
   <div  v-else>
+    <div class="cur-catalog">{{curParent}}</div>
     <NoteItem
       v-for="(item, index) in catalogList"
       :key="item.name"
@@ -44,6 +45,9 @@
         curBook: state => state.books.curBook,
       }),
       ...mapGetters('user', ['isVisitor', 'githubName']),
+      curParent() {
+        return this.curCatalog.substring(this.curCatalog.lastIndexOf('/')+1)
+      },
       catalogList() {
         if(this.isVisitor) {
           const getNotes = this.cacheCatalogMapNotes[this.curCatalog] || []
@@ -77,5 +81,12 @@
   }
 </script>
 <style lang="less" scoped>
+  .cur-catalog{
+    font-weight: bold;
+    font-size: 32px;
+    padding-left: 25px;
+    border-bottom: solid 1px @border-color;
+    padding-bottom: 8px;
 
+  }
 </style>
