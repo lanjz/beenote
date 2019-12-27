@@ -1,19 +1,11 @@
 <template>
   <div class="flex" :class="{'flex-1': !isVisitor, 'visitor-content': isVisitor}">
-    <div class="page-left flex">
+    <div class="page-left flex" :class="{'visitor-left': isVisitor}">
       <div
-        v-if="!isVisitor"
         class="catalog-layout"
         :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
         <TreeItem></TreeItem>
       </div>
-      <div
-        v-else
-        class="catalog-layout"
-        :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
-        <VisitorTreeItem></VisitorTreeItem>
-      </div>
-
       <NoteBrief
         v-if="!isVisitor"
         @emitToCreateNote="todoCreateNewFile"
@@ -374,7 +366,7 @@
 </script>
 <style lang="less" scoped>
   .visitor-content{
-    padding-top: 65px;
+    padding-top: @head-height;
   }
   .book-slider-layout {
     padding: 15px;
@@ -486,9 +478,9 @@
     left: 0;
     width: 280px;
     max-width: 280px;
-    top: 66px;
+    top: @head-height;
     bottom: 0;
-    background: none;
+    background: #fff;
     color: @bg-color;
     border-right: solid 1px #e9e7e7;
     z-index: 2;
@@ -505,5 +497,8 @@
   }
   .page-right{
     width: 280px;
+  }
+  .visitor-left{
+    padding-right: 6px;
   }
 </style>

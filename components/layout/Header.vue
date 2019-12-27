@@ -63,6 +63,7 @@
     padding: 8px 280px;
   }
   .visitor-box-header{
+    position: relative;
     .head{
       background: none;
       color: @bg-color;
@@ -73,6 +74,15 @@
     .head-nav a{
       color: @bg-color;
     }
+  }
+  .visitor-box-header:after{
+    content: '';
+    height: 6px;
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    width: 100%;
+    background: #f4f5f5;
   }
   .logo{
     position: absolute;

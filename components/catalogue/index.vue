@@ -89,6 +89,7 @@
     padding: 15px;
     z-index: 2;
     background: #fff;
-    top: 66px;
+    top: @head-height;
+    width: 264px;
   }
 </style>

@@ -18,10 +18,12 @@
 </template>
 <script>
   import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+  import * as ACTIONS from '@/store/const/actions'
   import constKey from '../../utils/client/const'
   import bus from '../../utils/client/global/eventBus'
   import TreeItem from './TreeItem'
   import NoteItem from './NoteItem'
+  import { findDirPath } from '../../utils/client/blackHole'
 
   export default {
     name: 'Tree',
@@ -54,6 +56,24 @@
         ]
       }
     },
+    methods: {
+      ...mapActions('catalogs', [
+        ACTIONS.CATALOGS_GET,
+      ]),
+      init() {
+        const {user, book, pathMatch} = $nuxt._route.params
+        const getDirPath = findDirPath(pathMatch)
+        const params = {
+          path: getDirPath,
+          getChild: false,
+          bookName: book
+        }
+        this[ACTIONS.CATALOGS_GET](params)
+      }
+    },
+    mounted() {
+      this.init()
+    }
   }
 </script>
 <style lang="less" scoped>

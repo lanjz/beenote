@@ -104,7 +104,6 @@ html {
       left: 0;
       width: 100%;
       z-index: 2;
-      border-bottom: solid 1px #e9e7e7;
     }
   }
   .visitor-box-view{
