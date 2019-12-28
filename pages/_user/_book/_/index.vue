@@ -2,6 +2,7 @@
   <div class="flex" :class="{'flex-1': !isVisitor, 'visitor-content': isVisitor}">
     <div class="page-left flex" :class="{'visitor-left': isVisitor}">
       <div
+        v-if="curNote"
         class="catalog-layout"
         :class="{'hidden-catalog': !showDir, 'catalog-layout-isVisitor': isVisitor, 'box-shadow': !isVisitor}">
         <TreeItem></TreeItem>
@@ -178,7 +179,7 @@
       async getNoteData() {
         const fetchArr = [
           this[ACTIONS.BOOK_LIST_GET](),
-          this[ACTIONS.CATALOGS_GET]()
+          // this[ACTIONS.CATALOGS_GET]()
         ]
         // 如果当前是访问的文章不存在如需要获取当前文章
         if($nuxt._route.query.type !== 'dir' && !this.notesMap[this.curNote]) {

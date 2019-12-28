@@ -46,6 +46,7 @@
       }),
       ...mapGetters('user', ['isVisitor', 'githubName']),
       curParent() {
+        if(!this.curCatalog) return []
         return this.curCatalog.substring(this.curCatalog.lastIndexOf('/')+1)
       },
       catalogList() {
@@ -62,9 +63,23 @@
     },
     methods: {
       ...mapActions('catalogs', [
-        ACTIONS.CATALOGS_GET,
+        ACTIONS.CATALOGS_GET_CUR,
       ]),
-      init() {
+      async init() {
+        const {user, book, pathMatch} = $nuxt._route.params
+        const isDir = $nuxt._route.query.type === 'dir'
+        let pathMatchArr = pathMatch && pathMatch.split('/')
+        if(pathMatchArr.length && !isDir) {
+          pathMatchArr = pathMatchArr.splice(0, pathMatchArr.length - 1)
+        }
+        this.$showLoading()
+        this[ACTIONS.CATALOGS_GET_CUR]({
+          pathMatchArr
+        })
+          .finally(() => {
+            this.$hideLoading()
+          })
+       /* if(!this.isVisitor) return
         const {user, book, pathMatch} = $nuxt._route.params
         const getDirPath = findDirPath(pathMatch)
         const params = {
@@ -72,7 +87,7 @@
           getChild: false,
           bookName: book
         }
-        this[ACTIONS.CATALOGS_GET](params)
+        this[ACTIONS.CATALOGS_GET](params)*/
       }
     },
     mounted() {

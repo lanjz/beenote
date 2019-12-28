@@ -194,6 +194,69 @@ const actions = {
     }
     return await Promise.all(PromiseAll)
   },
+  async [ACTIONS.CATALOGS_GET_CUR]({ state, commit, rootState, dispatch }, params = {
+    force: false,
+    pathMatchArr: []
+  }) {
+    let { force, path, bookName = rootState.books.curBook, getChild = true } = params
+    // bookName: 仓库名
+    const fullPath = path ? `${bookName}/${path}` : `${bookName}` // 为了保存key的唯一性，所以path前加上仓库名
+    let result = {}
+    // 刷新数据时，把cache的state清空
+    if(!path && force) {
+      commit(MUTATIONS.CATALOGS_CACHE_CLEAR)
+    }
+    const { list, catalogMapNotes } = state
+    // 如果list或者catalogMapNotes包含当前key的数据，说明这个数据获取过了
+    const hasData = (list[fullPath] && list[fullPath].childNodes) || catalogMapNotes[fullPath]
+    // 对于获取过的数据，直接返回
+    // 之所以这里没直接return，是因为服务端渲染时会先获取一个目录的数据，不能确定所有的数据都加载过了，所以这里需要继续循环
+    if(!force &&hasData) {
+      result = {
+        err: null,
+        data: [
+          ...state.list[fullPath].childNodes,
+          ...state.catalogMapNotes[fullPath]
+        ]
+      }
+      // 首屏渲染只会加一个key的数据的加上默认的root，如果大于两个，说明是全部加载过的，就是直接return
+      if(Object.keys(list[fullPath]).length > 2) {
+        return result
+      }
+    } else {
+      const githubName = rootState.user.curUserInfo.gitName
+      result = await fetch({
+        url: path ? `/repos/${githubName}/${bookName}/contents/${path}` : `/repos/${githubName}/${bookName}/contents`
+      })
+    }
+
+    const { err, data } = result
+    let PromiseAll = [Promise.resolve({})]
+    if(!err) {
+      // 接口返回的数数据既包含文件夹目录也包含文件，所以过滤出来，分开保存
+      const findDirs = data
+        .filter(item => item.type === 'dir')
+        .map(item => ({ ...item, repo: bookName, fullPath: `${bookName}/${item.path}`}))
+      const findFiles = data
+        .filter(item => item.type === 'file' && item.name.indexOf('.md') > -1)
+        .map(item => ({ ...item, repo: bookName, fullPath: `${bookName}/${item.path}`}))
+      commit(MUTATIONS.CATALOGS_SAVE, { key: fullPath, data: [ ...findDirs ] })
+      commit(MUTATIONS.CATALOGS_NOTE_MAP_SAVE, { key: fullPath, data: [ ...findFiles ] })
+      if(getChild && params.pathMatchArr.length) {
+        const popPath =params.pathMatchArr.shift()
+        const curDir = findDirs.find(item => item.name === popPath)
+        console.log('curDir', curDir, params.pathMatchArr)
+        PromiseAll.push(dispatch(ACTIONS.CATALOGS_GET_CUR, {
+          path: curDir.path,
+          bookName,
+          force,
+          isTree: true,
+          pathMatchArr: params.pathMatchArr
+        }))
+      }
+    }
+    return await Promise.all(PromiseAll)
+  },
   /* eslint-disable no-unused-vars */
   async [ACTIONS.CATALOGS_POST]({ commit }, data) {
     const result = await fetch({
