@@ -29,6 +29,7 @@
         curNote: state => state.notes.curNote,
       }),
       catalogList() {
+        return []
         if(!this.noteCatalogue || !this.curNote) return []
         if(!this.noteCatalogue) return []
         const getTree = this.noteCatalogue[this.curNote]

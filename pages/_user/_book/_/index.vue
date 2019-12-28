@@ -84,11 +84,11 @@
       // 如果当前只是浏览当前文件，则不需要获取目录了
       const isVisitor = store.state.user.curUserInfo.gitName !== store.state.user.loginUserInfo.gitName
       if(!context.route.query.view && !isVisitor) {
-        fetchArr.push( store.dispatch('catalogs/CATALOGS_GET',{
+       /* fetchArr.push( store.dispatch('catalogs/CATALOGS_GET',{
           path: getDirPath,
           getChild: false,
           bookName: book
-        }))
+        }))*/
       }
       if(context.route.query.view) {
         store.commit('user/VIEW_STATUS_SAVE', true)
@@ -482,7 +482,7 @@
     top: @head-height;
     bottom: 0;
     background: #fff;
-    color: @bg-color;
+    color: #777;
     border-right: solid 1px #e9e7e7;
     z-index: 2;
   }

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isVisitor" class="absolute-full">
+  <div class="absolute-full">
     <TreeItem
       v-for="(item, index) in catalogList"
       :key="item.name"
@@ -7,15 +7,15 @@
       :treeChain="[item['name']]"
     ></TreeItem>
   </div>
-  <div  v-else>
-    <div class="cur-catalog">{{curParent}}</div>
+ <!-- <div  v-if="false">
+    <div class="cur-catalog">{{curBlog}}</div>
     <NoteItem
       v-for="(item, index) in catalogList"
       :key="item.name"
       :curNode="item"
       :treeChain="[item['name']]"
     ></NoteItem>
-  </div>
+  </div>-->
 </template>
 <script>
   import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
@@ -42,23 +42,24 @@
         cacheCatalogMapNotes: state => state.catalogs.cacheCatalogMapNotes,
         catalogs: state => state.catalogs.list,
         curCatalog: state => state.catalogs.curCatalog,
+        curBlog: state => state.catalogs.curBlog,
         curBook: state => state.books.curBook,
+        catalogMapNotes: state => state.catalogs.catalogMapNotes,
       }),
       ...mapGetters('user', ['isVisitor', 'githubName']),
-      curParent() {
-        if(!this.curCatalog) return []
-        return this.curCatalog.substring(this.curCatalog.lastIndexOf('/')+1)
-      },
       catalogList() {
-        if(this.isVisitor) {
+        /*if(this.isVisitor) {
           const getNotes = this.cacheCatalogMapNotes[this.curCatalog] || []
           return getNotes
-        }
+        }*/
         // return this.catalogs[this.curBook] ? this.catalogs[this.curBook].childNodes : []
-        return [
-          {  path: '/', fullPath: this.curBook, name: this.curBook,icon: 'icon-wendang' },
-          // { _id: this.curBook+'_root', name: '我的文件夹', hasChild: true },
-        ]
+        const curNotePath = `${this.curBook}/${this.curBlog}`
+        const child = (this.catalogs[curNotePath] || {}).childNodes || []
+        let files = []
+        if(this.isVisitor){
+          files = this.catalogMapNotes[curNotePath] || []
+        }
+        return [ ...files, ...child]
       }
     },
     methods: {
@@ -98,7 +99,7 @@
 <style lang="less" scoped>
   .cur-catalog{
     font-weight: bold;
-    font-size: 32px;
+    font-size: 28px;
     padding-left: 25px;
     border-bottom: solid 1px @border-color;
     padding-bottom: 8px;

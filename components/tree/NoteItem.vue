@@ -5,10 +5,17 @@
       @click.left="chooseNote(null)"
       :class="{
         'act2': isInChin,
-        'catalogs-item-hover': !(isNewDir || renameCatalog)
+        'catalogs-item-hover': !(isNewDir || renameCatalog),
+        'file': curNode.type !== 'dir'
       }"
     >
       <div class="catalogs-name line-ellipsis">{{curNode.name}}</div>
+      <div
+        class="has-child"
+        :class="{
+        'in-chain': isOpen,
+      }"
+        v-if="curNode.type==='dir'"></div>
     </div>
     <div
       v-if="childList">
@@ -66,7 +73,7 @@
         curBook: state => state.books.curBook,
         curNote: state => state.notes.curNote,
         noteCatalogue: state => state.notes.noteCatalogue,
-        catalogMapNotes: state => state.catalogs.catalogMapNotes,
+        catalogMapNotes: state => state.catalogs.catalogMapNotes
       }),
       ...mapGetters('catalogs', ['treeChainList']),
       ...mapGetters('user', ['githubName', 'isVisitor']),
@@ -85,21 +92,23 @@
         }
         return this.clickOpen === 1 ? false : true
       },
-      isInChin() {
-        return this.curNote && this.curNote.indexOf(this.curNode.fullPath) > -1 && this.curNode.type !== 'mao'
+      isInChin(){
+        if(this.curNode.type === 'dir') {
+          return this.curNote && this.curNote.indexOf(this.curNode.fullPath) > -1 && this.curNode.type !== 'mao'
+        }
+        return `${this.githubName}/${this.curNode.fullPath}` === this.curNote
       },
       childList() {
-        let child = null
+        if(this.curNode.type !== 'dir') return []
         const curNotePath = `${this.githubName}/${this.curNode.fullPath}`
-        if(this.isVisitor && this.noteCatalogue[curNotePath] && this.noteCatalogue[curNotePath][this.curNode.fullPath]) {
+        /*if(this.isVisitor && this.noteCatalogue[curNotePath] && this.noteCatalogue[curNotePath][this.curNode.fullPath]) {
           child = this.noteCatalogue[curNotePath][this.curNode.fullPath]
         } else {
-          if(this.catalogs[this.curNode['fullPath']]&&this.catalogs[this.curNode['fullPath']].childNodes&&this.catalogs[this.curNode['fullPath']].childNodes.length) {
-            child = this.catalogs[this.curNode['fullPath']].childNodes
-          }
-        }
-        return child
 
+        }*/
+        const files = (this.catalogMapNotes || {})[this.curNode['fullPath']] || []
+        const child = (this.catalogs[this.curNode['fullPath']] || {}).childNodes || []
+        return [...files, ...child]
       }
     },
     watch: {
@@ -395,10 +404,17 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
+  .catalogs-layout-visitor .has-child{
+    position: relative;
+    transform: none;
+  }
 
   // 有子目录且打开状态
   .catalogs-item-layout .has-child.in-chain {
     transform: translateY(-6px) rotate(90deg);
+  }
+  .catalogs-layout-visitor .has-child.in-chain {
+    transform: translateY(0px) rotate(90deg);
   }
 
   /*  .catalogs-item-layout.act.has-child:before{
@@ -537,6 +553,12 @@
       width: 6px;
       display: block;
       background: #3eaf7c;
+    }
+    .catalogs-item-layout.file.act2:after {
+      display: none;
+    }
+    .catalogs-item-layout.file.act2{
+      color: #3eaf7c;
     }
   }
   #hello_recent {

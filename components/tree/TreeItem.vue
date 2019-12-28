@@ -1,5 +1,5 @@
 <template>
-  <div class="catalogs-layout">
+  <div class="catalogs-layout" :class="isVisitor?'visitor':'edit'">
     <div
       class="flex align-items-center catalogs-item-layout"
       @click.left="chooseCatalog(null)"
@@ -17,10 +17,10 @@
       }"
         @click.stop="toggleOpenDir(false)"
         v-if="hasChild"></div>
-      <i class="iconfont" :class="curNode.icon" :id="curNode._id" v-if="curNode.icon"></i>
-      <i class="iconfont icon-wenjianjia" :class="curNode.icon" :id="curNode._id"
-         v-else-if="treeChainList&&treeChainList.indexOf(curNode['_id']) > -1"></i>
-      <i class="iconfont icon-wendang1" :id="curNode._id" v-else></i>
+      <i
+        class="iconfont"
+        :class="isInChin?'icon-wenjianjia':'icon-wendang1'"
+        v-if="!isVisitor"></i>
       <!--   <div class="iconfont" v-else>
            <svg class="icon icon-close" aria-hidden="true">
              <use xlink:href="#icon-wenjian2"></use>
@@ -38,7 +38,7 @@
         v-focus:select
 
       />
-      <div v-else class="catalogs-name line-ellipsis">{{curNode.name}}</div>
+      <div v-else class="catalogs-name line-ellipsis" :class="curNode.type">{{curNode.name}}</div>
       <div class="operate-triangle-btn"
            @click.left.stop="(e) => showOperateMenu(e)"
            v-if="!curNode.icon"
@@ -56,10 +56,10 @@
       </div>
     </div>
     <div
-      v-if="catalogs[curNode['fullPath']]&&catalogs[curNode['fullPath']].childNodes&&catalogs[curNode['fullPath']].childNodes.length">
+      v-if="childList.length">
       <TreeItem
         v-show="isOpen"
-        v-for="(item, index) in catalogs[curNode['fullPath']].childNodes"
+        v-for="(item, index) in childList"
         :key="index"
         :curNode="item"
         @toInitOpenCatalog="initOpenCatalog"
@@ -120,8 +120,9 @@
         catalogMapNotes: state => state.catalogs.catalogMapNotes
       }),
       ...mapGetters('catalogs', ['treeChainList']),
-      ...mapGetters('user', ['githubName']),
+      ...mapGetters('user', ['githubName', 'isVisitor']),
       hasChild() {
+        return this.childList && this.childList.length
         const path = `${this.curNode['repo']}/${this.curNode['path']}`
         return this.catalogs[path]
           && this.catalogs[path]['childNodes']
@@ -134,7 +135,16 @@
         return this.clickOpen === 1 ? false : true
       },
       isInChin() {
-        return this.actCatalog && this.actCatalog.indexOf(this.curNode.fullPath) > -1
+        if(this.curNode.type === 'dir') {
+          return this.actCatalog && this.actCatalog.indexOf(this.curNode.fullPath) > -1
+        }
+        return `${this.githubName}/${this.curNode.fullPath}` === this.curNote
+      },
+      childList() {
+        if(this.curNode.type !== 'dir') return []
+        const files = (this.catalogMapNotes || {})[this.curNode['fullPath']] || []
+        const child = (this.catalogs[this.curNode['fullPath']] || {}).childNodes || []
+        return [...files, ...child]
       }
     },
     watch: {
@@ -177,6 +187,10 @@
         this.clickOpen = this.clickOpen === 2 ? 1 : 2
       },
       async chooseCatalog(item) {
+        if(this.isVisitor) {
+          this.toggleOpenDir()
+          return
+        }
         this.toggleOpenDir(true)
         this[MUTATIONS.CATALOGS_CUR_SAVE](`${this.curNode.fullPath}`)
         bus.$emit('emitFromCatalog', item || {
@@ -439,45 +453,57 @@
   /*  .catalogs-item-layout.act.has-child:before{
       border-left: solid 6px @tree-light-color;
     }*/
-  .catalogs-item-hover:hover {
-    background: @tree-hover-bg-color;
-    color: @tree-light-color;
+
+
+  .visitor{
+    .act {
+      .catalogs-name{
+        color: #7eb59c;
+      }
+      .catalogs-name.file{
+        color: #3eaf7c;
+      }
+    }
   }
+  .edit{
+    .catalogs-item-hover:hover {
+      background: @tree-hover-bg-color;
+      color: @tree-light-color;
+    }
 
-  .catalogs-item-hover:hover .operate-triangle-btn {
-    display: block;
-    color: @tree-light-color;
-  }
-
-  .catalogs-item-hover:hover:after {
-    background: @tree-hover-bg-color;
-  }
-
-  .catalogs-item-layout.act {
-    background: @tree-light-bg-color;
-    color: @tree-light-color;
-
-    .icon-open {
+    .catalogs-item-hover:hover .operate-triangle-btn {
       display: block;
+      color: @tree-light-color;
     }
 
-    .icon-close {
-      display: none;
+    .catalogs-item-hover:hover:after {
+      background: @tree-hover-bg-color;
     }
-  }
+    .catalogs-item-layout.act {
+      background: @tree-light-bg-color;
+      color: @tree-light-color;
 
-  .catalogs-item-layout.act:hover {
-    background: @tree-light-bg-color;
-  }
+      .icon-open {
+        display: block;
+      }
 
-  .catalogs-item-layout.act:hover:after {
-    background: @tree-light-bg-color;
-  }
+      .icon-close {
+        display: none;
+      }
+    }
+    .catalogs-item-layout.act:hover {
+      background: @tree-light-bg-color;
+    }
 
-  .catalogs-item-layout.act:after {
-    background: @tree-light-bg-color;
-  }
+    .catalogs-item-layout.act:hover:after {
+      background: @tree-light-bg-color;
+    }
 
+    .catalogs-item-layout.act:after {
+      background: @tree-light-bg-color;
+    }
+
+  }
   .catalogs-name {
     position: relative;
     max-width: 150px;

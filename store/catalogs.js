@@ -20,6 +20,7 @@ const state = () => (
 
     catchList: defaultList,
     cacheCatalogMapNotes: {},// 副本
+    curBlog: '', // 当前仓库的根目录下文件做为博客分类
   }
 )
 const getters = {
@@ -86,6 +87,9 @@ const mutations = {
   },
   [MUTATIONS.CATALOGS_CUR_SAVE](state, id) {
     state.curCatalog = getPath(id)
+  },
+  [MUTATIONS.CATALOGS_CUR_BLOG](state, blog) {
+    state.curBlog = blog
   },
   /**
    * 创建临时的目录
@@ -174,7 +178,7 @@ const actions = {
     if(!err) {
       // 接口返回的数数据既包含文件夹目录也包含文件，所以过滤出来，分开保存
       const findDirs = data
-        .filter(item => item.type === 'dir')
+        .filter(item => item.type === 'dir' && item.name !== 'demo')
         .map(item => ({ ...item, repo: bookName, fullPath: `${bookName}/${item.path}`}))
       const findFiles = data
         .filter(item => item.type === 'file' && item.name.indexOf('.md') > -1)
@@ -235,7 +239,7 @@ const actions = {
     if(!err) {
       // 接口返回的数数据既包含文件夹目录也包含文件，所以过滤出来，分开保存
       const findDirs = data
-        .filter(item => item.type === 'dir')
+        .filter(item => item.type === 'dir'&& item.name !== 'demo')
         .map(item => ({ ...item, repo: bookName, fullPath: `${bookName}/${item.path}`}))
       const findFiles = data
         .filter(item => item.type === 'file' && item.name.indexOf('.md') > -1)
@@ -245,7 +249,6 @@ const actions = {
       if(getChild && params.pathMatchArr.length) {
         const popPath =params.pathMatchArr.shift()
         const curDir = findDirs.find(item => item.name === popPath)
-        console.log('curDir', curDir, params.pathMatchArr)
         PromiseAll.push(dispatch(ACTIONS.CATALOGS_GET_CUR, {
           path: curDir.path,
           bookName,
