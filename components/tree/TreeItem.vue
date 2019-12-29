@@ -71,6 +71,11 @@
       @emitExitNewDir="exitNewDir"
       :isNewDir="doNewDir"
     ></TreeItem>
+    <div class="loading-tree" v-if="isLoading">
+      <svg class="loading-circular" viewBox="25 25 50 50">
+        <circle class="loading-circular-path" cx="50" cy="50" r="20" fill="none"/>
+      </svg>
+    </div>
   </div>
 </template>
 <script>
@@ -106,7 +111,8 @@
           isNew: true
         },
         clickOpen: '',
-        doNewDir: false
+        doNewDir: false,
+        isLoading: false
       }
     },
     computed: {
@@ -122,6 +128,9 @@
       ...mapGetters('catalogs', ['treeChainList']),
       ...mapGetters('user', ['githubName', 'isVisitor']),
       hasChild() {
+        if(this.isVisitor) {
+          return this.curNode.type === 'dir'
+        }
         return this.childList && this.childList.length
         const path = `${this.curNode['repo']}/${this.curNode['path']}`
         return this.catalogs[path]
@@ -169,6 +178,7 @@
       ]),
       ...mapActions('catalogs', [
         ACTIONS.CATALOGS_GET,
+        ACTIONS.CATALOGS_GET_CUR,
         ACTIONS.CATALOGS_PUT,
         ACTIONS.CATALOGS_POST,
         ACTIONS.CATALOGS_DELETE
@@ -179,10 +189,21 @@
       ...mapActions('notes', [
         ACTIONS.NOTE_DELETE
       ]),
-      toggleOpenDir(force = false, catalogId) {
+      async toggleOpenDir(force = false, catalogId) {
         if(force) {
           this.clickOpen = 2
           return
+        }
+        if(this.clickOpen !== 2) {
+          // 通过是否有文件即使是空数组还判断是否已经请求过该目录
+          if(!this.catalogMapNotes[this.curNode.fullPath]) {
+            this.isLoading = true
+            await this[ACTIONS.CATALOGS_GET_CUR]({
+              getChild: false,
+              path: this.curNode.path
+            })
+            this.isLoading = false
+          }
         }
         this.clickOpen = this.clickOpen === 2 ? 1 : 2
       },
@@ -576,5 +597,8 @@
 
   #hello_recent {
     font-size: 24px;
+  }
+  .loading-tree{
+    padding-left: 25px;
   }
 </style>
