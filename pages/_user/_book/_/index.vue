@@ -181,6 +181,9 @@
           this[ACTIONS.BOOK_LIST_GET](),
           // this[ACTIONS.CATALOGS_GET]()
         ]
+        if(!this.isVisitor) {
+          fetchArr.push(this[ACTIONS.CATALOGS_GET]())
+        }
         // 如果当前是访问的文章不存在如需要获取当前文章
         if($nuxt._route.query.type !== 'dir' && !this.notesMap[this.curNote]) {
           const {user, book, pathMatch = ''} = $nuxt._route.params

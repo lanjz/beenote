@@ -150,7 +150,7 @@ const actions = {
   async [ACTIONS.NOTE_DELETE]({commit, rootState}, data) {
     const { user, books } = rootState
     const result = await fetch({
-      url: `/repos/${user.curUserInfo.githubName}/${books.curBook}/contents/${data.path}`,
+      url: `/repos/${user.curUserInfo.gitName}/${books.curBook}/contents/${data.path}`,
       method: 'DELETE',
       data: {
         message: `DELETE: ${books.curBook}/${data.path} At ${getCurTime()}`,
@@ -161,8 +161,9 @@ const actions = {
   },
   async [ACTIONS.NOTE_PUT]({commit, rootState}, data) {
     const { user, books } = rootState
+    console.log('user', user)
     const result = await fetch({
-      url: `/repos/${user.curUserInfo.githubName}/${books.curBook}/contents/${data.path}`,
+      url: `/repos/${user.curUserInfo.gitName}/${books.curBook}/contents/${data.path}`,
       method: 'put',
       data: {
         message: `${data.newFile ? 'ADD: ' : 'UPDATE: '}${books.curBook}/${data.path} At ${getCurTime()}`,
