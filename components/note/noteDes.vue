@@ -30,7 +30,7 @@
     </div>
   </div>
   <div class="form-layout theme-1" style="width: 100%" v-else>
-    <div class="author-info-box">
+    <!--<div class="author-info-box">
       <div class="author-info flex align-items-center">
         <div class="author-avatar">
           <img src="http://img2.touxiang.cn/file/20170124/f7d7f55fb3c9c11bda3bae8ff27e7347.jpg">
@@ -48,7 +48,7 @@
           <img src="https://www.easyicon.net/api/resizeApi.php?id=1109058&size=128">
         </div>
       </div>
-    </div>
+    </div>-->
     <markdown-edit v-model="content" :onlyView="isVisitor" :showEdit="curNote.newFile"></markdown-edit>
   </div>
 </template>

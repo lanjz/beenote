@@ -1,5 +1,6 @@
 <template>
   <div class="absolute-full">
+    <div class="cur-catalog">{{curBlog}}</div>
     <TreeItem
       v-for="(item, index) in catalogList"
       :key="item.name"
@@ -99,10 +100,9 @@
 <style lang="less" scoped>
   .cur-catalog{
     font-weight: bold;
-    font-size: 28px;
-    padding-left: 25px;
+    font-size: 25px;
     border-bottom: solid 1px @border-color;
-    padding-bottom: 8px;
+    padding: 10px 0 10px 25px;
 
   }
 </style>

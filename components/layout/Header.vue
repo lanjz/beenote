@@ -105,6 +105,9 @@
     .head-nav a{
       color: @bg-color;
     }
+    .slide-box{
+      color: @bg-color;
+    }
   }
   .visitor-box-header:after{
     content: '';
@@ -166,6 +169,7 @@
   }
   .slide-box{
     padding-right: 15px;
+    color: #fff;
   }
   .slide-box:after{
     content: '';
@@ -192,6 +196,7 @@
     display: none;
     padding: 5px 0;
     .blog-item{
+      color: @bg-color;
       padding: 5px 15px;
     }
     .blog-item.act{
