@@ -7,6 +7,7 @@
       :actHash="actHash"
     ></NoteItem>
   </div>
+  <div v-else>无</div>
 </template>
 <script>
   import {mapState} from 'vuex'
@@ -29,7 +30,6 @@
         curNote: state => state.notes.curNote,
       }),
       catalogList() {
-        return []
         if(!this.noteCatalogue || !this.curNote) return []
         if(!this.noteCatalogue) return []
         const getTree = this.noteCatalogue[this.curNote]
@@ -85,12 +85,7 @@
 </script>
 <style lang="less" scoped>
   .note-catalogue{
-    position: fixed;
-    right: 10px;
-    padding: 15px;
-    z-index: 2;
-    background: #fff;
-    top: @head-height;
-    width: 264px;
+    position: relative;
+    padding-left: 15px;
   }
 </style>

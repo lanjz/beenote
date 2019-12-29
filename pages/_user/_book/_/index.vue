@@ -25,9 +25,9 @@
       ></note-des>
       <noNotes v-else @toCreateFile="todoCreateNewFile"></noNotes>
     </div>
-    <div class="page-right" v-if="isVisitor">
+   <!-- <div class="page-right" v-if="isVisitor">
       <Catalogue></Catalogue>
-    </div>
+    </div>-->
   </div>
 </template>
 <script>

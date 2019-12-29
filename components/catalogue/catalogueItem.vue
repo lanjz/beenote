@@ -84,7 +84,7 @@
       -webkit-box-orient:vertical;
       -webkit-line-clamp:2;
     }
-    .catalogs-name:after {
+    /*.catalogs-name:after {
       content: '';
       width: 7px;
       height: 7px;
@@ -95,7 +95,7 @@
       transform: translate(1px, -50%);
       border-radius: 50%;
       opacity: 0.5;
-    }
+    }*/
     .catalogs-name.act{
       color: #3eaf7c;
     }
@@ -106,7 +106,7 @@
       opacity: 1;
     }
   }
-  .catalogs-layout:before {
+  /*.catalogs-layout:before {
     content: '';
     width: 1px;
     background: #3eaf7c;
@@ -114,7 +114,7 @@
     left: 4px ;
     height: 100%;
     opacity: 0.5;
-  }
+  }*/
   .catalogs-layout:last-child:before{
     /*transform: translateY(-50%);*/
   }

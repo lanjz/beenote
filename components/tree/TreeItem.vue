@@ -1,5 +1,12 @@
 <template>
-  <div class="catalogs-layout" :class="isVisitor?'visitor':'edit'">
+  <div
+    class="catalogs-layout"
+    :class="{
+    'visitor': isVisitor,
+    'edit': !isVisitor,
+    'act-tree': isVisitor&&isInChin&&curNode.type==='file',
+    }"
+  >
     <div
       class="flex align-items-center catalogs-item-layout"
       @click.left="chooseCatalog(null)"
@@ -76,6 +83,7 @@
         <circle class="loading-circular-path" cx="50" cy="50" r="20" fill="none"/>
       </svg>
     </div>
+    <Catalogue v-if="isVisitor&&isInChin&&curNode.type==='file'"></Catalogue>
   </div>
 </template>
 <script>
@@ -84,7 +92,8 @@
   import * as ACTIONS from '../../store/const/actions'
   import bus from '../../utils/client/global/eventBus'
   import constKey from '../../utils/client/const'
-  import {findDirPath} from "../../utils/client/blackHole";
+  import {findDirPath, slitSuffix} from "../../utils/client/blackHole";
+  import Catalogue from '../../components/catalogue/index'
 
   export default {
     name: 'TreeItem',
@@ -114,6 +123,9 @@
         doNewDir: false,
         isLoading: false
       }
+    },
+    components: {
+      Catalogue
     },
     computed: {
       ...mapState({
@@ -207,9 +219,18 @@
         }
         this.clickOpen = this.clickOpen === 2 ? 1 : 2
       },
+      chooseNote: function (item) {
+        console.log('item', item)
+        if(this.curNote === `${this.githubName}/${item.fullPath}`) return
+        this.$router.push(`/${this.githubName}/${item.repo}/${slitSuffix(item.path)}`)
+      },
       async chooseCatalog(item) {
         if(this.isVisitor) {
-          this.toggleOpenDir()
+          if(this.curNode.type === 'dir') {
+            this.toggleOpenDir()
+          } else {
+            this.chooseNote(this.curNode)
+          }
           return
         }
         this.toggleOpenDir(true)
@@ -250,7 +271,6 @@
       },
       todoDelete() {
         this.closeMenu()
-        console.log(11)
         const combine = [
           ...(this.catalogMapNotes[this.curNode.fullPath] || []),
           ...(this.catalogs[this.curNode.fullPath].childNodes || [])
@@ -387,12 +407,22 @@
 </script>
 <style lang="less" scoped>
   .catalogs-layout {
+    position: relative;
     .catalogs-layout {
       padding-left: 20px;
       margin-top: 1px;
     }
   }
 
+  .catalogs-layout.act-tree:after{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: #3eaf7c;
+    width: 5px;
+  }
   .iconfont {
     font-size: 25px;
     position: relative;
