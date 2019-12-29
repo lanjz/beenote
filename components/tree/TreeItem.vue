@@ -220,7 +220,6 @@
         this.clickOpen = this.clickOpen === 2 ? 1 : 2
       },
       chooseNote: function (item) {
-        console.log('item', item)
         if(this.curNote === `${this.githubName}/${item.fullPath}`) return
         this.$router.push(`/${this.githubName}/${item.repo}/${slitSuffix(item.path)}`)
       },
@@ -420,7 +419,7 @@
     left: 0;
     top: 0;
     height: 100%;
-    background: #3eaf7c;
+    background: @visitor-font-primary-color;
     width: 5px;
   }
   .iconfont {
@@ -512,7 +511,7 @@
         color: #7eb59c;
       }
       .catalogs-name.file{
-        color: #3eaf7c;
+        color: @visitor-font-primary-color;
       }
     }
   }

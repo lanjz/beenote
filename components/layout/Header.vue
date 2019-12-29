@@ -1,20 +1,39 @@
 <template>
-  <div class="head flex" :class="{'isVisitor':isVisitor}">
+  <div class="head flex">
 <!--    <div class="logo">
       Black Hook - N
       <i class="iconfont icon-biji"></i>
       &lt;!&ndash;<img src="../../assets/imgs/small-LOGO.png">&ndash;&gt;
     </div>-->
     <div class="logo-test">
-      <small>Black<br/>Hook </small> <big>- N</big>
+      Git-Online
     </div>
     <div class="flex flex-1 align-items-center justify-content-end">
       <div class="head-nav flex">
         <!--<nuxt-link to="/default/recently/">
           最近笔记
         </nuxt-link>-->
+        <div class="relative slide-box">
+          <span>博客</span>
+          <div class="blog-list" v-if="blogList.length">
+            <div
+              class="blog-item"
+              v-for="(item, index) in blogList"
+              :class="{'act': curCatalog.indexOf(item.fullPath) === 0}"
+              @click="goto(item)"
+              :key="index">
+              {{item.name}}
+            </div>
+          </div>
+        </div>
         <nuxt-link to="/BookList">
-          我的仓库
+          关于
+        </nuxt-link>
+        <nuxt-link to="/BookList">
+          仓库
+        </nuxt-link>
+        <nuxt-link to="/BookList">
+          Github
         </nuxt-link>
       </div>
       <div @click="toDoShowUserLayout" class="user-avatar-layout cursor">
@@ -41,20 +60,30 @@
       ...mapState({
         userInfo: state => state.user.loginUserInfo,
         userLayoutStatus: state => state.user.userInfoStatus,
+        catalogs: state => state.catalogs.list,
+        curBook: state => state.books.curBook,
+        curCatalog: state => state.catalogs.curCatalog,
       }),
-      ...mapGetters('user', ['isVisitor']),
+      ...mapGetters('user', ['isVisitor', 'githubName']),
+      blogList: function () {
+        return (this.catalogs[this.curBook] || {}).childNodes || []
+      }
     },
     methods: {
       ...mapMutations('user', [MUTATIONS.CUR_USER_LAYOUT_SAVE]),
       toDoShowUserLayout() {
         const tar = this.userInfo.username ? 'info' : 'login'
         this[MUTATIONS.CUR_USER_LAYOUT_SAVE](tar)
+      },
+      goto(item) {
+        this.$router.push(`/${this.githubName}/${item.fullPath}?type=dir`)
       }
-    }
+    },
   }
 </script>
 <style lang="less">
   .head{
+    height: 70px;
     padding: 8px;
     background: @bg-color;
     position: relative;
@@ -69,7 +98,9 @@
       color: @bg-color;
     }
     .logo-test{
+      line-height: 50px;
       color: @bg-color;
+      font-size: 20px;
     }
     .head-nav a{
       color: @bg-color;
@@ -92,6 +123,7 @@
     left: 10px;
     top: 10px;
     color: #fff;
+    line-height: 65px;
     img{
       height: 65px;
     }
@@ -131,5 +163,56 @@
       font-size: 15px;
       display: inline-block;
     }
+  }
+  .slide-box{
+    padding-right: 15px;
+  }
+  .slide-box:after{
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: solid 6px #d6d4d4;
+    border-left: solid 5px transparent;
+    border-right: solid 5px transparent;
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .blog-list{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border-radius: 2px;
+    border: solid 1px #eee;
+    z-index: 10;
+    transform: translateY(10px);
+    cursor: pointer;
+    display: none;
+    padding: 5px 0;
+    .blog-item{
+      padding: 5px 15px;
+    }
+    .blog-item.act{
+      color: @visitor-font-primary-color;
+    }
+  }
+  .blog-list:after{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 10px;
+    top: -10px;
+    left: 0;
+  }
+  .slide-box{
+    cursor: pointer;
+  }
+  .slide-box:hover .blog-list{
+    display: block;
+  }
+  .blog-list:hover{
+    display: none;
   }
 </style>

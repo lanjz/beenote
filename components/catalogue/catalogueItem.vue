@@ -88,7 +88,7 @@
       content: '';
       width: 7px;
       height: 7px;
-      background:  #3eaf7c;
+      background:  @visitor-font-primary-color;
       position: absolute;
       left: 0;
       top: 50%;
@@ -97,7 +97,7 @@
       opacity: 0.5;
     }*/
     .catalogs-name.act{
-      color: #3eaf7c;
+      color: @visitor-font-primary-color;
     }
     .catalogs-name.actDot:after{
       width: 10px;
@@ -109,7 +109,7 @@
   /*.catalogs-layout:before {
     content: '';
     width: 1px;
-    background: #3eaf7c;
+    background: @visitor-font-primary-color;
     position: absolute;
     left: 4px ;
     height: 100%;

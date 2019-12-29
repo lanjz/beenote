@@ -542,7 +542,7 @@
     }
     .catalogs-item-hover:hover {
       background: none;
-      color: #3eaf7c;
+      color: @visitor-font-primary-color;
     }
 
     .catalogs-item-layout.act2:after {
@@ -552,13 +552,13 @@
       top: 0;
       width: 6px;
       display: block;
-      background: #3eaf7c;
+      background: @visitor-font-primary-color;
     }
     .catalogs-item-layout.file.act2:after {
       display: none;
     }
     .catalogs-item-layout.file.act2{
-      color: #3eaf7c;
+      color: @visitor-font-primary-color;
     }
   }
   #hello_recent {
