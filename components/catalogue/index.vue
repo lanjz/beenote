@@ -31,8 +31,7 @@
       }),
       catalogList() {
         if(!this.noteCatalogue || !this.curNote) return []
-        if(!this.noteCatalogue) return []
-        const getTree = this.noteCatalogue[this.curNote]
+        const getTree = this.noteCatalogue[this.curNote] || {}
         return getTree[this.curNote] || []
       },
     },

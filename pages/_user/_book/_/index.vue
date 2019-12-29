@@ -333,8 +333,8 @@
        * 因为文章是服务端渲染的，所以是游客模式下就不需要获取其它的数据了
        * */
       async init() {
-        if(this.isVisitor) return
         this.getNoteData()
+        if(this.isVisitor) return
         this.initEmitOn()
       },
       /**
