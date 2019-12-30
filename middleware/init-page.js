@@ -8,7 +8,7 @@ export default async function ({ store, redirect, req, app, params, route }) {
     })
   }
   if(pathMatch) {
-    const blog = pathMatch.substring(0, pathMatch.indexOf('/'))
+    const blog = pathMatch.substring(0, Math.max(pathMatch.indexOf('/'), 0) || pathMatch.length)
     console.log('blog', blog)
     store.commit('catalogs/CATALOGS_CUR_BLOG', blog)
   }

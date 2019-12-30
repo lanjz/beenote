@@ -156,7 +156,11 @@
       }
     },
     methods: {
-      ...mapMutations('catalogs', [MUTATIONS.CATALOGS_CUR_SAVE,MUTATIONS.CATALOGS_CACHE_SAVE, MUTATIONS.CATALOGS_REMOVE]),
+      ...mapMutations('catalogs', [
+        MUTATIONS.CATALOGS_CUR_SAVE,
+        MUTATIONS.CATALOGS_CACHE_SAVE,
+        MUTATIONS.CATALOGS_CUR_BLOG,
+        MUTATIONS.CATALOGS_REMOVE]),
       ...mapMutations('notes', [MUTATIONS.NOTE_CUR_UPDATE,]),
       ...mapMutations('books', [MUTATIONS.BOOK_CUR_UPDATE,]),
       ...mapMutations('user', [MUTATIONS.CUR_USER_INFO_SAVE]),
@@ -168,6 +172,7 @@
       ]),
       ...mapActions('catalogs', [
         ACTIONS.CATALOGS_GET,
+        ACTIONS.CATALOGS_GET_CUR
       ]),
       ...mapActions('user', [
         ACTIONS.USER_INFO_GET
@@ -176,16 +181,21 @@
        * 获取仓库列表和当前仓库的文件目录
        * */
       async getNoteData() {
+        const {user, book, pathMatch = ''} = $nuxt._route.params
+        const isDir = $nuxt._route.query.type === 'dir'
+        let pathMatchArr = pathMatch && pathMatch.split('/')
+        if(pathMatchArr.length && !isDir) {
+          pathMatchArr = pathMatchArr.splice(0, pathMatchArr.length - 1)
+        }
         const fetchArr = [
           this[ACTIONS.BOOK_LIST_GET](),
-          // this[ACTIONS.CATALOGS_GET]()
+          this[ACTIONS.CATALOGS_GET_CUR]({pathMatchArr})
         ]
         if(!this.isVisitor) {
           // fetchArr.push(this[ACTIONS.CATALOGS_GET]())
         }
         // 如果当前是访问的文章不存在如需要获取当前文章
         if($nuxt._route.query.type !== 'dir' && !this.notesMap[this.curNote]) {
-          const {user, book, pathMatch = ''} = $nuxt._route.params
           const fullPath = `${user}/${book}/${pathMatch}`
           fetchArr.push(this[ACTIONS.NOTE_DES_GET]({
             fullPath,
@@ -349,6 +359,11 @@
         this[MUTATIONS.CUR_USER_INFO_SAVE]({
           gitName: user
         })
+        if(pathMatch){
+          const blog = pathMatch.substring(0, Math.max(pathMatch.indexOf('/'), 0) || pathMatch.length)
+          this[MUTATIONS.CATALOGS_CUR_BLOG](blog)
+        }
+
         if($nuxt._route.query.type === 'dir') {
           // 如果当前是文件夹，而直接保存当前路径
           this[MUTATIONS.CATALOGS_CUR_SAVE](`${book}/${pathMatch}`)

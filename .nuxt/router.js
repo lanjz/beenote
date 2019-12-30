@@ -3,14 +3,14 @@ import Router from 'vue-router'
 import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
-const _6fdf3330 = () => interopDefault(import('../pages/bookList.vue' /* webpackChunkName: "pages/bookList" */))
-const _8566fc10 = () => interopDefault(import('../pages/login.vue' /* webpackChunkName: "pages/login" */))
-const _3c520222 = () => interopDefault(import('../pages/schema.vue' /* webpackChunkName: "pages/schema" */))
-const _18b6423e = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
-const _08fc867c = () => interopDefault(import('../pages/_user/index.vue' /* webpackChunkName: "pages/_user/index" */))
-const _764e4f75 = () => interopDefault(import('../pages/_user/_book/index.vue' /* webpackChunkName: "pages/_user/_book/index" */))
-const _5393488d = () => interopDefault(import('../pages/_user/_book/index2.vue' /* webpackChunkName: "pages/_user/_book/index2" */))
-const _15dd59f6 = () => interopDefault(import('../pages/_user/_book/_/index.vue' /* webpackChunkName: "pages/_user/_book/_/index" */))
+const _68550d42 = () => interopDefault(import('..\\pages\\bookList.vue' /* webpackChunkName: "pages_bookList" */))
+const _29762a61 = () => interopDefault(import('..\\pages\\login.vue' /* webpackChunkName: "pages_login" */))
+const _555d66d9 = () => interopDefault(import('..\\pages\\schema.vue' /* webpackChunkName: "pages_schema" */))
+const _5fce874a = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages_index" */))
+const _57a71320 = () => interopDefault(import('..\\pages\\_user\\index.vue' /* webpackChunkName: "pages__user_index" */))
+const _5eea5cac = () => interopDefault(import('..\\pages\\_user\\_book\\index.vue' /* webpackChunkName: "pages__user__book_index" */))
+const _7e78e236 = () => interopDefault(import('..\\pages\\_user\\_book\\index2.vue' /* webpackChunkName: "pages__user__book_index2" */))
+const _518ceba9 = () => interopDefault(import('..\\pages\\_user\\_book\\_\\index.vue' /* webpackChunkName: "pages__user__book___index" */))
 
 Vue.use(Router)
 
@@ -23,35 +23,35 @@ export const routerOptions = {
 
   routes: [{
       path: "/bookList",
-      component: _6fdf3330,
+      component: _68550d42,
       name: "bookList"
     }, {
       path: "/login",
-      component: _8566fc10,
+      component: _29762a61,
       name: "login"
     }, {
       path: "/schema",
-      component: _3c520222,
+      component: _555d66d9,
       name: "schema"
     }, {
       path: "/",
-      component: _18b6423e,
+      component: _5fce874a,
       name: "index"
     }, {
       path: "/:user",
-      component: _08fc867c,
+      component: _57a71320,
       name: "user"
     }, {
       path: "/:user/:book",
-      component: _764e4f75,
+      component: _5eea5cac,
       name: "user-book"
     }, {
       path: "/:user/:book/index2",
-      component: _5393488d,
+      component: _7e78e236,
       name: "user-book-index2"
     }, {
       path: "/:user/:book/*",
-      component: _15dd59f6,
+      component: _518ceba9,
       name: "user-book-all"
     }],
 

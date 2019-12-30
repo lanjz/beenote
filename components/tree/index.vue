@@ -82,6 +82,7 @@
         ACTIONS.CATALOGS_GET_CUR,
       ]),
       async init() {
+        return
         const {user, book, pathMatch} = $nuxt._route.params
         const isDir = $nuxt._route.query.type === 'dir'
         let pathMatchArr = pathMatch && pathMatch.split('/')
@@ -110,6 +111,7 @@
       }
     },
     mounted() {
+      console.log('mounted')
       this.init()
     }
   }
