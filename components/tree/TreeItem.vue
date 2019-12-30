@@ -121,7 +121,8 @@
         },
         clickOpen: '',
         doNewDir: false,
-        isLoading: false
+        isLoading: false,
+        hasLoad: false
       }
     },
     components: {
@@ -140,10 +141,14 @@
       ...mapGetters('catalogs', ['treeChainList']),
       ...mapGetters('user', ['githubName', 'isVisitor']),
       hasChild() {
-        if(this.isVisitor) {
-          return this.curNode.type === 'dir'
+        if(!this.isVisitor) {
+          if(this.catalogMapNotes[this.curNode.fullPath]) {
+            return this.hasDirChild
+          }
         }
-        return this.childList && this.childList.length
+        return this.curNode.type === 'dir'
+      },
+      hasDirChild() {
         const path = `${this.curNode['repo']}/${this.curNode['path']}`
         return this.catalogs[path]
           && this.catalogs[path]['childNodes']
@@ -163,7 +168,10 @@
       },
       childList() {
         if(this.curNode.type !== 'dir') return []
-        const files = (this.catalogMapNotes || {})[this.curNode['fullPath']] || []
+        let files = []
+        if(this.isVisitor){
+          files = files = (this.catalogMapNotes || {})[this.curNode['fullPath']] || []
+        }
         const child = (this.catalogs[this.curNode['fullPath']] || {}).childNodes || []
         return [...files, ...child]
       }
@@ -201,21 +209,25 @@
       ...mapActions('notes', [
         ACTIONS.NOTE_DELETE
       ]),
+      async getChildList() {
+        // 通过是否有文件即使是空数组还判断是否已经请求过该目录
+        if(!this.catalogMapNotes[this.curNode.fullPath]) {
+          this.isLoading = true
+          await this[ACTIONS.CATALOGS_GET_CUR]({
+            getChild: false,
+            path: this.curNode.path
+          })
+          this.isLoading = false
+          this.hasLoad = true
+        }
+      },
       async toggleOpenDir(force = false, catalogId) {
         if(force) {
           this.clickOpen = 2
           return
         }
         if(this.clickOpen !== 2) {
-          // 通过是否有文件即使是空数组还判断是否已经请求过该目录
-          if(!this.catalogMapNotes[this.curNode.fullPath]) {
-            this.isLoading = true
-            await this[ACTIONS.CATALOGS_GET_CUR]({
-              getChild: false,
-              path: this.curNode.path
-            })
-            this.isLoading = false
-          }
+          await this.getChildList()
         }
         this.clickOpen = this.clickOpen === 2 ? 1 : 2
       },
@@ -231,6 +243,8 @@
             this.chooseNote(this.curNode)
           }
           return
+        } else {
+          await this.getChildList()
         }
         this.toggleOpenDir(true)
         this[MUTATIONS.CATALOGS_CUR_SAVE](`${this.curNode.fullPath}`)

@@ -1,15 +1,20 @@
 <template>
-  <div class="no-data flex direction-column justify-content-center align-items-center">
+  <div class="no-data">
     <i class="iconfont icon-wushuju"></i>
-    <div>还没任何有笔记，<span class="create-btn" @click="toCreateNote">快速创建</span></div>
+    <div v-if="!isVisitor">还没任何有笔记，<span class="create-btn" @click="toCreateNote">快速创建</span></div>
+    <div v-else>当前目录还没有笔记</div>
   </div>
 </template>
 <script>
+  import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
   import constKey from '../../utils/client/const'
   export default {
     data() {
       return {
       }
+    },
+    computed: {
+      ...mapGetters('user', ['isVisitor']),
     },
     methods: {
       toCreateNote(arg) {
@@ -25,8 +30,9 @@
     flex: 1;
     font-size: 20px;
     padding: 20px;
+    text-align: center;
     color: #7e8896;
-    background: #faf9f9;
+    padding-top: 35%;
     .iconfont{
       font-size: 100px;
     }

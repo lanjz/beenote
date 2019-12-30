@@ -1,12 +1,23 @@
 <template>
   <div class="absolute-full">
-    <div class="cur-catalog">{{curBlog}}</div>
+    <div class="cur-catalog">{{curBlog || curBook}}</div>
     <TreeItem
       v-for="(item, index) in catalogList"
       :key="item.name"
       :curNode="item"
       :treeChain="[item['name']]"
+      v-if="curBlog"
     ></TreeItem>
+    <div v-else>
+      <div
+        class="blog-item"
+        v-for="(item, index) in blogList"
+        :class="{'act': curCatalog.indexOf(item.fullPath) === 0}"
+        @click="goto(item)"
+        :key="index">
+        <i class="iconfont icon-shuji"></i>{{item.name}}
+      </div>
+    </div>
   </div>
  <!-- <div  v-if="false">
     <div class="cur-catalog">{{curBlog}}</div>
@@ -48,6 +59,9 @@
         catalogMapNotes: state => state.catalogs.catalogMapNotes,
       }),
       ...mapGetters('user', ['isVisitor', 'githubName']),
+      blogList: function () {
+        return (this.catalogs[this.curBook] || {}).childNodes || []
+      },
       catalogList() {
         /*if(this.isVisitor) {
           const getNotes = this.cacheCatalogMapNotes[this.curCatalog] || []
@@ -68,7 +82,6 @@
         ACTIONS.CATALOGS_GET_CUR,
       ]),
       async init() {
-        if(!this.isVisitor) return
         const {user, book, pathMatch} = $nuxt._route.params
         const isDir = $nuxt._route.query.type === 'dir'
         let pathMatchArr = pathMatch && pathMatch.split('/')
@@ -91,6 +104,9 @@
           bookName: book
         }
         this[ACTIONS.CATALOGS_GET](params)*/
+      },
+      goto(item) {
+        this.$router.push(`/${this.githubName}/${item.fullPath}?type=dir`)
       }
     },
     mounted() {
@@ -105,5 +121,16 @@
     border-bottom: solid 1px @border-color;
     padding: 10px 0 10px 25px;
 
+  }
+  .blog-item{
+    cursor: pointer;
+    .iconfont{
+      margin-right: 5px;
+      font-size: 20px;
+    }
+    padding: 7px 15px 7px 30px;
+  }
+  .blog-item.act{
+    color: @visitor-font-primary-color;
   }
 </style>

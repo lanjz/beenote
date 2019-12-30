@@ -98,15 +98,20 @@
       color: @bg-color;
     }
     .logo-test{
-      line-height: 50px;
       color: @bg-color;
-      font-size: 20px;
+
     }
     .head-nav a{
       color: @bg-color;
+      line-height: 21px;
+      display: inline-block;
     }
     .slide-box{
       color: @bg-color;
+      span{
+        display: inline-block;
+        line-height: 21px;
+      }
     }
   }
   .visitor-box-header:after{
@@ -161,6 +166,8 @@
   }
 
   .logo-test{
+    line-height: 50px;
+    font-size: 20px;
     color: #fff;
     small{
       font-size: 15px;
