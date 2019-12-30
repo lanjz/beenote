@@ -62,7 +62,7 @@
               }
             }
           })
-          if(location.hash !== dis.getAttribute('id')) {
+          if(dis && dis.getAttribute&&location.hash !== dis.getAttribute('id')) {
             location.hash = dis.getAttribute('id')
             const type = dis.tagName === 'H1' ? '#' : '##'
             this.getActTree(dis.getAttribute('id'), type)

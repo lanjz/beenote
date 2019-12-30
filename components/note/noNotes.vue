@@ -32,7 +32,7 @@
     padding: 20px;
     text-align: center;
     color: #7e8896;
-    padding-top: 35%;
+    padding-top: 25%;
     .iconfont{
       font-size: 100px;
     }
