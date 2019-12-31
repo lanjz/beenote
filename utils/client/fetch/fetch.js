@@ -8,7 +8,6 @@ import { ApiBase } from './fetchConfig'
 if(process.client) {
   console.log('context', window)
 }
-console.log(111)
 const gitToken = 'e0ed39f163363a5b3d5eb9f658cdffba25c4e72a'
 
 function dealRetCode(response = {}, reqOptions) {
