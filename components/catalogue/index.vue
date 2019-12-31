@@ -7,7 +7,7 @@
       :actHash="actHash"
     ></NoteItem>
   </div>
-  <div v-else>无</div>
+<!--  <div v-else>无</div>-->
 </template>
 <script>
   import {mapState} from 'vuex'
