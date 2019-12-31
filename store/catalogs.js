@@ -213,7 +213,6 @@ const actions = {
     const { list, catalogMapNotes } = state
     // 如果list或者catalogMapNotes包含当前key的数据，说明这个数据获取过了
     const hasData = (list[fullPath] && list[fullPath].childNodes) || catalogMapNotes[fullPath]
-    console.log('CATALOGS_GET_CUR', hasData)
     // 对于获取过的数据，直接返回
     // 之所以这里没直接return，是因为服务端渲染时会先获取一个目录的数据，不能确定所有的数据都加载过了，所以这里需要继续循环
     if(!force &&hasData) {

@@ -79,7 +79,6 @@
             this[ACTIONS.NOTES_RECENTLY_GET]()
           })
           .catch(err => {
-            console.log('err', err)
             this.$alert({
               title: 'getBookData',
               content: err.message
