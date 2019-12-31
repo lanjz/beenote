@@ -1,21 +1,25 @@
 <template>
-  <div class="absolute-full">
+  <div class="absolute-full flex direction-column">
     <div class="cur-catalog">{{curBlog || curBook}}</div>
-    <TreeItem
-      v-for="(item, index) in catalogList"
-      :key="item.name"
-      :curNode="item"
-      :treeChain="[item['name']]"
-      v-if="curBlog"
-    ></TreeItem>
-    <div v-else>
-      <div
-        class="blog-item"
-        v-for="(item, index) in blogList"
-        :class="{'act': curCatalog.indexOf(item.fullPath) === 0}"
-        @click="goto(item)"
-        :key="index">
-        <i class="iconfont icon-shuji"></i>{{item.name}}
+    <div class="flex-1 relative">
+      <div class="absolute-full catalog-content" :class="{'visitor': isVisitor}">
+        <TreeItem
+          v-for="(item, index) in catalogList"
+          :key="item.name"
+          :curNode="item"
+          :treeChain="[item['name']]"
+          v-if="curBlog"
+        ></TreeItem>
+        <div v-else>
+          <div
+            class="blog-item"
+            v-for="(item, index) in blogList"
+            :class="{'act': curCatalog.indexOf(item.fullPath) === 0}"
+            @click="goto(item)"
+            :key="index">
+            <i class="iconfont icon-shuji"></i>{{item.name}}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -111,18 +115,31 @@
       }
     },
     mounted() {
-      console.log('mounted')
       this.init()
     }
   }
 </script>
 <style lang="less" scoped>
+  .is-visitor-catalog{
+    overflow: auto;
+    padding-bottom: 100px;
+    padding-top: 50px;
+
+  }
+  .catalog-content{
+    overflow: auto;
+    padding-bottom: 20px;
+  }
+  .catalog-content.visitor:after{
+    content: '';
+    height: 70px;
+    display: block;
+  }
   .cur-catalog{
     font-weight: bold;
     font-size: 25px;
     border-bottom: solid 1px @border-color;
     padding: 10px 0 10px 25px;
-
   }
   .blog-item{
     cursor: pointer;

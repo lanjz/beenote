@@ -503,7 +503,6 @@
     border-right: solid 1px #e9e7e7;
     z-index: 2;
   }
-
   .hidden-catalog {
     padding: 15px 0;
     max-width: 0;
