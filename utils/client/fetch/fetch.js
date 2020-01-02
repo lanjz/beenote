@@ -65,6 +65,7 @@ function fetchData(options) {
     })
     options.data = formData
   }
+  console.log('options', options)
   // options.url = `http://127.0.0.1:3001${options.url}`
 /*  options.url = process.env.NODE_ENV === 'development' ?
     `http://localhost:3001${options.url}` : `http://127.0.0.1:3001${options.url}`*/
@@ -116,6 +117,11 @@ const uploadFile = function (data) {
   const options = {
     url: `/repos/${data.path}`,
     method: 'put',
+    transformRequest: [function (data) {
+      // 对 data 进行任意转换处理
+    
+      return data;
+    }],
     data: {
       message: `ADD: images At ${getCurTime()}`,
       content: data.content
