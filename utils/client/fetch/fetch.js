@@ -65,7 +65,6 @@ function fetchData(options) {
     })
     options.data = formData
   }
-  console.log('options', options)
   // options.url = `http://127.0.0.1:3001${options.url}`
 /*  options.url = process.env.NODE_ENV === 'development' ?
     `http://localhost:3001${options.url}` : `http://127.0.0.1:3001${options.url}`*/
