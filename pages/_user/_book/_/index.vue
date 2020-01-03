@@ -291,8 +291,6 @@
           let pathMatchArr = this.getPathMatch()
           const updatePathMatchArr = updatePath.split('/')
           pathMatchArr = pathMatchArr.splice(updatePathMatchArr.length)
-          console.log('updatePath', updatePath)
-          console.log('pathMatchArr', pathMatchArr)
           fetchArr.push(
             this[ACTIONS.CATALOGS_GET_CUR]({
               force,

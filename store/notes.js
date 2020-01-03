@@ -149,12 +149,14 @@ const actions = {
   },
   async [ACTIONS.NOTE_DELETE]({commit, rootState}, data) {
     const { user, books } = rootState
+    const message = `DELETE: ${books.curBook}/${data.path} At ${getCurTime()}`
+    const sha = data.sha
     const result = await fetch({
-      url: `/repos/${user.curUserInfo.gitName}/${books.curBook}/contents/${data.path}`,
+      url: `/repos/${user.curUserInfo.gitName}/${books.curBook}/contents/${data.path}?message=${message}&sha=${sha}`,
       method: 'DELETE',
       data: {
-        message: `DELETE: ${books.curBook}/${data.path} At ${getCurTime()}`,
-        sha: data.sha
+        message,
+        sha
       }
     })
     return result

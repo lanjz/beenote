@@ -99,6 +99,11 @@ const doFetchData = function (options) {
         resolve(res)
       })
       .catch((err) => {
+        if(err.response && err.response.data && err.response.data.message) {
+          showHelloAlert(err.response.data.message)
+          resolve({ err: new Error(err.response.data.message), data: '' })
+        }
+        console.log('err', err.response)
         if(err.message === 'Request failed with status code 409') {
           showHelloAlert('sha无效,刷新页面重试')
           resolve({ err: new Error('sha无效,刷新页面重试'), data: '' })
@@ -118,7 +123,7 @@ const uploadFile = function (data) {
     method: 'put',
     transformRequest: [function (data) {
       // 对 data 进行任意转换处理
-    
+
       return data;
     }],
     data: {
