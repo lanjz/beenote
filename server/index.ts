@@ -23,7 +23,7 @@ async function start(){
   }
   // 如果不是接口返回页面
   app.use(async (ctx, next) => {
-    if(!(ctx.url.indexOf('/api') == 0 || ctx.url.indexOf('/git') === 0 || ctx.url.indexOf('/row') === 0)) {
+    if(!(ctx.url.indexOf('/api') == 0 || ctx.url.indexOf('/git') === 0 || ctx.url.indexOf('/row') === 0|| ctx.url.indexOf('/testapi') === 0)) {
       ctx.status = 200
       ctx.respond = false // Bypass Koa's built-in response handling
       ctx.req.ctx = ctx // This might be useful later on, e.g. in nuxtServerInit or with nuxt-stash

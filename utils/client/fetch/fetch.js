@@ -4,7 +4,7 @@ import {getCurTime} from '../blackHole';
 import {Base64} from 'js-base64';
 import { ApiBase } from './fetchConfig'
 
-
+// axios.delete('/testapi/user',{data: {abc: 134}})
 if(process.client) {
   console.log('context', window)
 }

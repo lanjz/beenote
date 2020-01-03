@@ -2,6 +2,7 @@ import * as bodyParser from 'koa-bodyparser'
 import * as koaBody from'koa-body'
 import router from '../router'
 import gitRouter from '../gitRouter'
+import testRouter from '../testRouter'
 import { errorHandle } from '../utils/hello'
 import checkAuth from  '../utils/checkAuth'
 
@@ -24,6 +25,7 @@ export default function (app) {
   app.use(sent())
   app.use(errorHandle)
   app.use(checkAuth)
+  app.use(testRouter.routes()).use(testRouter.allowedMethods())
   app.use(router.routes()).use(router.allowedMethods())
   app.use(gitRouter.routes()).use(gitRouter.allowedMethods())
 }

@@ -18,6 +18,10 @@ function passValidAuth(ctx: Context) {
 
 async function checkAuth(ctx: Context, next) {
   try{
+    if(ctx.request.path.indexOf('/testapi/') > -1) {
+      await next()
+      return
+    }
     if(ctx.method.toLowerCase() === 'options') {
       ctx.send('', '', '准了')
       return
