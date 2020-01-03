@@ -177,16 +177,21 @@
       ...mapActions('user', [
         ACTIONS.USER_INFO_GET
       ]),
-      /**
-       * 获取仓库列表和当前仓库的文件目录
-       * */
-      async getNoteData() {
-        const {user, book, pathMatch = ''} = $nuxt._route.params
+      getPathMatch() {
+        const {pathMatch = ''} = $nuxt._route.params
         const isDir = $nuxt._route.query.type === 'dir'
         let pathMatchArr = pathMatch && pathMatch.split('/')
         if(pathMatchArr.length && !isDir) {
           pathMatchArr = pathMatchArr.splice(0, pathMatchArr.length - 1)
         }
+        return pathMatchArr
+      },
+      /**
+       * 获取仓库列表和当前仓库的文件目录
+       * */
+      async getNoteData() {
+        const {user, book, pathMatch = ''} = $nuxt._route.params
+        let pathMatchArr = this.getPathMatch()
         const fetchArr = [
           this[ACTIONS.BOOK_LIST_GET](),
           this[ACTIONS.CATALOGS_GET_CUR]({pathMatchArr})
@@ -282,11 +287,16 @@
         // 如果新增或删除，需要更新一下所在目录
         if(arg.newFile || arg.delete) {
           // 要更新的目录不定是当前目录，优化取rootModifyPath属性
-          const updatePath = (this.catalogs[this.curCatalog] && this.catalogs[this.curCatalog].rootModifyPath) || ''
-          // const updatePath = `${findDirPath(arg.path)}`
+          const updatePath = ((this.catalogs[this.curCatalog] || {}).rootModifyPath || this.catalogs[this.curCatalog]).path || ''
+          let pathMatchArr = this.getPathMatch()
+          const updatePathMatchArr = updatePath.split('/')
+          pathMatchArr = pathMatchArr.splice(updatePathMatchArr.length)
+          console.log('updatePath', updatePath)
+          console.log('pathMatchArr', pathMatchArr)
           fetchArr.push(
-            this[ACTIONS.CATALOGS_GET]({
+            this[ACTIONS.CATALOGS_GET_CUR]({
               force,
+              pathMatchArr,
               path: updatePath
             })
           )
