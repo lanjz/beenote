@@ -121,11 +121,6 @@ const uploadFile = function (data) {
   const options = {
     url: `/repos/${data.path}`,
     method: 'put',
-    transformRequest: [function (data) {
-      // 对 data 进行任意转换处理
-
-      return data;
-    }],
     data: {
       message: `ADD: images At ${getCurTime()}`,
       content: data.content

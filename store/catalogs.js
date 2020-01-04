@@ -244,6 +244,7 @@ const actions = {
       const findFiles = data
         .filter(item => item.type === 'file' && item.name.indexOf('.md') > -1)
         .map(item => ({ ...item, repo: bookName, fullPath: `${bookName}/${item.path}`}))
+        console.log('catalog')
       commit(MUTATIONS.CATALOGS_SAVE, { key: fullPath, data: [ ...findDirs ] })
       commit(MUTATIONS.CATALOGS_NOTE_MAP_SAVE, { key: fullPath, data: [ ...findFiles ] })
       if(getChild && params.pathMatchArr.length) {

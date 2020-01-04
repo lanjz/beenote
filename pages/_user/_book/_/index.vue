@@ -291,6 +291,7 @@
           let pathMatchArr = this.getPathMatch()
           const updatePathMatchArr = updatePath.split('/')
           pathMatchArr = pathMatchArr.splice(updatePathMatchArr.length)
+          console.log('this.curCatalog')
           fetchArr.push(
             this[ACTIONS.CATALOGS_GET_CUR]({
               force,
@@ -315,16 +316,19 @@
           if(this.curNote.indexOf(arg.path) !== this.curNote.length - arg.path.length) {
             return
           }
-          this[MUTATIONS.CATALOGS_REMOVE]({ key: `${this.curBook}/${findDirPath(arg.path)}` })
+          // this[MUTATIONS.CATALOGS_REMOVE]({ key: `${this.curBook}/${findDirPath(arg.path)}` })
           this[MUTATIONS.CATALOGS_CACHE_SAVE]()
           const getGoPath = this.findHasFileDir(`${this.curBook}/${findDirPath(arg.path)}`)
           this.$router.push(`/${this.githubName}/${getGoPath}?type=dir`)
         }
       },
       findHasFileDir(path){
-        while(path && !(this.catalogs[path])){
+        console.log('path', path)
+        while(path && !(this.catalogMapNotes[path])){
           path = findDirPath(path)
         }
+        console.log()
+        console.log('path', path)
         return path
       },
       initEmitOn() {
