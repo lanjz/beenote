@@ -196,9 +196,6 @@
           this[ACTIONS.BOOK_LIST_GET](),
           this[ACTIONS.CATALOGS_GET_CUR]({pathMatchArr})
         ]
-        if(!this.isVisitor) {
-          // fetchArr.push(this[ACTIONS.CATALOGS_GET]())
-        }
         // 如果当前是访问的文章不存在如需要获取当前文章
         if($nuxt._route.query.type !== 'dir' && !this.notesMap[this.curNote]) {
           const fullPath = `${user}/${book}/${pathMatch}`
@@ -286,7 +283,7 @@
         }
         // 如果新增或删除，需要更新一下所在目录
         if(arg.newFile || arg.delete) {
-          // 要更新的目录不定是当前目录，优化取rootModifyPath属性
+          // 要更新的目录不一定是当前目录，优先取rootModifyPath属性
           const updatePath = ((this.catalogs[this.curCatalog] || {}).rootModifyPath || this.catalogs[this.curCatalog]).path || ''
           let pathMatchArr = this.getPathMatch()
           const updatePathMatchArr = updatePath.split('/')

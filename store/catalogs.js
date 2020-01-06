@@ -198,12 +198,17 @@ const actions = {
     }
     return await Promise.all(PromiseAll)
   },
+  /**
+   * 获取目录
+   * @params <String || ''> path 要开始获取的路径，不传则从当前仓库根目录开始获取
+   * @params <String || ''> bookName 仓库名
+   * @params <Array>  pathMatchArr 要获取的子文件夹集合，如果一次性将所有目录获取到的话响应太慢了
+   * */
   async [ACTIONS.CATALOGS_GET_CUR]({ state, commit, rootState, dispatch }, params = {
     force: false,
     pathMatchArr: []
   }) {
     let { force, path, bookName = rootState.books.curBook, getChild = true } = params
-    // bookName: 仓库名
     const fullPath = path ? `${bookName}/${path}` : `${bookName}` // 为了保存key的唯一性，所以path前加上仓库名
     let result = {}
     // 刷新数据时，把cache的state清空
@@ -214,7 +219,6 @@ const actions = {
     // 如果list或者catalogMapNotes包含当前key的数据，说明这个数据获取过了
     const hasData = (list[fullPath] && list[fullPath].childNodes) || catalogMapNotes[fullPath]
     // 对于获取过的数据，直接返回
-    // 之所以这里没直接return，是因为服务端渲染时会先获取一个目录的数据，不能确定所有的数据都加载过了，所以这里需要继续循环
     if(!force &&hasData) {
       result = {
         err: null,
@@ -223,14 +227,10 @@ const actions = {
           ...state.catalogMapNotes[fullPath]
         ]
       }
-      // 首屏渲染只会加一个key的数据的加上默认的root，如果大于两个，说明是全部加载过的，就是直接return
-      if(Object.keys(list[fullPath]).length > 2) {
-        return result
-      }
     } else {
       const githubName = rootState.user.curUserInfo.gitName
       result = await fetch({
-        url: path ? `/repos/${githubName}/${bookName}/contents/${path}` : `/repos/${githubName}/${bookName}/contents`
+        url: `/repos/${githubName}/${bookName}/contents/${path ||''}`
       })
     }
 
@@ -244,7 +244,6 @@ const actions = {
       const findFiles = data
         .filter(item => item.type === 'file' && item.name.indexOf('.md') > -1)
         .map(item => ({ ...item, repo: bookName, fullPath: `${bookName}/${item.path}`}))
-        console.log('catalog')
       commit(MUTATIONS.CATALOGS_SAVE, { key: fullPath, data: [ ...findDirs ] })
       commit(MUTATIONS.CATALOGS_NOTE_MAP_SAVE, { key: fullPath, data: [ ...findFiles ] })
       if(getChild && params.pathMatchArr.length) {
