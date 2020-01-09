@@ -18,7 +18,6 @@
     <div class="flex-1 flex">
       <note-des
         :curNote="curEditNote"
-        :newFileNode = 'newFileNode'
         @emitUpdateNote="doUpdateNote"
         v-if="!noData"
       ></note-des>
@@ -42,6 +41,7 @@
   import noNotes from '@/components/note/noNotes.vue'
   import constKey from '../../../../utils/client/const'
   import {returnCatalog, setTitle, findDirPath, slitSuffix} from '../../../../utils/client/blackHole'
+  import { jsonToParams}  from '../../../../utils/helper'
   import fetch from '../../../../utils/client/fetch/fetch'
 
   export default {
@@ -148,10 +148,10 @@
         return []
       },
       curEditNote: function () {
-        const findNote = this.notesMap[this.curNote]
         if(this.newFileNode) {
           return { ...this.newFileNode }
         }
+        const findNote = this.notesMap[this.curNote]
         return { ...findNote } || {}
       }
     },
@@ -251,7 +251,16 @@
           newFile: true
         }
         this[MUTATIONS.NOTE_CUR_UPDATE]('NEW')
-        this.$router.push(`/${this.githubName}/${this.curCatalog}?type=dir&new=1`)
+      },
+      gotoCreateNewFilePage(rootModifyPath) {
+        const params = {
+          type: 'dir',
+          new: 1
+        }
+        if(rootModifyPath) {
+          params.rootModifyPath = 1
+        }
+        this.$router.push(`/${this.githubName}/${this.curCatalog}?${jsonToParams(params)}`)
       },
       /**
        * 选择了目录
@@ -284,11 +293,15 @@
         // 如果新增或删除，需要更新一下所在目录
         if(arg.newFile || arg.delete) {
           // 要更新的目录不一定是当前目录，优先取rootModifyPath属性
-          const updatePath = ((this.catalogs[this.curCatalog] || {}).rootModifyPath || this.catalogs[this.curCatalog]).path || ''
-          let pathMatchArr = this.getPathMatch()
-          const updatePathMatchArr = updatePath.split('/')
-          pathMatchArr = pathMatchArr.splice(updatePathMatchArr.length)
-          console.log('this.curCatalog')
+          const { rootModifyPath } = (this.catalogs[this.curCatalog] || {}).rootModifyPath
+          const updatePath = rootModifyPath || this.catalogs[this.curCatalog].path || ''
+
+          let pathMatchArr = []
+          if(rootModifyPath) {
+            pathMatchArr = this.getPathMatch()
+            const updatePathMatchArr = pathMatchArr.split('/')
+            pathMatchArr = pathMatchArr.splice(updatePathMatchArr.length)
+          }
           fetchArr.push(
             this[ACTIONS.CATALOGS_GET_CUR]({
               force,
@@ -320,12 +333,9 @@
         }
       },
       findHasFileDir(path){
-        console.log('path', path)
         while(path && !(this.catalogMapNotes[path])){
           path = findDirPath(path)
         }
-        console.log()
-        console.log('path', path)
         return path
       },
       initEmitOn() {
@@ -335,11 +345,9 @@
         bus.$off("updateCurBooks")
         bus.$off("emitFromCatalog")
         bus.$on('emitFromCatalog', (arg) => {
-          const {isNew} = arg
+          const {isNew, rootModifyPath} = arg
           if (isNew) {
-            this.todoCreateNewFile({
-              catalogId: arg.catalogId
-            })
+            this.gotoCreateNewFilePage(rootModifyPath)
           } else {
             this.doChooseCatalog(arg)
           }
@@ -362,6 +370,7 @@
        * 根据URL上的参数进行初始化配置
        * */
       async dealParams() {
+        const { new: isNewFile, type, rootModifyPath} = $nuxt._route.query
         this.routerParams = $nuxt._route.params
         const {user, book, pathMatch = ''} = $nuxt._route.params
         this[MUTATIONS.BOOK_CUR_UPDATE](book)
@@ -373,7 +382,7 @@
           this[MUTATIONS.CATALOGS_CUR_BLOG](blog)
         }
 
-        if($nuxt._route.query.type === 'dir') {
+        if(type === 'dir') {
           // 如果当前是文件夹，而直接保存当前路径
           this[MUTATIONS.CATALOGS_CUR_SAVE](`${book}/${pathMatch}`)
         } else {
@@ -383,6 +392,10 @@
           this[MUTATIONS.NOTE_CUR_UPDATE](`${user}/${book}/${pathMatch}.md`)
         }
         this.pathMatch = pathMatch
+        if(rootModifyPath && isNewFile) {
+          this.todoCreateNewFile()
+          return
+        }
         this.init()
       }
     },

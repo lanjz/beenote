@@ -9,7 +9,7 @@
   >
     <div
       class="flex align-items-center catalogs-item-layout"
-      @click.left="chooseCatalog(null)"
+      @click.left="chooseCatalog"
       @click.right.stop.prevent="(e) => showOperateMenu(e)"
       :class="{
         'act': isInChin,
@@ -235,7 +235,7 @@
         if(this.curNote === `${this.githubName}/${item.fullPath}`) return
         this.$router.push(`/${this.githubName}/${item.repo}/${slitSuffix(item.path)}`)
       },
-      async chooseCatalog(item) {
+      async chooseCatalog() {
         if(this.isVisitor) {
           if(this.curNode.type === 'dir') {
             this.toggleOpenDir()
@@ -244,11 +244,16 @@
           }
           return
         } else {
+          // 直接创建多级目录的情况跳过获取子目录
+          if(this.curNode.rootModifyPath) {
+            this.todoCreateFile()
+            return
+          }
           await this.getChildList()
         }
         this.toggleOpenDir(true)
         this[MUTATIONS.CATALOGS_CUR_SAVE](`${this.curNode.fullPath}`)
-        bus.$emit('emitFromCatalog', item || {
+        bus.$emit('emitFromCatalog', {
           ...this.curNode,
         })
       },
@@ -275,10 +280,12 @@
         this.renameCatalog = true
       },
       todoCreateFile() {
+        const { fullPath, rootModifyPath } = this.curNode
         this.closeMenu()
-        this[MUTATIONS.CATALOGS_CUR_SAVE](this.curNode.fullPath)
+        this[MUTATIONS.CATALOGS_CUR_SAVE](fullPath)
         bus.$emit('emitFromCatalog', {
-          isNew: 1
+          isNew: 1,
+          rootModifyPath
         })
         // this.$router.push(`/${this.githubName}/${this.actCatalog}?type=dir&new=1`)
       },
@@ -383,8 +390,8 @@
         this.toggleOpenDir(true)
         this.closeMenu()
         this.doNewDir = true
-        console.log('this.curNode.fullPath', this.curNode.fullPath)
         this.newDir.parentPath = this.curNode.fullPath
+        // 如果创建多级目录下的文件，需要从一开始创建的文件开始更新目录，用rootModifyPath存储开始更新的文件目录
         this.newDir.rootModifyPath = this.curNode.rootModifyPath || this.curNode.path
       },
       async getDate(treeNode, isParentId, force) {
