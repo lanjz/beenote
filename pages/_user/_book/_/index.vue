@@ -139,7 +139,6 @@
         curUserInfo: state => state.user.curUserInfo,
         onlyView: state => state.user.onlyView,
       }),
-      ...mapGetters('catalogs', ['treeChainList']),
       ...mapGetters('user', ['isVisitor', 'githubName']),
       curNoteList: function () {
         if (this.curCatalog && this.catalogMapNotes) {
@@ -173,9 +172,6 @@
       ...mapActions('catalogs', [
         ACTIONS.CATALOGS_GET,
         ACTIONS.CATALOGS_GET_CUR
-      ]),
-      ...mapActions('user', [
-        ACTIONS.USER_INFO_GET
       ]),
       getPathMatch() {
         const {pathMatch = ''} = $nuxt._route.params
