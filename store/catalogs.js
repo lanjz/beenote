@@ -257,6 +257,11 @@ const actions = {
           pathMatchArr: params.pathMatchArr
         }))
       }
+    } else {
+      if(err.code === 404) {
+        commit(MUTATIONS.CATALOGS_SAVE, { key: fullPath, data: [] })
+      }
+      return [result]
     }
     return await Promise.all(PromiseAll)
   },

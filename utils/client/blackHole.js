@@ -98,3 +98,12 @@ export function findHasFileDir(catalogMapNotes, path) {
   }
   return path
 }
+
+export function _Error(msg = {}) {
+  this.code = msg.code || '';
+  this.message = msg.message || '';
+  this.type = msg.type || 'api';
+  this.stack = (new Error()).stack;
+}
+_Error.prototype = Object.create(Error.prototype);
+_Error.prototype.constructor = _Error;

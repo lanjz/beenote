@@ -1,6 +1,7 @@
 import axios from 'axios'
 import helloAlert from '../../../components/messageBox/messageBox'
 import { getCurTime } from '../../helper';
+import { _Error } from '../../client/blackHole'
 import {Base64} from 'js-base64';
 import { ApiBase } from './fetchConfig'
 
@@ -68,6 +69,10 @@ function fetchData(options) {
   // options.url = `http://127.0.0.1:3001${options.url}`
 /*  options.url = process.env.NODE_ENV === 'development' ?
     `http://localhost:3001${options.url}` : `http://127.0.0.1:3001${options.url}`*/
+  if(process.env.NODE_ENV === 'development') {
+    // options.url = `http://127.0.0.1:3001${options.url}`
+    options.url = `http://localhost:3001${options.url}`
+  }
   return axios(options)
 }
 
@@ -99,11 +104,23 @@ const doFetchData = function (options) {
         resolve(res)
       })
       .catch((err) => {
+        const { status } = err.response || {}
+        const message = (err.response && err.response.data && err.response.data.message) ? err.response.data.message : ''
+        if(status === 404) {
+          resolve({
+            err: new _Error({
+              message,
+              code: status,
+              type: 'api'
+            }),
+            data: ''
+          })
+        }
         if(err.response && err.response.data && err.response.data.message) {
           showHelloAlert(err.response.data.message)
           resolve({ err: new Error(err.response.data.message), data: '' })
         }
-        console.log('err', err.response)
+        // console.log('err', err.response)
         if(err.message === 'Request failed with status code 409') {
           showHelloAlert('sha无效,刷新页面重试')
           resolve({ err: new Error('sha无效,刷新页面重试'), data: '' })

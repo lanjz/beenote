@@ -1,6 +1,6 @@
 <template>
   <div class="absolute-full flex direction-column">
-    <div class="cur-catalog">{{curBlog || curBook}}</div>
+    <div class="cur-catalog" @click="gotoBogRootPath">{{curBlog || curBook}}</div>
     <div class="flex-1 relative">
       <div class="absolute-full catalog-content" :class="{'visitor': isVisitor}">
         <TreeItem
@@ -100,6 +100,9 @@
         this.newDir.parentPath = `${this.curBook}/${this.curBlog}`
         this.newDir.rootModifyPath = `${this.curBlog}`
       },
+      gotoBogRootPath() {
+        this.$router.push(`/${this.githubName}/${this.curBook}/${this.curBlog}?type=dir`)
+      }
     },
   }
 </script>
