@@ -45,9 +45,7 @@
   export default {
     name: 'Tree',
     data() {
-      return {
-        actHash: ''
-      }
+      return {}
     },
     components: {
       TreeItem,
@@ -55,7 +53,6 @@
     },
     computed: {
       ...mapState({
-        cacheCatalogMapNotes: state => state.catalogs.cacheCatalogMapNotes,
         catalogs: state => state.catalogs.list,
         curCatalog: state => state.catalogs.curCatalog,
         curBlog: state => state.catalogs.curBlog,
@@ -67,11 +64,6 @@
         return (this.catalogs[this.curBook] || {}).childNodes || []
       },
       catalogList() {
-        /*if(this.isVisitor) {
-          const getNotes = this.cacheCatalogMapNotes[this.curCatalog] || []
-          return getNotes
-        }*/
-        // return this.catalogs[this.curBook] ? this.catalogs[this.curBook].childNodes : []
         const curNotePath = `${this.curBook}/${this.curBlog}`
         const child = (this.catalogs[curNotePath] || {}).childNodes || []
         let files = []
@@ -82,41 +74,10 @@
       }
     },
     methods: {
-      ...mapActions('catalogs', [
-        ACTIONS.CATALOGS_GET_CUR,
-      ]),
-      async init() {
-        return
-        const {user, book, pathMatch} = $nuxt._route.params
-        const isDir = $nuxt._route.query.type === 'dir'
-        let pathMatchArr = pathMatch && pathMatch.split('/')
-        if(pathMatchArr.length && !isDir) {
-          pathMatchArr = pathMatchArr.splice(0, pathMatchArr.length - 1)
-        }
-        this.$showLoading()
-        this[ACTIONS.CATALOGS_GET_CUR]({
-          pathMatchArr
-        })
-          .finally(() => {
-            this.$hideLoading()
-          })
-       /* if(!this.isVisitor) return
-        const {user, book, pathMatch} = $nuxt._route.params
-        const getDirPath = findDirPath(pathMatch)
-        const params = {
-          path: getDirPath,
-          getChild: false,
-          bookName: book
-        }
-        this[ACTIONS.CATALOGS_GET](params)*/
-      },
       goto(item) {
         this.$router.push(`/${this.githubName}/${item.fullPath}?type=dir`)
       }
     },
-    mounted() {
-      this.init()
-    }
   }
 </script>
 <style lang="less" scoped>

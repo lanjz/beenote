@@ -34,7 +34,6 @@
   import * as ACTIONS from '@/store/const/actions'
   import bus from '../../../../utils/client/global/eventBus'
   import TreeItem from '@/components/tree/index.vue'
-  import VisitorTreeItem from '@/components/tree/tem/index.vue'
   import Catalogue from '@/components/catalogue/index.vue'
   import NoteBrief from '@/components/note/NoteBrief.vue'
   import noteDes from '@/components/note/noteDes.vue'
@@ -100,7 +99,6 @@
       noteDes,
       noNotes,
       Catalogue,
-      VisitorTreeItem
     },
     data: function () {
       return {
