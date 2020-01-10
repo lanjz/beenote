@@ -293,13 +293,13 @@
         // 如果新增或删除，需要更新一下所在目录
         if(arg.newFile || arg.delete) {
           // 要更新的目录不一定是当前目录，优先取rootModifyPath属性
-          const { rootModifyPath } = (this.catalogs[this.curCatalog] || {}).rootModifyPath
+          const { rootModifyPath } = (this.catalogs[this.curCatalog] || {})
           const updatePath = rootModifyPath || this.catalogs[this.curCatalog].path || ''
 
           let pathMatchArr = []
           if(rootModifyPath) {
             pathMatchArr = this.getPathMatch()
-            const updatePathMatchArr = pathMatchArr.split('/')
+            const updatePathMatchArr = updatePath.split('/')
             pathMatchArr = pathMatchArr.splice(updatePathMatchArr.length)
           }
           fetchArr.push(
@@ -339,9 +339,6 @@
         return path
       },
       initEmitOn() {
-        /**
-         * @params <Object> arg 包含schemaId字段id和当前articleId(如果是添加则为'new')
-         * */
         bus.$off("updateCurBooks")
         bus.$off("emitFromCatalog")
         bus.$on('emitFromCatalog', (arg) => {
@@ -362,15 +359,22 @@
        * 因为文章是服务端渲染的，所以是游客模式下就不需要获取其它的数据了
        * */
       async init() {
+        const { new: isNewFile, rootModifyPath} = $nuxt._route.query
+        // 如果是多级目录下创建新的文件，直接执行创建文件方法，不拉取数据
+        if(rootModifyPath && isNewFile) {
+          this.todoCreateNewFile()
+          return
+        }
         this.getNoteData()
         if(this.isVisitor) return
         this.initEmitOn()
       },
       /**
        * 根据URL上的参数进行初始化配置
+       * 存储当前是哪个仓库、哪个git用户、路径
        * */
       async dealParams() {
-        const { new: isNewFile, type, rootModifyPath} = $nuxt._route.query
+        const { type } = $nuxt._route.query
         this.routerParams = $nuxt._route.params
         const {user, book, pathMatch = ''} = $nuxt._route.params
         this[MUTATIONS.BOOK_CUR_UPDATE](book)
@@ -392,10 +396,6 @@
           this[MUTATIONS.NOTE_CUR_UPDATE](`${user}/${book}/${pathMatch}.md`)
         }
         this.pathMatch = pathMatch
-        if(rootModifyPath && isNewFile) {
-          this.todoCreateNewFile()
-          return
-        }
         this.init()
       }
     },
