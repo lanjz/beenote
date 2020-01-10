@@ -125,6 +125,9 @@
         line-height: 21px;
       }
     }
+    .nav-item{
+      color: @bg-color !important;
+    }
   }
   .visitor-box-header:after{
     content: '';

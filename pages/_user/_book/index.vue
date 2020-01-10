@@ -1,58 +1,61 @@
 <template>
-  <div class="flex-1 ">
-    <div v-if="showEdit" class="blog-edit">
-      <div class="form-panel">
-        <div class="edit-title">创建一个博客</div>
-        <div class="form-tips">一个博客对应该仓库的一个根目录文件,名称请勿带有 ' / ' 等特殊符号</div>
-        <div class="label-line"></div>
-        <div class="form-layout-layout">
-          <div class="label-name">名称</div>
+  <div class="flex-1 relative" :class="{'isVisitor': isVisitor}">
+    <div :class="isVisitor?'relative':'absolute-full'">
+      <div v-if="!isVisitor && showEdit" class="blog-edit">
+        <div class="form-panel">
+          <div class="edit-title">创建一个博客</div>
+          <div class="form-tips">一个博客对应该仓库的一个根目录文件,名称请勿带有 ' / ' 等特殊符号</div>
+          <div class="label-line"></div>
+          <div class="form-layout-layout">
+            <div class="label-name">名称</div>
+          </div>
+          <div class="form-layout-content">
+            <div class="label-edit-box">
+              <input class="form-input" v-model.trim="blogName"/>
+            </div>
+          </div>
+          <div class="label-line"></div>
+          <div class="form-tips">以下配置将存到当前目录下的_blackhook.conf.json文件中，所以请谨慎删除这个文件</div>
+          <div class="form-layout-layout" style="margin-top: 10px">
+            <div class="label-name">简介</div>
+          </div>
+          <div class="form-layout-content">
+            <div class="label-edit-box">
+              <textarea class="form-input" v-model.trim="summary"/>
+            </div>
+          </div>
+          <div class="form-group submit-layout">
+            <div class="btn" @click.stop="submit" :class="{'disable-btn': !validForm}">保存</div>
+            <div class="btn second-btn" @click.stop="doReset" >取消</div>
+          </div>
+          <div class="show-err" v-show="errMsg">{{errMsg}}</div>
         </div>
-        <div class="form-layout-content">
-          <div class="label-edit-box">
-            <input class="form-input" v-model.trim="blogName"/>
+      </div>
+      <div v-else class="blog-content">
+        <div class="blog-total">
+          <div class="name">共有 <b>{{blogList.childNodes.length}}</b> 个博客</div>
+          <div v-if="!isVisitor" class="add-btn" @click="todoAddBlog"><i class="iconfont icon-wendang"></i>New</div>
+        </div>
+        <div v-if="noData">
+          <noNotes name="博客" @toCreateFile="todoAddBlog"></noNotes>
+        </div>
+        <div class="blog-list flex-1" v-else>
+          <div
+            v-for="(item, index) in blogList.childNodes"
+            :key="index"
+            class="blog-item flex"
+            @click="gotoBlogPath(item)"
+          >
+            <i class="iconfont icon-shuji"></i>
+            <div class="flex-1">
+              <div class="name">{{item.name}}</div>
+              <div class="summary">博客简介</div>
+            </div>
           </div>
         </div>
-        <div class="label-line"></div>
-        <div class="form-tips">以下配置将存到当前目录下的_blackhook.conf.json文件中，所以请谨慎删除这个文件</div>
-        <div class="form-layout-layout" style="margin-top: 10px">
-          <div class="label-name">简介</div>
-        </div>
-        <div class="form-layout-content">
-          <div class="label-edit-box">
-            <textarea class="form-input" v-model.trim="summary"/>
-          </div>
-        </div>
-        <div class="form-group submit-layout">
-          <div class="btn" @click.stop="submit" :class="{'disable-btn': !validForm}">保存</div>
-          <div class="btn second-btn" @click.stop="doReset" >取消</div>
-        </div>
-        <div class="show-err" v-show="errMsg">{{errMsg}}</div>
       </div>
     </div>
-    <div v-else class="blog-content">
-      <div class="blog-total">
-        <div class="name">共有 <b>{{blogList.childNodes.length}}</b> 个博客</div>
-        <div class="add-btn" @click="todoAddBlog"><i class="iconfont icon-wendang"></i>New</div>
-      </div>
-      <div v-if="noData">
-        <noNotes name="博客" @toCreateFile="todoAddBlog"></noNotes>
-      </div>
-      <div class="blog-list" v-else>
-        <div
-          v-for="(item, index) in blogList.childNodes"
-          :key="index"
-          class="blog-item flex"
-          @click="gotoBlogPath(item)"
-        >
-          <i class="iconfont icon-shuji"></i>
-          <div class="flex-1">
-            <div class="name">{{item.name}}</div>
-            <div class="summary">博客简介</div>
-          </div>
-        </div>
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -224,5 +227,11 @@
     font-size: 25px;
     padding-bottom: 15px;
     color: #333;
+  }
+  .absolute-full{
+    overflow: auto;
+  }
+  .isVisitor{
+    padding-top: @head-height;
   }
 </style>
