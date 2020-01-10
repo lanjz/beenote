@@ -179,6 +179,10 @@ body{
 .form-input{
   padding: 0 7px;
 }
+.form-tips{
+  font-size: 12px;
+  color: #7e8896;
+}
 textarea.form-input{
   min-height: 100px;
 }
@@ -450,7 +454,9 @@ textarea.form-input{
   left: 0;
   top: 0;
 }
-
+textarea.form-input{
+  padding: 10px;
+}
 .modal-layout{
   width: 400px;
   position: absolute;
@@ -806,4 +812,28 @@ markdown-style-view
   100% {
     stroke-dasharray: 90, 150;
     stroke-dashoffset: -120px; }
+}
+
+// 第二种表单
+
+.label-name{
+  color: #666;
+  padding: 5px 0;
+}
+.label-line{
+  height: 1px;
+  background: #dfe2e5;
+  margin: 15px 0;
+}
+.form-panel{
+  width: 600px;
+  margin: 0 auto;
+  .form-input{
+    width: 100%;
+    box-shadow: 0 0 100px 1px #fafafa inset;
+  }
+  .show-err{
+    padding: 10px 0;
+    color: @warn-color;
+  }
 }

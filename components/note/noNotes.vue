@@ -1,14 +1,21 @@
 <template>
   <div class="no-data">
     <i class="iconfont icon-wushuju"></i>
-    <div v-if="!isVisitor">还没任何有笔记，<span class="create-btn" @click="toCreateNote">快速创建</span></div>
-    <div v-else>当前目录还没有笔记</div>
+    <div v-if="!isVisitor">还没任何有{{name}}，<span class="create-btn" @click="toCreateNote">快速创建</span></div>
+    <div v-else>当前还没有任何{{name}}</div>
   </div>
 </template>
 <script>
   import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
   import constKey from '../../utils/client/const'
   export default {
+    props: {
+      name: {
+        default() {
+          return '笔记'
+        }
+      }
+    },
     data() {
       return {
       }

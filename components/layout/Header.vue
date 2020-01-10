@@ -81,7 +81,7 @@
     },
   }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .head{
     height: 70px;
     padding: 8px;
