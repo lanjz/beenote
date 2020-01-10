@@ -81,7 +81,7 @@
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
   import * as MUTATIONS from '../../../store/const/mutaions'
   import * as ACTIONS from '../../../store/const/actions'
-  import {returnCatalog, setTitle, findDirPath, slitSuffix} from '../../../utils/client/blackHole'
+  import {setTitle, findDirPath, slitSuffix} from '../../../utils/client/blackHole'
 
   export default {
     data(){

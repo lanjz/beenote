@@ -40,7 +40,7 @@
   import noteDes from '@/components/note/noteDes.vue'
   import noNotes from '@/components/note/noNotes.vue'
   import constKey from '../../../../utils/client/const'
-  import {returnCatalog, setTitle, findDirPath, slitSuffix} from '../../../../utils/client/blackHole'
+  import { setTitle, findDirPath, slitSuffix, findHasFileDir} from '../../../../utils/client/blackHole'
   import { jsonToParams}  from '../../../../utils/helper'
   import fetch from '../../../../utils/client/fetch/fetch'
 
@@ -326,17 +326,11 @@
           if(this.curNote.indexOf(arg.path) !== this.curNote.length - arg.path.length) {
             return
           }
-          // this[MUTATIONS.CATALOGS_REMOVE]({ key: `${this.curBook}/${findDirPath(arg.path)}` })
+          // 啥用？
           this[MUTATIONS.CATALOGS_CACHE_SAVE]()
-          const getGoPath = this.findHasFileDir(`${this.curBook}/${findDirPath(arg.path)}`)
+          const getGoPath = findHasFileDir(this.catalogMapNotes, `${this.curBook}/${findDirPath(arg.path)}`)
           this.$router.push(`/${this.githubName}/${getGoPath}?type=dir`)
         }
-      },
-      findHasFileDir(path){
-        while(path && !(this.catalogMapNotes[path])){
-          path = findDirPath(path)
-        }
-        return path
       },
       initEmitOn() {
         bus.$off("updateCurBooks")

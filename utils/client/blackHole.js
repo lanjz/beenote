@@ -1,15 +1,9 @@
-export function returnCatalog(str, bookId) {
-  if(bookId) {
-    return str === 'root' ? `${bookId}_root` : str
-  }
-  return str.indexOf('root') > -1 ? 'root' : str
-}
-
 
 export function setTitle(str = '') {
-  return `${str}-黑洞笔记-BlackHook`
+  return `${str ? str+'-': ''}黑洞笔记-BlackHook`
 }
 
+// path的最后个节点是文件名，那么最后一个'/'前是对应的目录
 export function findDirPath(path) {
   const findTag = path.lastIndexOf('/')
   return path.substring(0, findTag)
@@ -20,12 +14,13 @@ export function slitSuffix(path) {
   return path.substring(0, path.lastIndexOf('.'))
 }
 
-// 最底的文件夹名
-export function getLastName(path) {
+// 获取文件夹名(不包含路径)
+export function getFileNameInPath(path) {
   const findPath = path.lastIndexOf('/')
   return slitSuffix(path.substring(findPath))
 }
 
+// 去除前后'/'
 export function getPath(path) {
   if (!path) return path
   if(path[0] === '/') {
@@ -35,16 +30,6 @@ export function getPath(path) {
     path = path.substring(0, path.length - 1)
   }
   return path
-}
-
-export function getCurTime() {
-  const getDate = new Date()
-  return `${getDate.getFullYear()}-${formatNum(getDate.getMonth()+1)}-${formatNum(getDate.getDay())} ${formatNum(getDate.getHours())}:${formatNum(getDate.getMinutes())}:${formatNum(getDate.getSeconds())}`
-}
-
-export function formatNum(num) {
-  if(!num) return num
-  return (num*1) < 10 ? '0' + num : num
 }
 
 export function filterTxt(txt) {
@@ -63,6 +48,8 @@ export function filterTxt(txt) {
   getText = getText.replace(' ', '')
   return getText
 }
+
+// 获取文件h1、h2标题作为索引
 export function createCatalogue(title, test) {
   if(!test) return test
   let parentTitle = title
@@ -101,4 +88,13 @@ export function createCatalogue(title, test) {
     })
   }
   return obj
+}
+
+// 从当前目录开始逐级查找有文件的目录
+
+export function findHasFileDir(catalogMapNotes, path) {
+  while(path && !(catalogMapNotes[path])){
+    path = findDirPath(path)
+  }
+  return path
 }

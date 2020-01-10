@@ -1,6 +1,6 @@
 import axios from 'axios'
 import helloAlert from '../../../components/messageBox/messageBox'
-import {getCurTime} from '../blackHole';
+import { getCurTime } from '../../helper';
 import {Base64} from 'js-base64';
 import { ApiBase } from './fetchConfig'
 

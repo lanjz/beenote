@@ -73,7 +73,7 @@
 
   import bus from '../../utils/client/global/eventBus'
   import constKey from '../../utils/client/const'
-  import { returnCatalog, slitSuffix } from '../../utils/client/blackHole'
+  import { slitSuffix } from '../../utils/client/blackHole'
 
   export default {
     props: {
