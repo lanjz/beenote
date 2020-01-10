@@ -20,6 +20,13 @@
             <i class="iconfont icon-shuji"></i>{{item.name}}
           </div>
         </div>
+        <TreeItem
+          v-if="doNewDir"
+          :curNode="newDir"
+          @emitExitNewDir="exitNewDir"
+          :isNewDir="doNewDir"
+        ></TreeItem>
+        <div class="add-catalog" @click="doCreateTemDir"><i class="iconfont icon-tianjiajiahaowubiankuang"></i>添加目录</div>
       </div>
     </div>
   </div>
@@ -45,7 +52,14 @@
   export default {
     name: 'Tree',
     data() {
-      return {}
+      return {
+        doNewDir: false,
+        newDir: {
+          name: '新建文件夹',
+          show: false,
+          isNew: true
+        },
+      }
     },
     components: {
       TreeItem,
@@ -76,7 +90,16 @@
     methods: {
       goto(item) {
         this.$router.push(`/${this.githubName}/${item.fullPath}?type=dir`)
-      }
+      },
+      exitNewDir() {
+        this.newDir.parentPath = ''
+        this.doNewDir = false
+      },
+      doCreateTemDir() {
+        this.doNewDir = true
+        this.newDir.parentPath = `${this.curBook}/${this.curBlog}`
+        this.newDir.rootModifyPath = `${this.curBlog}`
+      },
     },
   }
 </script>
@@ -112,5 +135,11 @@
   }
   .blog-item.act{
     color: @visitor-font-primary-color;
+  }
+  .add-catalog{
+    background: #313131;
+    padding: 10px 0;
+    padding-left: 20px;
+    cursor: pointer;
   }
 </style>
