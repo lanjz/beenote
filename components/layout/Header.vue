@@ -14,7 +14,7 @@
           最近笔记
         </nuxt-link>-->
         <div class="relative slide-box">
-          <span>博客</span>
+          <span @click="gotoBlog">博客</span>
           <div class="blog-list" v-if="blogList.length">
             <div
               class="blog-item"
@@ -26,15 +26,18 @@
             </div>
           </div>
         </div>
-        <nuxt-link to="/BookList">
+        <div class="relative nav-item" @click="gotoRep">
+          <span>仓库</span>
+        </div>
+<!--        <nuxt-link to="/BookList">
           关于
-        </nuxt-link>
-        <nuxt-link to="/BookList">
-          仓库
-        </nuxt-link>
-        <nuxt-link to="/BookList">
-          Github
-        </nuxt-link>
+        </nuxt-link>-->
+        <div class="relative nav-item">
+          <span>关于</span>
+        </div>
+        <div class="relative nav-item" @click="gotoGithub">
+          <span>Github</span>
+        </div>
       </div>
       <div @click="toDoShowUserLayout" class="user-avatar-layout cursor">
         <img :src="userInfo.avatar" v-if="userInfo.avatar">
@@ -77,6 +80,15 @@
       },
       goto(item) {
         this.$router.push(`/${this.githubName}/${item.fullPath}?type=dir`)
+      },
+      gotoBlog() {
+        this.$router.push(`/${this.githubName}/${this.curBook}`)
+      },
+      gotoRep() {
+        this.$router.push(`/${this.githubName}`)
+      },
+      gotoGithub() {
+        window.open(`https://github.com/${this.githubName}`)
       }
     },
   }
@@ -137,9 +149,11 @@
     }
   }
   .head-nav{
-    a{
+    a, .nav-item{
+      cursor: pointer;
       color: #fff;
       padding: 0 10px;
+      line-height: 20px;
       text-decoration: none;
     }
     .nuxt-link-active{
@@ -202,6 +216,7 @@
     cursor: pointer;
     display: none;
     padding: 5px 0;
+    width: 100px;
     .blog-item{
       color: @bg-color;
       padding: 5px 15px;
