@@ -10,7 +10,7 @@ const defaultBook = {
 }
 const state = () => (
   {
-    list: defaultBook,
+    list: {},
     curBook: ''
   }
 )
@@ -21,7 +21,7 @@ const getters = {
 }
 const mutations = {
   [MUTATIONS.BOOK_LIST_SAVE](state, { data, start }) {
-    const newMap = start ? state.list : { ...defaultBook }
+    const newMap = start ? state.list : {}
     data.forEach((item) => {
       newMap[item._id] = item
     })
