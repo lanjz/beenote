@@ -129,15 +129,7 @@
       color: @bg-color !important;
     }
   }
-  .visitor-box-header:after{
-    content: '';
-    height: 6px;
-    position: absolute;
-    left: 0;
-    bottom: 0px;
-    width: 100%;
-    background: @body-color;
-  }
+
   .logo{
     position: absolute;
     width: 65px;

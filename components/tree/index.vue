@@ -26,7 +26,7 @@
           @emitExitNewDir="exitNewDir"
           :isNewDir="doNewDir"
         ></TreeItem>
-        <div class="add-catalog" @click="doCreateTemDir"><i class="iconfont icon-tianjiajiahaowubiankuang"></i>添加目录</div>
+        <div v-if="!isVisitor" class="add-catalog" @click="doCreateTemDir"><i class="iconfont icon-tianjiajiahaowubiankuang"></i>添加目录</div>
       </div>
     </div>
   </div>
@@ -123,6 +123,7 @@
     display: block;
   }
   .cur-catalog{
+    cursor: pointer;
     font-weight: bold;
     font-size: 25px;
     border-bottom: solid 1px @border-color;

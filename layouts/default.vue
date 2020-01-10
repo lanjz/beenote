@@ -109,4 +109,13 @@ html {
   .visitor-box-view{
     padding: 66px 0 0 0;
   }
+.visitor-box-header:after{
+  content: '';
+  height: 6px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: @body-color;
+}
 </style>

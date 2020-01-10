@@ -264,6 +264,7 @@
         this[MUTATIONS.CATALOGS_CUR_SAVE]('recently')
       },
       showOperateMenu(e) {
+        if(this.isVisitor) return
         // if (this.curNode.icon) return
         const {clientX, clientY} = e
         this.operateMenuStyle = {
