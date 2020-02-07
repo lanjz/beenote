@@ -13,6 +13,14 @@ const articleCtl = require('./controller/Article.js')
 const baseCtl = new BaseCtl()
 const router = new Router({ prefix: '/api' })
 
+router.post('/csrf', function (ctx) {
+  console.log('csrf-post', ctx.state)
+})
+router.get('/csrf', function (ctx) {
+  console.log('method', ctx.request.method)
+  console.log('csrf-get', ctx.state)
+})
+
 router.post('/uploadImg', baseCtl.uploadImg)
 router.post('/uploadImgCdn', baseCtl.uploadImgCdn)
 
