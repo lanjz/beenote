@@ -1,5 +1,6 @@
 <template>
-  <div class="app flex direction-column absolute-full" v-if="!isVisitor">
+  <nuxt v-if="resume"/>
+  <div class="app flex direction-column absolute-full" v-else-if="!resume && !isVisitor">
     <Header/>
     <div class="flex flex-1">
       <bookShelveNav></bookShelveNav>
@@ -24,6 +25,11 @@
   import bookShelveNav from '../components/layout/bookShelveNav'
   import constKey from '../utils/client/const'
   export default {
+      data: function() {
+          return {
+              resume: false
+          }
+      },
     components: {
       Header,
       bookShelveNav
@@ -39,12 +45,15 @@
         ACTIONS.USER_INFO_GET
       ]),
       async init(){
+          console.log('this', $nuxt._route)
+          if($nuxt._route.name === 'resume') {
+              this.resume = true
+          }
         // this[ACTIONS.USER_INFO_GET]()
       }
     },
     mounted() {
       this.init()
-
     }
   }
 </script>
