@@ -2,6 +2,7 @@
   <div class="code-mirror markdown-layout">
     <div class="" :class="{'hideSplit': editMode !== 3}">
       <div class="flex relative" v-if="isEdit">
+        <img src="../assets/imgs/IMG_0804的副本.JPG" alt="" class="avatar">
         <div class="flex-1">
           <textarea class="markdown-edit-box box-shadow-inset" v-model="markDownValueLeft"></textarea>
         </div>
@@ -112,6 +113,13 @@
     }
 </script>
 <style scoped lang="less">
+  .avatar{
+    width: 100px;
+    right: 20px;
+    top: 20px;
+    position: absolute;
+    z-index: 1;
+  }
   .edit-layout:hover .markdown-operate-layout{
     display: block;
   }
